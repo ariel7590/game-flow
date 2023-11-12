@@ -1,8 +1,8 @@
-const express = require("express");
-const path = require("path");
-const cors = require("cors");
-const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
+import express from "express";
+import path from "path";
+import cors from "cors";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(
@@ -19,4 +19,4 @@ app.get("/", (req, res) => {
 	res.send("Works!");
 });
 
-module.exports = app;
+export default app;
