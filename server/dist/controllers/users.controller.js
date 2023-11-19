@@ -7,12 +7,6 @@ exports.httpAuthenticate = exports.httpLogin = exports.httpCreateNewUser = expor
 const jwt_config_1 = require("../jwt/jwt.config");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const users_model_1 = require("../models/users.model");
-// const {
-// 	getUserById,
-// 	deactivateUser,
-// 	isUserExists,
-// } = require("../../models/users/users.model");
-// const bcrypt = require("bcrypt");
 const httpGetAllUsers = async (req, res) => {
     // this function is for testing only, I can delete it later
     const users = await (0, users_model_1.getAllUsers)();
@@ -38,7 +32,7 @@ const httpGetUserById = async (req, res) => {
 exports.httpGetUserById = httpGetUserById;
 const httpCreateNewUser = async (req, res) => {
     const user = req.body;
-    if (!user.firstName || !user.lastName || !user.password || !user.email) {
+    if (!user.userName || !user.password || !user.email) {
         return res.status(400).json({
             error: "Missing required user properties!",
         });
@@ -58,15 +52,12 @@ const httpCreateNewUser = async (req, res) => {
     };
     const userId = await (0, users_model_1.createNewUser)(hashedPassUser);
     const token = (0, jwt_config_1.createJWT)({ email: user.email, id: userId });
-    const blankProfileImage = "https://res.cloudinary.com/dwobsryyr/image/upload/f_auto,q_auto/v1/faces-and-books/qhvyxsejupgbcrderwv4";
     res.cookie("jwt", token, { httpOnly: true, maxAge: jwt_config_1.jwtExp * 1000 });
     return res.status(201).json({
         status: "created!",
         auth: true,
         userId: userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        profileImageUrl: blankProfileImage,
+        userName: user.userName,
     });
 };
 exports.httpCreateNewUser = httpCreateNewUser;
@@ -91,9 +82,7 @@ const httpLogin = async (req, res) => {
         status: "Logged in",
         auth: true,
         userId: user.userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        profileImageUrl: user.profileImageUrl,
+        userName: user.userName,
     });
 };
 exports.httpLogin = httpLogin;
@@ -113,17 +102,7 @@ const httpAuthenticate = async (req, res) => {
     return res.status(200).json({
         userId: user.userId,
         auth: true,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        profileImageUrl: user.profileImageUrl,
+        userName: user.userName,
     });
 };
 exports.httpAuthenticate = httpAuthenticate;
-// module.exports = {
-// 	httpGetAllUsers,
-// 	httpGetUserById,
-// 	httpCreateNewUser,
-// 	httpLogin,
-// 	httpDeactivateUser,
-// 	httpAuthenticate,
-// };

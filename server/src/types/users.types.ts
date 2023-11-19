@@ -1,6 +1,5 @@
 export interface INewUserInput {
-	firstName: string;
-	lastName: string;
+	userName: string;
 	password: string;
 	email: string;
 }
@@ -10,7 +9,6 @@ export interface IHashedPassUser extends INewUserInput{
 }
 
 export interface IUserReadyForSaving extends IHashedPassUser {
-	active: boolean;
 	userId: number;
 }
 

@@ -6,11 +6,7 @@ const usersSchema = new mongoose.Schema<IUserSchema>({
 		type: Number,
 		required: true,
 	},
-	firstName: {
-		type: String,
-		required: true,
-	},
-	lastName: {
+	userName: {
 		type: String,
 		required: true,
 	},
@@ -25,17 +21,6 @@ const usersSchema = new mongoose.Schema<IUserSchema>({
 	email: {
 		type: String,
 		required: true,
-	},
-	profileImageUrl: {
-		type: String,
-		required: true,
-		default:
-			"https://res.cloudinary.com/dwobsryyr/image/upload/f_auto,q_auto/v1/faces-and-books/qhvyxsejupgbcrderwv4",
-	},
-	active: {
-		type: Boolean,
-		required: true,
-		default: true,
 	},
 });
 
