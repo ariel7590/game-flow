@@ -1,0 +1,15 @@
+{
+  "name": "game-flow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc-server": "npm run tsc-watch --prefix server",
+    "server-watch": "npm run watch --prefix server",
+    "client-watch": "npm run dev --prefix client"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
