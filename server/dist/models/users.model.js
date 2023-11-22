@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createNewUser = exports.getUserById = exports.getAllUsers = exports.findUserByEmail = void 0;
+exports.createNewUser = exports.getUserById = exports.getAllUsers = exports.findUserByEmail = exports.isUserExists = void 0;
 const users_mongo_1 = require("./users.mongo");
 const DEFAULT_USER_ID = 0;
 async function getLatestUserId() {
@@ -10,11 +10,17 @@ async function getLatestUserId() {
     }
     return latestUser.userId;
 }
-async function isUserExists(userId) {
-    return await users_mongo_1.userModel.findOne({
-        userId: userId,
-    });
+async function isUserExists(userName) {
+    try {
+        return await users_mongo_1.userModel.findOne({
+            userName
+        }, { _id: 0, __v: 0, salt: 0 });
+    }
+    catch (err) {
+        console.error(err);
+    }
 }
+exports.isUserExists = isUserExists;
 async function findUserByEmail(userEmail) {
     try {
         return await users_mongo_1.userModel.findOne({

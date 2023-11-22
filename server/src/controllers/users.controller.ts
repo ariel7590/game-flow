@@ -6,6 +6,7 @@ import {
 	findUserByEmail,
 	createNewUser,
 	getUserById,
+	isUserExists,
 } from "../models/users.model";
 import {
 	INewUserInput,
@@ -71,13 +72,12 @@ export const httpCreateNewUser: RequestHandler = async (req, res) => {
 
 export const httpLogin: RequestHandler = async (req, res) => {
 	const credentials = req.body as ICredentials;
-	const user = await findUserByEmail(credentials.email);
+	const user = await isUserExists(credentials.userName);
 	if (!user) {
 		return res.status(404).json({
 			error: "User not found!",
 		});
 	}
-	console.log(user);
 	const match = await bcrypt.compare(credentials.password, user.password);
 	if (!match) {
 		return res.status(404).json({

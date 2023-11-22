@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as signUpStyles from "./sign-up.tailwind";
-import { SignUpData } from "./sign-up.types";
+import { ISignUpData } from "./sign-up.types";
 import { signUpThunk } from "../../redux/users/users.thunks";
 import { AppDispatch } from "../../redux/store";
 
 
 const SignUp = () => {
-	const [data, setData] = useState<SignUpData>({
+	const [data, setData] = useState<ISignUpData>({
 		userName: "",
 		email: "",
 		password: "",
@@ -26,6 +26,10 @@ const SignUp = () => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+		if(data.userName.length===0 || data.email.length===0 || data.password.length===0 || data.confirmPassword.length===0){
+			alert("Missing required fields!");
+			return;
+		}
 		if (data.password !== data.confirmPassword) {
 			alert("Passwords don't match!");
 			return;
@@ -35,7 +39,6 @@ const SignUp = () => {
 			email: data.email,
 			password: data.password
 		}
-		console.log(user);
 		dispatch(signUpThunk(user));
 	};
 	return (

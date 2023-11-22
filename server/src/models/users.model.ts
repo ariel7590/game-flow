@@ -12,10 +12,17 @@ async function getLatestUserId() {
 	return latestUser.userId;
 }
 
-async function isUserExists(userId: number) {
-	return await usersDB.findOne({
-		userId: userId,
-	});
+export async function isUserExists(userName: string) {
+	try {
+		return await usersDB.findOne(
+			{
+				userName
+			},
+			{ _id: 0, __v: 0, salt: 0 }
+		);
+	} catch (err) {
+		console.error(err);
+	}
 }
 
 export async function findUserByEmail(userEmail: string) {

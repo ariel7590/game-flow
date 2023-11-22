@@ -1,15 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signUpThunk } from "./users.thunks";
-
-export interface ICurrentUser {
-	auth: boolean;
-	message: string;
-}
-export interface IUserState {
-	currentUser: ICurrentUser;
-	loading: boolean;
-	error: string | null;
-}
+import { signUpThunk, loginThunk } from "./users.thunks";
+import { ICurrentUser, IUserState } from "./users.types";
 
 const initialState = {
 	currentUser: {
@@ -36,6 +27,23 @@ const userSlice = createSlice({
 				state.currentUser = action.payload as ICurrentUser;
 			})
 			.addCase(signUpThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload as string;
+				state.currentUser = {
+					auth: false,
+					message: "No token found!",
+				};
+			})
+			.addCase(loginThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(loginThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.error = null;
+				state.currentUser = action.payload as ICurrentUser;
+			})
+			.addCase(loginThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
 				state.currentUser = {

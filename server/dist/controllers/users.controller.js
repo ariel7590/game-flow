@@ -63,13 +63,12 @@ const httpCreateNewUser = async (req, res) => {
 exports.httpCreateNewUser = httpCreateNewUser;
 const httpLogin = async (req, res) => {
     const credentials = req.body;
-    const user = await (0, users_model_1.findUserByEmail)(credentials.email);
+    const user = await (0, users_model_1.isUserExists)(credentials.userName);
     if (!user) {
         return res.status(404).json({
             error: "User not found!",
         });
     }
-    console.log(user);
     const match = await bcrypt_1.default.compare(credentials.password, user.password);
     if (!match) {
         return res.status(404).json({

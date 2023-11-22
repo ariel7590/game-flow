@@ -13,6 +13,6 @@ export interface IUserReadyForSaving extends IHashedPassUser {
 }
 
 export interface ICredentials {
-	email: string;
+	userName: string;
 	password: string;
 }
