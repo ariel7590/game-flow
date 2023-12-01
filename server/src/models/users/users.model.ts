@@ -1,5 +1,5 @@
 import { userModel as usersDB } from "./users.mongo";
-import { IHashedPassUser, IUserReadyForSaving } from "../types/users.types";
+import { IHashedPassUser, IUserReadyForSaving } from "../../types/users.types";
 
 const DEFAULT_USER_ID = 0;
 

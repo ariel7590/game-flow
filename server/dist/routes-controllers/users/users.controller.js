@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpAuthenticate = exports.httpLogin = exports.httpCreateNewUser = exports.httpGetUserById = exports.httpGetAllUsers = void 0;
-const jwt_config_1 = require("../jwt/jwt.config");
+const jwt_config_1 = require("../../jwt/jwt.config");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const users_model_1 = require("../models/users/users.model");
+const users_model_1 = require("../../models/users/users.model");
 const httpGetAllUsers = async (req, res) => {
     // this function is for testing only, I can delete it later
     const users = await (0, users_model_1.getAllUsers)();

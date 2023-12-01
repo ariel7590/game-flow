@@ -1,12 +1,12 @@
 import express from "express";
-import { verifyJWT } from "../jwt/jwt.config";
+import { verifyJWT } from "../../jwt/jwt.config";
 import {
 	httpGetAllUsers,
 	httpGetUserById,
 	httpCreateNewUser,
 	httpLogin,
 	httpAuthenticate,
-} from "../controllers/users.controller";
+} from "./users.controller";
 
 const usersRouter = express.Router();
 

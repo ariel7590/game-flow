@@ -1,4 +1,4 @@
-import { createJWT, jwtExp } from "../jwt/jwt.config";
+import { createJWT, jwtExp } from "../../jwt/jwt.config";
 import { RequestHandler, Response } from "express";
 import bcrypt from "bcrypt";
 import {
@@ -7,13 +7,13 @@ import {
 	createNewUser,
 	getUserById,
 	isUserExists,
-} from "../models/users.model";
+} from "../../models/users/users.model";
 import {
 	INewUserInput,
 	ICredentials,
 	IHashedPassUser,
-} from "../types/users.types";
-import { AuthenticatedRequest } from "../types/jwt.types";
+} from "../../types/users.types";
+import { AuthenticatedRequest } from "../../types/jwt.types";
 
 
 export const httpGetAllUsers: RequestHandler = async (req, res) => {
