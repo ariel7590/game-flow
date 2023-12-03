@@ -11,6 +11,7 @@ export interface IUserSchema extends Document {
 export interface IPostSchema extends Document {
 	postId: string;
 	creatorId: number;
+	title: string;
 	body: string;
 	media: string[];
 	deleted: boolean;

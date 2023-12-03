@@ -18,6 +18,7 @@ const httpCreateNewPost = async (req, res) => {
     return res.status(201).json({
         postId,
         creatorId: post.creatorId,
+        title: post.title,
         body: post.body,
         media: post.media,
     });

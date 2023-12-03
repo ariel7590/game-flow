@@ -10,6 +10,10 @@ const postsSchema = new mongoose.Schema<IPostSchema>({
 		type: Number,
 		required: true,
 	},
+	title: {
+		type: String,
+		required: true,
+	},
 	body: {
 		type: String,
 		required: true,

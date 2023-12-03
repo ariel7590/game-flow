@@ -18,8 +18,10 @@ const LoginSignupPage = () => {
 		}
 	};
 
+const pageStyle='flex justify-center items-center min-h-[50vh]';
+
 	return (
-		<div>
+		<div className={pageStyle}>
 			{mode === loginSignup.Login ? (
 				<div>
 					<Login />
