@@ -2,12 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePost = exports.createNewPost = exports.getAllPosts = exports.isPostExists = void 0;
 const posts_mongo_1 = require("./posts.mongo");
-const crypto_1 = require("crypto");
-function generateRandomStringId(length) {
-    const idRandomBytes = (0, crypto_1.randomBytes)(length);
-    const randomString = idRandomBytes.toString("hex");
-    return randomString;
-}
+const utils_1 = require("../../utils");
 async function savePost(post) {
     try {
         await posts_mongo_1.postModel.findOneAndUpdate({
@@ -39,7 +34,7 @@ async function getAllPosts() {
 }
 exports.getAllPosts = getAllPosts;
 async function createNewPost(post) {
-    const newPostId = generateRandomStringId(10);
+    const newPostId = (0, utils_1.generateRandomStringId)(10);
     const newPost = { postId: newPostId, deleted: false, ...post };
     await savePost(newPost);
     return newPostId;

@@ -1,12 +1,7 @@
 import {postModel as postsDB} from './posts.mongo'
-import { randomBytes } from 'crypto';
+import { generateRandomStringId } from '../../utils';
 import { IPost, IReceivedPostContent } from '../../types/posts.types';
 
-function generateRandomStringId(length: number) {
-    const idRandomBytes = randomBytes(length);
-	const randomString = idRandomBytes.toString("hex");
-	return randomString;
-}
 
 async function savePost(post: IPost) {
 	try {

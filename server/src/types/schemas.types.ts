@@ -16,3 +16,11 @@ export interface IPostSchema extends Document {
 	media: string[];
 	deleted: boolean;
 }
+
+export interface ICommentSchema extends Document {
+	commentId: string;
+	postId: string;
+	body: string;
+	publisher: string;
+	rank: number;
+}
