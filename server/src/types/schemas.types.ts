@@ -10,7 +10,7 @@ export interface IUserSchema extends Document {
 
 export interface IPostSchema extends Document {
 	postId: string;
-	creatorId: number;
+	publisher: string;
 	title: string;
 	body: string;
 	media: string[];

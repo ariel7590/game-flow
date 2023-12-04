@@ -7,7 +7,7 @@ export const signUpThunk = createAsyncThunk<
 	unknown,
 	ISignUpPayload,
 	{ rejectValue: SerializedError }
->("users/signup", async (user: ISignUpPayload, thunkAPI) => {
+>("users/signup", async (user, thunkAPI) => {
 	try {
 		const response = await axios({
 			method: "post",
@@ -22,8 +22,8 @@ export const signUpThunk = createAsyncThunk<
 		return thunkAPI.fulfillWithValue(response.data);
 	} catch (err) {
 		if (err instanceof AxiosError && err.response !== undefined) {
-			alert(err.response.data.error);
-			return thunkAPI.rejectWithValue(err.response.data.error);
+			alert(err.response.data.message);
+			return thunkAPI.rejectWithValue(err.response.data.message);
 		} else {
 			throw err;
 		}
@@ -34,7 +34,7 @@ export const loginThunk = createAsyncThunk<
 	unknown,
 	ILoginPayload,
 	{ rejectValue: SerializedError }
->("users/login", async (user: ILoginPayload, thunkAPI) => {
+>("users/login", async (user, thunkAPI) => {
 	try {
 		const response = await axios({
 			method: "post",
@@ -49,8 +49,33 @@ export const loginThunk = createAsyncThunk<
 		return thunkAPI.fulfillWithValue(response.data);
 	} catch (err) {
 		if (err instanceof AxiosError && err.response !== undefined) {
-			alert(err.response.data.error);
-			return thunkAPI.rejectWithValue(err.response.data.error);
+			alert(err.response.data.message);
+			return thunkAPI.rejectWithValue(err.response.data.message);
+		} else {
+			throw err;
+		}
+	}
+});
+
+export const authenticationThunk = createAsyncThunk<
+	unknown,
+	unknown,
+	{ rejectValue: SerializedError }
+>("users/authenticate", async (_, thunkAPI) => {
+	try {
+		const response = await axios({
+			method: "get",
+			url: localAPI + usersRoute + "auth",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			withCredentials: true
+		});
+
+		return thunkAPI.fulfillWithValue(response.data);
+	} catch (err) {
+		if (err instanceof AxiosError && err.response !== undefined) {
+			return thunkAPI.rejectWithValue(err.response.data.message);
 		} else {
 			throw err;
 		}

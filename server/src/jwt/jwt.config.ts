@@ -20,7 +20,7 @@ export function verifyJWT(
 ): Response | void {
 	const token = (req.cookies as { jwt: string }).jwt;
 	if (!token) {
-		return res.status(200).json({
+		return res.status(400).json({
 			auth: false,
 			message: "No token found!",
 		});

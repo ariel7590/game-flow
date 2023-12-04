@@ -17,7 +17,7 @@ exports.createJWT = createJWT;
 function verifyJWT(req, res, next) {
     const token = req.cookies.jwt;
     if (!token) {
-        return res.status(200).json({
+        return res.status(400).json({
             auth: false,
             message: "No token found!",
         });

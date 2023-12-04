@@ -34,13 +34,13 @@ const httpCreateNewUser = async (req, res) => {
     const user = req.body;
     if (!user.userName || !user.password || !user.email) {
         return res.status(400).json({
-            error: "Missing required user properties!",
+            message: "Missing required user properties!",
         });
     }
     const userWithEmail = await (0, users_model_1.findUserByEmail)(user.email);
     if (userWithEmail) {
         return res.status(400).json({
-            error: "Account with this email already exists!",
+            message: "Account with this email already exists!",
         });
     }
     const salt = await bcrypt_1.default.genSalt(10);
@@ -54,7 +54,6 @@ const httpCreateNewUser = async (req, res) => {
     const token = (0, jwt_config_1.createJWT)({ email: user.email, id: userId });
     res.cookie("jwt", token, { httpOnly: true, maxAge: jwt_config_1.jwtExp * 1000 });
     return res.status(201).json({
-        status: "created!",
         auth: true,
         userId: userId,
         userName: user.userName,
@@ -66,19 +65,18 @@ const httpLogin = async (req, res) => {
     const user = await (0, users_model_1.isUserExists)(credentials.userName);
     if (!user) {
         return res.status(404).json({
-            error: "User not found!",
+            message: "User not found!",
         });
     }
     const match = await bcrypt_1.default.compare(credentials.password, user.password);
     if (!match) {
         return res.status(404).json({
-            error: "Incorrect password!",
+            message: "Incorrect password!",
         });
     }
     const token = (0, jwt_config_1.createJWT)({ email: user.email, id: user.userId });
     res.cookie("jwt", token, { httpOnly: true, maxAge: jwt_config_1.jwtExp * 1000 });
     return res.status(200).json({
-        status: "Logged in",
         auth: true,
         userId: user.userId,
         userName: user.userName,
@@ -87,15 +85,18 @@ const httpLogin = async (req, res) => {
 exports.httpLogin = httpLogin;
 const httpAuthenticate = async (req, res) => {
     const userId = req.userId;
+    console.log(userId);
     if (!userId) {
         return res.status(400).json({
-            error: "Invalid user id",
+            auth: false,
+            message: "Invalid user id",
         });
     }
     const user = await (0, users_model_1.getUserById)(userId);
     if (!user) {
         return res.status(404).json({
-            error: "user not found",
+            auth: false,
+            message: "user not found",
         });
     }
     return res.status(200).json({

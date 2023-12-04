@@ -6,8 +6,8 @@ const postsSchema = new mongoose.Schema<IPostSchema>({
 		type: String,
 		required: true,
 	},
-	creatorId: {
-		type: Number,
+	publisher: {
+		type: String,
 		required: true,
 	},
 	title: {

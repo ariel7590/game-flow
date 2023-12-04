@@ -1,5 +1,5 @@
 export interface IReceivedPostContent{
-    creatorId: number;
+    publisher: string;
 	title: string;
 	body: string;
 	media: string[];

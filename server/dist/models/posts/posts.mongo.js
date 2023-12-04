@@ -10,8 +10,8 @@ const postsSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
-    creatorId: {
-        type: Number,
+    publisher: {
+        type: String,
         required: true,
     },
     title: {

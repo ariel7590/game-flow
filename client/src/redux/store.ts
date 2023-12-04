@@ -2,9 +2,10 @@ import { configureStore } from "@reduxjs/toolkit";
 import logger from "redux-logger";
 import thunkMiddleware from "redux-thunk";
 import userReducer from "./users/users.slice";
+import postsReducer from "./posts/posts.slice";
 
 export const store = configureStore({
-	reducer: { users: userReducer },
+	reducer: { users: userReducer, posts: postsReducer },
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().prepend(logger).concat(thunkMiddleware),
 });

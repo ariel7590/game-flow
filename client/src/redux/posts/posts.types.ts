@@ -1,12 +1,12 @@
 export interface IPostState {
-	currentPost: object | null;
+	currentPostList: ICurrentPost[] | null;
 	loading: boolean;
 	error: string | null;
 }
 
 export interface ICurrentPost {
 	postId: string;
-	creatorId: number;
+	publisher: string;
     title: string;
 	body: string;
 	media: string;

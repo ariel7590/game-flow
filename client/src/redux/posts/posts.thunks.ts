@@ -3,6 +3,33 @@ import axios, { AxiosError } from "axios";
 import { ICurrentPost } from "./posts.types";
 import { localAPI, postsRoute } from "../routeUrls";
 
+
+export const getAllPostsThunk = createAsyncThunk<
+	unknown,
+	ICurrentPost[],
+	{ rejectValue: SerializedError }
+>("posts/getAllPosts", async (_, thunkAPI) => {
+	try {
+		const response = await axios({
+			method: "get",
+			url: localAPI + postsRoute,
+			headers: {
+				"Content-Type": "application/json",
+			},
+			withCredentials: true,
+		});
+
+		return thunkAPI.fulfillWithValue(response.data);
+	} catch (err) {
+		if (err instanceof AxiosError && err.response !== undefined) {
+			alert(err.response.data.error);
+			return thunkAPI.rejectWithValue(err.response.data.error);
+		} else {
+			throw err;
+		}
+	}
+});
+
 export const createPostThunk = createAsyncThunk<
 	unknown,
 	ICurrentPost,

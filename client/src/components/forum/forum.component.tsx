@@ -1,37 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { getAllPostsThunk } from "../../redux/posts/posts.thunks";
 import * as forumStyle from "./forum.tailwind";
-import axios from "axios";
 
-type postList = {
-	postId: string;
-	creatorId: number;
-	title: string;
-	body: string;
-	media: string;
-};
+
 const Forum = () => {
-	const [posts, setPosts] = useState<postList[]>();
+	const posts=useSelector((state:RootState)=>state.posts.currentPostList)
+	const dispatch=useDispatch<AppDispatch>();
 
 	useEffect(() => {
-		function zibi() {
-			axios({
-				method: "get",
-				url: "http://localhost:8000/posts/",
-				withCredentials: true,
-				headers: {
-					"Content-Type": "application/json",
-				},
-			})
-				.then((result) => {
-					console.log(result.data);
-					setPosts(result.data);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
-
-		zibi();
+		dispatch(getAllPostsThunk([]));
 	}, []);
 
 	return (
@@ -48,7 +27,7 @@ const Forum = () => {
 						return (
 							<tr key={post.postId}>
 								<td className={forumStyle.titleTdStyle}>{post.title}</td>
-								<td className={forumStyle.byTdStyle}>{post.creatorId}</td>
+								<td className={forumStyle.byTdStyle}>{post.publisher}</td>
 							</tr>
 						);
 					})}
