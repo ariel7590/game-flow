@@ -11,7 +11,12 @@ export const httpGetAllPosts: RequestHandler= async (req, res)=> {
 
 export const httpCreateNewPost: RequestHandler=async (req, res)=> {
 	const post = req.body as IReceivedPostContent;
-	if (!post.body) {
+	if (!post) {
+		return res.status(400).json({
+			error: "Missing required post!",
+		});
+	}
+	if (post.body==="" || post.publisher==="" || post.title==="") {
 		return res.status(400).json({
 			error: "Missing required post properties!",
 		});

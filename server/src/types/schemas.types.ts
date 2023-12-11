@@ -23,4 +23,5 @@ export interface ICommentSchema extends Document {
 	body: string;
 	publisher: string;
 	rank: number;
+	deleted: boolean;
 }

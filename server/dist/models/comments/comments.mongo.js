@@ -24,7 +24,11 @@ const commentSchema = new mongoose_1.default.Schema({
     },
     rank: {
         type: Number,
-        required: true
-    }
+        required: true,
+    },
+    deleted: {
+        type: Boolean,
+        required: true,
+    },
 });
 exports.commentModel = mongoose_1.default.model("Comments", commentSchema);

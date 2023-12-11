@@ -9,7 +9,12 @@ const httpGetAllPosts = async (req, res) => {
 exports.httpGetAllPosts = httpGetAllPosts;
 const httpCreateNewPost = async (req, res) => {
     const post = req.body;
-    if (!post.body) {
+    if (!post) {
+        return res.status(400).json({
+            error: "Missing required post!",
+        });
+    }
+    if (post.body === "" || post.publisher === "" || post.title === "") {
         return res.status(400).json({
             error: "Missing required post properties!",
         });

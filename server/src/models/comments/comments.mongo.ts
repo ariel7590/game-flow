@@ -6,22 +6,26 @@ const commentSchema = new mongoose.Schema<ICommentSchema>({
 		type: String,
 		required: true,
 	},
-    postId: {
-        type: String,
+	postId: {
+		type: String,
 		required: true,
-    },
-    body: {
-        type: String,
-        required: true,
-    },
+	},
+	body: {
+		type: String,
+		required: true,
+	},
 	publisher: {
-        type: String,
-        required: true,
-    },
+		type: String,
+		required: true,
+	},
 	rank: {
-        type: Number,
-        required: true
-    }
+		type: Number,
+		required: true,
+	},
+	deleted: {
+		type: Boolean,
+		required: true,
+	},
 });
 
 export const commentModel = mongoose.model<ICommentSchema>(
