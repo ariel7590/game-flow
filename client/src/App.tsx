@@ -8,7 +8,7 @@ import NavBar from "./components/navbar/navbar.component";
 import Homepage from "./pages/homepage/homepage.component";
 import LoginSignupPage from "./pages/login-signup-page/login-signup-page.component";
 import Forum from "./components/forum/forum.component";
-
+import Post from "./components/post/post.component";
 
 function App() {
 
@@ -26,6 +26,7 @@ function App() {
 					<Route path='/' element={<Homepage />} />
 					<Route path='/login' element={<LoginSignupPage />} />
 					<Route path='/forum' element={<Forum />} />
+					<Route path="/post" element={<Post />} />
 				</Routes>
 			</Router>
 		</>
