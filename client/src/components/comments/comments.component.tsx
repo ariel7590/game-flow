@@ -22,10 +22,14 @@ const Comments = () => {
 	}, [dispatch, postId]);
 
 	return (
-		<div>
+		<div className="w-[50%]">
 			{comments && comments.map((comment) => (
 				<div key={comment.commentId} className={commentsStyle.container}>
+                    <div className="flex flex-col justify-center">
+                    <div className={commentsStyle.voteUp} />
 					<div className={commentsStyle.rank}>{comment.rank}</div>
+                    <div className={commentsStyle.votedown} />
+                    </div>
 					<div className={commentsStyle.content}>
 						<div className={commentsStyle.body}>{comment.body}</div>
 						<div className={commentsStyle.publisher}>by: {comment.publisher}</div>
