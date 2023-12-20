@@ -1,5 +1,6 @@
 export interface IPostState {
 	currentPostList: ICurrentPost[] | null;
+	currentPost: ICurrentPost | null;
 	loading: boolean;
 	error: string | null;
 }

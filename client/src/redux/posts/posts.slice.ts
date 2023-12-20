@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
 	getAllPostsThunk,
 	createPostThunk,
@@ -8,6 +8,7 @@ import { IPostState, ICurrentPost } from "./posts.types";
 
 const initialState = {
 	currentPostList: null,
+	currentPost: null,
 	loading: false,
 	error: null,
 } as IPostState;
@@ -15,7 +16,11 @@ const initialState = {
 const postSlice = createSlice({
 	name: "posts",
 	initialState,
-	reducers: {},
+	reducers: {
+		enterPost: (state, action: PayloadAction<ICurrentPost>) => {
+			state.currentPost = action.payload;
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(getAllPostsThunk.pending, (state) => {
@@ -61,5 +66,7 @@ const postSlice = createSlice({
 			});
 	},
 });
+
+export const { enterPost } = postSlice.actions;
 
 export default postSlice.reducer;

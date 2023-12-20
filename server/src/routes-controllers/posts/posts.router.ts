@@ -8,7 +8,7 @@ import {
 
 const postsRouter = express.Router();
 
-postsRouter.get("/", verifyJWT, httpGetAllPosts);
+postsRouter.get("/", httpGetAllPosts);
 postsRouter.post("/", verifyJWT, httpCreateNewPost);
 postsRouter.delete("/:postId", verifyJWT, httpDeletePost);
 

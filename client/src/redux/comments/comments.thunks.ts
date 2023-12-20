@@ -1,18 +1,18 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
-import { IComment, ICommentForEditing, ICommentInput } from "./comments.types";
+import { ICommentForEditing, ICommentInput } from "./comments.types";
 import { localAPI, commentsRoute } from "../routeUrls";
 
 
 export const getRelevantCommentsThunk = createAsyncThunk<
 	unknown,
-	IComment[],
+	string,
 	{ rejectValue: SerializedError }
->("comments/getRelevantComments", async (_, thunkAPI) => {
+>("comments/getRelevantComments", async (postId, thunkAPI) => {
 	try {
 		const response = await axios({
 			method: "get",
-			url: localAPI + commentsRoute,
+			url: localAPI + commentsRoute + postId,
 			headers: {
 				"Content-Type": "application/json",
 			},
