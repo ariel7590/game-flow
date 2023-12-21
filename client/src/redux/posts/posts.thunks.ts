@@ -1,6 +1,6 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
-import { ICurrentPost } from "./posts.types";
+import { ICurrentPost, NewPost } from "./posts.types";
 import { localAPI, postsRoute } from "../routeUrls";
 
 
@@ -32,9 +32,9 @@ export const getAllPostsThunk = createAsyncThunk<
 
 export const createPostThunk = createAsyncThunk<
 	unknown,
-	ICurrentPost,
+	NewPost,
 	{ rejectValue: SerializedError }
->("posts/createPost", async (post: ICurrentPost, thunkAPI) => {
+>("posts/createPost", async (post, thunkAPI) => {
 	try {
 		const response = await axios({
 			method: "post",

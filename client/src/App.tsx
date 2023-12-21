@@ -9,6 +9,7 @@ import Homepage from "./pages/homepage/homepage.component";
 import LoginSignupPage from "./pages/login-signup-page/login-signup-page.component";
 import Forum from "./components/forum/forum.component";
 import PostPage from "./pages/post-page/post-page.component";
+import NewPost from "./pages/new-post/new-post.component";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
 					<Route path='/login' element={<LoginSignupPage />} />
 					<Route path='/forum' element={<Forum />} />
 					<Route path="/forum/post/:id" element={<PostPage />} />
+					<Route path="/forum/new-post" element={<NewPost />} />
 				</Routes>
 			</Router>
 		</>

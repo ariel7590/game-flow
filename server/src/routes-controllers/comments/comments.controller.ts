@@ -52,9 +52,9 @@ export const httpFindCommentsWithPostId: RequestHandler = async (req, res) => {
 		});
 	}
 	const comments = await findCommentsWithPostId(postId);
-	if (comments?.length === 0) {
+	if (!comments) {
 		return res.status(404).json({
-			error: "Post ID is not found!",
+			error: "Failed at getting comments for this postId!",
 		});
 	}
 	return res.status(200).json(comments);

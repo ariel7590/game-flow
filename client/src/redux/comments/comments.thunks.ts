@@ -21,7 +21,6 @@ export const getRelevantCommentsThunk = createAsyncThunk<
 		return thunkAPI.fulfillWithValue(response.data);
 	} catch (err) {
 		if (err instanceof AxiosError && err.response !== undefined) {
-			alert(err.response.data.error);
 			return thunkAPI.rejectWithValue(err.response.data.error);
 		} else {
 			throw err;
@@ -48,7 +47,6 @@ export const createNewCommentThunk = createAsyncThunk<
 
 	} catch (err) {
 		if (err instanceof AxiosError && err.response !== undefined) {
-			alert(err.response.data.error);
 			return thunkAPI.rejectWithValue(err.response.data.error);
 		} else {
 			throw err;
@@ -74,7 +72,6 @@ export const deleteCommentThunk = createAsyncThunk<
 
 	} catch (err) {
 		if (err instanceof AxiosError && err.response !== undefined) {
-			alert(err.response.data.error);
 			return thunkAPI.rejectWithValue(err.response.data.error);
 		} else {
 			throw err;
@@ -101,7 +98,6 @@ export const editCommentThunk = createAsyncThunk<
 
 	} catch (err) {
 		if (err instanceof AxiosError && err.response !== undefined) {
-			alert(err.response.data.error);
 			return thunkAPI.rejectWithValue(err.response.data.error);
 		} else {
 			throw err;

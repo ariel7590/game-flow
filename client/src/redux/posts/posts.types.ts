@@ -8,7 +8,9 @@ export interface IPostState {
 export interface ICurrentPost {
 	postId: string;
 	publisher: string;
-    title: string;
+	title: string;
 	body: string;
 	media: string;
 }
+
+export type NewPost = Omit<ICurrentPost, "postId">;

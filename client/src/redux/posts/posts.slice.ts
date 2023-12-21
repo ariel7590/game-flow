@@ -20,6 +20,9 @@ const postSlice = createSlice({
 		enterPost: (state, action: PayloadAction<ICurrentPost>) => {
 			state.currentPost = action.payload;
 		},
+		exitPost: (state) => {
+			state.currentPost = null;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -42,15 +45,19 @@ const postSlice = createSlice({
 			.addCase(createPostThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.error = null;
-				state.currentPostList = [
-					action.payload as ICurrentPost,
-					...(state.currentPostList as ICurrentPost[]),
-				];
+				if (state.currentPostList) {
+					state.currentPostList = [
+						action.payload as ICurrentPost,
+						...(state.currentPostList as ICurrentPost[]),
+					];
+				}
+				state.currentPost = action.payload as ICurrentPost;
 			})
 			.addCase(createPostThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
 				state.currentPostList = null;
+				state.currentPost = null;
 			})
 			.addCase(deletePostThunk.pending, (state) => {
 				state.loading = true;
@@ -67,6 +74,6 @@ const postSlice = createSlice({
 	},
 });
 
-export const { enterPost } = postSlice.actions;
+export const { enterPost, exitPost } = postSlice.actions;
 
 export default postSlice.reducer;
