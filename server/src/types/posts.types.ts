@@ -8,3 +8,8 @@ export interface IPost extends IReceivedPostContent{
     postId: string;
 	deleted: boolean;
 }
+export interface IPostForEditing {
+	postId: string;
+	newTitle: string;
+	newContent: string;
+}

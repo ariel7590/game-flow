@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePost = exports.createNewPost = exports.getAllPosts = exports.isPostExists = void 0;
+exports.deletePost = exports.editPost = exports.createNewPost = exports.getAllPosts = exports.isPostExists = void 0;
 const posts_mongo_1 = require("./posts.mongo");
 const utils_1 = require("../../utils");
 async function savePost(post) {
@@ -17,6 +17,10 @@ async function isPostExists(postId) {
     try {
         return await posts_mongo_1.postModel.findOne({
             postId,
+        }, {
+            _id: 0,
+            __v: 0,
+            deleted: 0,
         });
     }
     catch (err) {
@@ -26,7 +30,9 @@ async function isPostExists(postId) {
 exports.isPostExists = isPostExists;
 async function getAllPosts() {
     try {
-        return await posts_mongo_1.postModel.find({}, { _id: 0, __v: 0, deleted: 0 });
+        return await posts_mongo_1.postModel.find({
+            deleted: false,
+        }, { _id: 0, __v: 0, deleted: 0 });
     }
     catch (err) {
         console.error(err);
@@ -40,6 +46,27 @@ async function createNewPost(post) {
     return newPostId;
 }
 exports.createNewPost = createNewPost;
+async function editPost(postId, newTitle, newContent) {
+    try {
+        const edited = await posts_mongo_1.postModel.updateOne({
+            postId,
+            deleted: false,
+        }, {
+            title: newTitle,
+            body: newContent,
+        });
+        if (edited.acknowledged && edited.matchedCount > 0) {
+            return await isPostExists(postId);
+        }
+        else {
+            return null;
+        }
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+exports.editPost = editPost;
 async function deletePost(postId) {
     try {
         const deleted = await posts_mongo_1.postModel.updateOne({

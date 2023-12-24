@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import { getAllPosts, createNewPost, deletePost, isPostExists } from "../../models/posts/posts.model";
-import { IReceivedPostContent } from "../../types/posts.types";
+import { getAllPosts, createNewPost, deletePost, isPostExists, editPost } from "../../models/posts/posts.model";
+import { IPostForEditing, IReceivedPostContent } from "../../types/posts.types";
 
 
 
@@ -49,3 +49,20 @@ export const httpDeletePost: RequestHandler= async (req, res)=> {
 		error: "Post is not found!",
 	});
 }
+
+export const httpEditPost: RequestHandler = async (req, res) => {
+	const post = req.body as IPostForEditing;
+	const { postId, newTitle, newContent } = post;
+	if (!post || postId === "" || newTitle === "" || newContent === "") {
+		return res.status(404).json({
+			error: "Missing required fields!",
+		});
+	}
+	const editedPost = await editPost(postId, newTitle, newContent);
+	if (!editedPost) {
+		return res.status(500).json({
+			error: "Couldn't edit post",
+		});
+	}
+	return res.status(200).json(editedPost);
+};

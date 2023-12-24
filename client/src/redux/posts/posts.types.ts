@@ -14,3 +14,9 @@ export interface ICurrentPost {
 }
 
 export type NewPost = Omit<ICurrentPost, "postId">;
+
+export interface IPostForEditing {
+	postId: string;
+	newTitle: string;
+	newContent: string;
+}

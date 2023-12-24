@@ -2,9 +2,9 @@ import React, { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { createPostThunk } from "../../redux/posts/posts.thunks";
-import * as newPostStyle from "./new-post.tailwind";
 import { ICurrentUser } from "../../redux/users/users.types";
 import { useNavigate } from "react-router-dom";
+import PostForm from "../../components/post-form/post-form.component";
 
 const NewPost = () => {
 	const [formData, setFormData] = useState({ title: "", body: "", media: "" });
@@ -18,11 +18,11 @@ const NewPost = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 
-	useEffect(()=>{
+	useEffect(() => {
 		if (currentPost) {
 			navigate(`/forum/post/${currentPost.postId}`);
 		}
-	}, [currentPost])
+	}, [currentPost]);
 
 	const handleChange = (
 		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -38,32 +38,7 @@ const NewPost = () => {
 		await dispatch(createPostThunk(post));
 	};
 
-	return (
-		<div className={newPostStyle.container}>
-			<h1 className={newPostStyle.pageTitle}>New Post</h1>
-			<form
-				className={newPostStyle.form}
-				onSubmit={(event) => handleSubmit(event)}
-			>
-				<input
-					type='text'
-					name='title'
-					className={newPostStyle.title}
-					placeholder='Title'
-					onChange={handleChange}
-				/>
-				<textarea
-					name='body'
-					className={newPostStyle.body}
-					placeholder='Content...'
-					onChange={handleChange}
-				/>
-				<button type='submit' className={newPostStyle.submit}>
-					Send
-				</button>
-			</form>
-		</div>
-	);
+	return <PostForm handleSubmit={handleSubmit} handleChange={handleChange} />;
 };
 
 export default NewPost;

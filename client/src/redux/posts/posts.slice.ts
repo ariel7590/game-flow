@@ -3,8 +3,10 @@ import {
 	getAllPostsThunk,
 	createPostThunk,
 	deletePostThunk,
+	editPostThunk,
 } from "./posts.thunks";
 import { IPostState, ICurrentPost } from "./posts.types";
+import { editCommentThunk } from "../comments/comments.thunks";
 
 const initialState = {
 	currentPostList: null,
@@ -68,6 +70,19 @@ const postSlice = createSlice({
 				state.currentPostList = null;
 			})
 			.addCase(deletePostThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload as string;
+			})
+			.addCase(editCommentThunk.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(editPostThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.error = null;
+				state.currentPostList = null;
+				state.currentPost=action.payload as ICurrentPost;
+			})
+			.addCase(editPostThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
 			});
