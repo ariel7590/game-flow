@@ -8,6 +8,7 @@ export interface IPostState {
 export interface ICurrentPost {
 	postId: string;
 	publisher: string;
+	publisherId: number;
 	title: string;
 	body: string;
 	media: string;
@@ -19,4 +20,5 @@ export interface IPostForEditing {
 	postId: string;
 	newTitle: string;
 	newContent: string;
+	publisherId: number;
 }

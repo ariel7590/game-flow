@@ -8,8 +8,8 @@ import PostForm from "../../components/post-form/post-form.component";
 
 const NewPost = () => {
 	const [formData, setFormData] = useState({ title: "", body: "", media: "" });
-	const publisher = useSelector(
-		(state: RootState) => (state.users.currentUser as ICurrentUser).userName
+	const user = useSelector(
+		(state: RootState) => state.users.currentUser as ICurrentUser
 	);
 
 	const currentPost = useSelector(
@@ -34,7 +34,7 @@ const NewPost = () => {
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		const post = { ...formData, publisher };
+		const post = { ...formData, publisher: user.userName, publisherId: user.userId };
 		await dispatch(createPostThunk(post));
 	};
 

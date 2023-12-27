@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import * as loginStyles from "./login.tailwind"
+import * as loginStyles from "./login.tailwind";
 import { ICredentials } from "./login.types";
 import { loginThunk } from "../../redux/users/users.thunks";
 import { AppDispatch } from "../../redux/store";
-
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 	const [credentials, setCredentials] = useState<ICredentials>({
@@ -12,7 +12,8 @@ const Login = () => {
 		password: "",
 	});
 
-	const dispatch=useDispatch<AppDispatch>();
+	const dispatch = useDispatch<AppDispatch>();
+	const navigate = useNavigate();
 
 	const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -22,13 +23,17 @@ const Login = () => {
 		}));
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if(credentials.userName.length===0 || credentials.password.length===0){
+		if (
+			credentials.userName.length === 0 ||
+			credentials.password.length === 0
+		) {
 			alert("Missing required fields!");
 			return;
 		}
-		dispatch(loginThunk(credentials));
+		await dispatch(loginThunk(credentials));
+		navigate('/');
 	};
 
 	return (

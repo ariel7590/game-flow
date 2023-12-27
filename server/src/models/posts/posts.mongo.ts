@@ -10,6 +10,10 @@ const postsSchema = new mongoose.Schema<IPostSchema>({
 		type: String,
 		required: true,
 	},
+	publisherId: {
+		type: Number,
+		required: true,
+	},
 	title: {
 		type: String,
 		required: true,

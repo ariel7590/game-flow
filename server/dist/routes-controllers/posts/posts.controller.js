@@ -23,6 +23,7 @@ const httpCreateNewPost = async (req, res) => {
     return res.status(201).json({
         postId,
         publisher: post.publisher,
+        publisherId: post.publisherId,
         title: post.title,
         body: post.body,
         media: post.media,
@@ -36,8 +37,20 @@ const httpDeletePost = async (req, res) => {
             error: "Invalid post id",
         });
     }
+    const userId = req.userId;
+    if (!userId) {
+        return res.status(400).json({
+            auth: false,
+            message: "Invalid user id",
+        });
+    }
     const isExists = await (0, posts_model_1.isPostExists)(postId);
     if (isExists) {
+        if (isExists.publisherId !== userId) {
+            return res.status(401).json({
+                error: "You are unathorized to delete this post!",
+            });
+        }
         await (0, posts_model_1.deletePost)(postId);
         return res.status(200).json({
             ok: `Post with ID ${postId} has been deleted!`,
@@ -50,10 +63,26 @@ const httpDeletePost = async (req, res) => {
 exports.httpDeletePost = httpDeletePost;
 const httpEditPost = async (req, res) => {
     const post = req.body;
-    const { postId, newTitle, newContent } = post;
-    if (!post || postId === "" || newTitle === "" || newContent === "") {
+    const userId = req.userId;
+    if (!userId) {
+        return res.status(400).json({
+            auth: false,
+            message: "Invalid user id",
+        });
+    }
+    const { postId, newTitle, newContent, publisherId } = post;
+    if (!post ||
+        postId === "" ||
+        newTitle === "" ||
+        newContent === "" ||
+        !publisherId) {
         return res.status(404).json({
             error: "Missing required fields!",
+        });
+    }
+    if (publisherId !== userId) {
+        return res.status(401).json({
+            error: "You are unathorized to edit this post!",
         });
     }
     const editedPost = await (0, posts_model_1.editPost)(postId, newTitle, newContent);

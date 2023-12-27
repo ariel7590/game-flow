@@ -94,7 +94,6 @@ export const httpLogin: RequestHandler = async (req, res) => {
 
 export const httpAuthenticate = async (req: AuthenticatedRequest, res: Response) => {
 	const userId = req.userId as number;
-	console.log(userId);
 	if (!userId) {
 		return res.status(400).json({
 			auth: false,

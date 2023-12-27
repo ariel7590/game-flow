@@ -21,17 +21,18 @@ const EditPost = () => {
 				body: post.body,
 			});
 		}
-	},[post]);
+	}, [post]);
 
 	const handleSubmit = async (event: FormEvent) => {
-        event.preventDefault();
-        
+		event.preventDefault();
+
 		if (post) {
 			await dispatch(
 				editPostThunk({
 					postId: post.postId,
 					newTitle: formData.title,
 					newContent: formData.body,
+					publisherId: post.publisherId,
 				})
 			);
 			navigate(`/forum/post/${post.postId}`);
