@@ -8,12 +8,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 interface alertProps{
   btnClassName: string;
-  btnText: string;
+  children: string;
   title: string;
   content: string;
-  onAgree: ()=>void;
+  onAgree: (_:unknown)=>void;
 }
-export default function AlertDialog({btnClassName, btnText, title, content, onAgree}:alertProps) {
+export default function AlertDialog({btnClassName, children, title, content, onAgree}:alertProps) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -27,7 +27,7 @@ export default function AlertDialog({btnClassName, btnText, title, content, onAg
   return (
     <React.Fragment>
       <Button variant="text" className={btnClassName} onClick={handleClickOpen}>
-        {btnText}
+        {children}
       </Button>
       <Dialog
         open={open}

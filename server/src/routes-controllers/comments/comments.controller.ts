@@ -67,13 +67,19 @@ export const httpDeleteComment: RequestHandler = async (req, res) => {
 			error: "Comment ID is not found!",
 		});
 	}
-	const deletedComment = await deleteComment(commentId);
-	if (!deletedComment) {
+	const comment=await findCommentWithCommentId(commentId);
+	if(!comment){
+		return res.status(404).json({
+			error: "Comment with this ID is not found!",
+		});
+	}
+	const updatedComments = await deleteComment(commentId, comment.postId);
+	if (!updatedComments) {
 		return res.status(500).json({
 			error: "Couldn't delete comment",
 		});
 	}
-	return res.status(200).json(deletedComment);
+	return res.status(200).json(updatedComments);
 };
 
 export const httpEditComment: RequestHandler = async (req, res) => {

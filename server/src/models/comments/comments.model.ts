@@ -31,7 +31,16 @@ export async function findCommentsWithPostId(postId: string) {
 
 export async function findCommentWithCommentId(commentId: string) {
 	try {
-		return await commentDB.findOne({ commentId });
+		return await commentDB.findOne(
+			{
+				commentId,
+			},
+			{
+				_id: 0,
+				__v: 0,
+				deleted: 0,
+			}
+		);
 	} catch (err) {
 		console.log(err);
 	}
@@ -49,7 +58,7 @@ export async function createNewComment(comment: ICommentInput) {
 	return newComment;
 }
 
-export async function deleteComment(commentId: string) {
+export async function deleteComment(commentId: string, postId: string) {
 	try {
 		const deleted = await commentDB.updateOne(
 			{
@@ -60,7 +69,10 @@ export async function deleteComment(commentId: string) {
 				deleted: true,
 			}
 		);
-		return deleted.acknowledged && deleted.matchedCount > 0;
+		if (deleted.acknowledged && deleted.matchedCount > 0) {
+			const updatedComments = await findCommentsWithPostId(postId);
+			return updatedComments;
+		}
 	} catch (err) {
 		console.error(err);
 	}

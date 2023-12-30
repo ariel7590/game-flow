@@ -26,7 +26,13 @@ async function findCommentsWithPostId(postId) {
 exports.findCommentsWithPostId = findCommentsWithPostId;
 async function findCommentWithCommentId(commentId) {
     try {
-        return await comments_mongo_1.commentModel.findOne({ commentId });
+        return await comments_mongo_1.commentModel.findOne({
+            commentId,
+        }, {
+            _id: 0,
+            __v: 0,
+            deleted: 0,
+        });
     }
     catch (err) {
         console.log(err);
@@ -45,7 +51,7 @@ async function createNewComment(comment) {
     return newComment;
 }
 exports.createNewComment = createNewComment;
-async function deleteComment(commentId) {
+async function deleteComment(commentId, postId) {
     try {
         const deleted = await comments_mongo_1.commentModel.updateOne({
             commentId: commentId,
@@ -53,7 +59,10 @@ async function deleteComment(commentId) {
         }, {
             deleted: true,
         });
-        return deleted.acknowledged && deleted.matchedCount > 0;
+        if (deleted.acknowledged && deleted.matchedCount > 0) {
+            const updatedComments = await findCommentsWithPostId(postId);
+            return updatedComments;
+        }
     }
     catch (err) {
         console.error(err);

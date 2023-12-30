@@ -17,8 +17,6 @@ const Post = () => {
 	const navigate = useNavigate();
 
 	const handleDelete = async () => {
-		// TODO: create a modal to ask if you sure you want to delete the post
-		// or just use Swal
 		await dispatch(deletePostThunk(post!.postId));
 		navigate("/forum");
 	};
@@ -38,11 +36,10 @@ const Post = () => {
 					<div className={postStyle.options}>
 						<AlertDialog
 							btnClassName={postStyle.deleteEdit}
-							btnText='Delete'
 							title='Delete a post'
 							content='Are you sure you want to delete your post?'
 							onAgree={handleDelete}
-						/>
+						> Delete </AlertDialog>
 						&nbsp;
 						<Button
 							variant='text'

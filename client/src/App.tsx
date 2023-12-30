@@ -11,6 +11,7 @@ import Forum from "./components/forum/forum.component";
 import PostPage from "./pages/post-page/post-page.component";
 import NewPost from "./pages/new-post/new-post.component";
 import EditPost from "./pages/edit-post/edit-post.component";
+import NewComment from "./pages/new-comment/new-comment.component";
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
 					<Route path='/login' element={<LoginSignupPage />} />
 					<Route path='/forum' element={<Forum />} />
 					<Route path="/forum/post/:id" element={<PostPage />} />
+					<Route path="/forum/post/:postId/new-comment" element={<NewComment />} />
 					<Route path="/forum/post/edit-post/:id" element={<EditPost />} />
 					<Route path="/forum/new-post" element={<NewPost />} />
 				</Routes>
