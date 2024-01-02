@@ -12,6 +12,7 @@ import PostPage from "./pages/post-page/post-page.component";
 import NewPost from "./pages/new-post/new-post.component";
 import EditPost from "./pages/edit-post/edit-post.component";
 import NewComment from "./pages/new-comment/new-comment.component";
+import EditComment from "./pages/edit-comment/edit-comment.component";
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
 					<Route path='/login' element={<LoginSignupPage />} />
 					<Route path='/forum' element={<Forum />} />
 					<Route path="/forum/post/:id" element={<PostPage />} />
+					<Route path="/forum/post/:postId/edit-comment/:commentId" element={<EditComment text='zibi' />} />
 					<Route path="/forum/post/:postId/new-comment" element={<NewComment />} />
 					<Route path="/forum/post/edit-post/:id" element={<EditPost />} />
 					<Route path="/forum/new-post" element={<NewPost />} />

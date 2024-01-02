@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as commentsStyle from "./comments.tailwind";
 import { getRelevantCommentsThunk } from "../../redux/comments/comments.thunks";
 import { AppDispatch, RootState } from "../../redux/store";
 import { deleteCommentThunk } from "../../redux/comments/comments.thunks";
+import { Button } from "@mui/material";
 import AlertDialog from "../mui/alert-dialog.component";
+
 
 const Comments = () => {
 	const postId = useSelector(
@@ -15,6 +18,8 @@ const Comments = () => {
 	);
 
 	const dispatch = useDispatch<AppDispatch>();
+	const navigate=useNavigate();
+	const location=useLocation();
 
 	useEffect(() => {
 		async function getRelevantComments() {
@@ -26,6 +31,10 @@ const Comments = () => {
 	const handleDelete = (commentId: string) => {
 		console.log(commentId)
 		dispatch(deleteCommentThunk(commentId));
+	}
+
+	const handleEdit=(commentId: string)=>{
+		navigate(`${location.pathname}/edit-comment/${commentId}`)
 	}
 	return (
 		<div className="w-[50%]">
@@ -45,6 +54,14 @@ const Comments = () => {
 								content='Are you sure you want to delete this comment?'
 								onAgree={() => handleDelete(comment.commentId)}
 							>Delete</AlertDialog>
+							&nbsp;
+						<Button
+							variant='text'
+							className={commentsStyle.commentDeleteEdit}
+							onClick={()=>handleEdit(comment.commentId)}
+						>
+							Edit
+						</Button>
 							<div className={commentsStyle.publisher}>by: {comment.publisher}</div>
 						</div>
 					</div>
