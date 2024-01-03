@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
 	getRelevantCommentsThunk,
 	createNewCommentThunk,
@@ -9,6 +9,7 @@ import { ICommentsState, IComment } from "./comments.types";
 
 const initialState = {
 	currentCommentsList: null,
+	currentComment: null,
 	loading: false,
 	error: null,
 } as ICommentsState;
@@ -16,7 +17,14 @@ const initialState = {
 const commentsSlice = createSlice({
 	name: "comments",
 	initialState,
-	reducers: {},
+	reducers: {
+		enterEditComment: (state, action: PayloadAction<IComment>) => {
+			state.currentComment = action.payload;
+		},
+		exitEditComment: (state) => {
+			state.currentComment = null;
+		}
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(getRelevantCommentsThunk.pending, (state) => {
@@ -54,14 +62,14 @@ const commentsSlice = createSlice({
 			.addCase(deleteCommentThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.error = null;
-				state.currentCommentsList = 
+				state.currentCommentsList =
 					action.payload as IComment[]
 			})
 			.addCase(deleteCommentThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
 			})
-            .addCase(editCommentThunk.pending, (state) => {
+			.addCase(editCommentThunk.pending, (state) => {
 				state.loading = true;
 			})
 			.addCase(editCommentThunk.fulfilled, (state, action) => {
@@ -77,4 +85,5 @@ const commentsSlice = createSlice({
 	},
 });
 
+export const { enterEditComment, exitEditComment } = commentsSlice.actions;
 export default commentsSlice.reducer;

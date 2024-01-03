@@ -1,5 +1,6 @@
 export interface ICommentsState {
 	currentCommentsList: IComment[] | null;
+	currentComment: IComment | null;
 	loading: boolean;
 	error: string | null;
 }

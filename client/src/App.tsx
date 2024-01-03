@@ -31,7 +31,7 @@ function App() {
 					<Route path='/login' element={<LoginSignupPage />} />
 					<Route path='/forum' element={<Forum />} />
 					<Route path="/forum/post/:id" element={<PostPage />} />
-					<Route path="/forum/post/:postId/edit-comment/:commentId" element={<EditComment text='zibi' />} />
+					<Route path="/forum/post/:postId/edit-comment/:commentId" element={<EditComment />} />
 					<Route path="/forum/post/:postId/new-comment" element={<NewComment />} />
 					<Route path="/forum/post/edit-post/:id" element={<EditPost />} />
 					<Route path="/forum/new-post" element={<NewPost />} />

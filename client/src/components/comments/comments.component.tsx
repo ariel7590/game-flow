@@ -5,8 +5,10 @@ import * as commentsStyle from "./comments.tailwind";
 import { getRelevantCommentsThunk } from "../../redux/comments/comments.thunks";
 import { AppDispatch, RootState } from "../../redux/store";
 import { deleteCommentThunk } from "../../redux/comments/comments.thunks";
+import { enterEditComment } from "../../redux/comments/comments.slice";
 import { Button } from "@mui/material";
 import AlertDialog from "../mui/alert-dialog.component";
+import { IComment } from "../../redux/comments/comments.types";
 
 
 const Comments = () => {
@@ -18,8 +20,8 @@ const Comments = () => {
 	);
 
 	const dispatch = useDispatch<AppDispatch>();
-	const navigate=useNavigate();
-	const location=useLocation();
+	const navigate = useNavigate();
+	const location = useLocation();
 
 	useEffect(() => {
 		async function getRelevantComments() {
@@ -33,8 +35,9 @@ const Comments = () => {
 		dispatch(deleteCommentThunk(commentId));
 	}
 
-	const handleEdit=(commentId: string)=>{
-		navigate(`${location.pathname}/edit-comment/${commentId}`)
+	const handleEdit = (comment: IComment) => {
+		dispatch(enterEditComment(comment))
+		navigate(`${location.pathname}/edit-comment/${comment.commentId}`)
 	}
 	return (
 		<div className="w-[50%]">
@@ -55,13 +58,13 @@ const Comments = () => {
 								onAgree={() => handleDelete(comment.commentId)}
 							>Delete</AlertDialog>
 							&nbsp;
-						<Button
-							variant='text'
-							className={commentsStyle.commentDeleteEdit}
-							onClick={()=>handleEdit(comment.commentId)}
-						>
-							Edit
-						</Button>
+							<Button
+								variant='text'
+								className={commentsStyle.commentDeleteEdit}
+								onClick={() => handleEdit(comment)}
+							>
+								Edit
+							</Button>
 							<div className={commentsStyle.publisher}>by: {comment.publisher}</div>
 						</div>
 					</div>
