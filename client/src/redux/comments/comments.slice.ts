@@ -75,8 +75,8 @@ const commentsSlice = createSlice({
 			.addCase(editCommentThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.error = null;
-				state.currentCommentsList =
-					action.payload as IComment[]
+				state.currentComment =
+					action.payload as IComment;
 			})
 			.addCase(editCommentThunk.rejected, (state, action) => {
 				state.loading = false;

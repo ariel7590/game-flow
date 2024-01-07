@@ -22,6 +22,10 @@ const commentSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    publisherId: {
+        type: Number,
+        required: true,
+    },
     rank: {
         type: Number,
         required: true,

@@ -23,6 +23,7 @@ export interface ICommentSchema extends Document {
 	postId: string;
 	body: string;
 	publisher: string;
+	publisherId: number;
 	rank: number;
 	deleted: boolean;
 }

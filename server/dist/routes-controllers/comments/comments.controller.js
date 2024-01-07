@@ -27,6 +27,7 @@ const httpCreateNewComment = async (req, res) => {
     return res.status(201).json({
         commetId: newComment.commentId,
         publisher: newComment.publisher,
+        publisherId: newComment.publisherId,
         body: newComment.body,
         rank: newComment.rank,
     });
@@ -55,27 +56,51 @@ const httpDeleteComment = async (req, res) => {
             error: "Comment ID is not found!",
         });
     }
+    const userId = req.userId;
+    if (!userId) {
+        return res.status(400).json({
+            auth: false,
+            message: "Invalid user id",
+        });
+    }
     const comment = await (0, comments_model_1.findCommentWithCommentId)(commentId);
-    if (!comment) {
-        return res.status(404).json({
-            error: "Comment with this ID is not found!",
-        });
+    if (comment) {
+        if (comment.publisherId !== userId) {
+            return res.status(401).json({
+                error: "You are unathorized to delete this comment!",
+            });
+        }
+        const updatedComments = await (0, comments_model_1.deleteComment)(commentId, comment.postId);
+        if (!updatedComments) {
+            return res.status(500).json({
+                error: "Couldn't delete comment",
+            });
+        }
+        return res.status(200).json(updatedComments);
     }
-    const updatedComments = await (0, comments_model_1.deleteComment)(commentId, comment.postId);
-    if (!updatedComments) {
-        return res.status(500).json({
-            error: "Couldn't delete comment",
-        });
-    }
-    return res.status(200).json(updatedComments);
+    return res.status(404).json({
+        error: "Comment with this ID is not found!",
+    });
 };
 exports.httpDeleteComment = httpDeleteComment;
 const httpEditComment = async (req, res) => {
     const comment = req.body;
-    const { commentId, newContent } = comment;
+    const { commentId, newContent, publisherId, editorId } = comment;
+    const userId = req.userId;
+    if (!userId) {
+        return res.status(400).json({
+            auth: false,
+            message: "Invalid user id",
+        });
+    }
     if (!comment || commentId === "" || newContent === "") {
         return res.status(404).json({
             error: "Missing required fields!",
+        });
+    }
+    if (editorId !== publisherId) {
+        return res.status(401).json({
+            error: "You are unathorized to edit this comment!",
         });
     }
     const editedComment = await (0, comments_model_1.editComment)(commentId, newContent);

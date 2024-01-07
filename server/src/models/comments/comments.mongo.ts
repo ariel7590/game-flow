@@ -18,6 +18,10 @@ const commentSchema = new mongoose.Schema<ICommentSchema>({
 		type: String,
 		required: true,
 	},
+	publisherId: {
+		type: Number,
+		required: true,
+	},
 	rank: {
 		type: Number,
 		required: true,
