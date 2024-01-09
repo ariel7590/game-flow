@@ -4,7 +4,7 @@ export interface INewUserInput {
 	email: string;
 }
 
-export interface IHashedPassUser extends INewUserInput{
+export interface IHashedPassUser extends INewUserInput {
 	salt: string;
 }
 
@@ -14,5 +14,9 @@ export interface IUserReadyForSaving extends IHashedPassUser {
 
 export interface ICredentials {
 	userName: string;
+	email: string;
 	password: string;
+	userId: number;
 }
+
+export type SignInCredentials = (Pick<ICredentials, "userName"> & { email?: never } | Pick<ICredentials, "email"> & { userName?: never }) & Pick<ICredentials, "password">

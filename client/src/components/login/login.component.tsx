@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
 	const [credentials, setCredentials] = useState<ICredentials>({
 		userName: "",
+		email: "",
 		password: "",
 	});
 

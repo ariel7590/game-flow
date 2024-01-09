@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc-server": "npm run tsc-watch --prefix server",
     "server-watch": "npm run watch --prefix server",
-    "client-watch": "npm run dev --prefix client"
+    "client-watch": "npm run dev --prefix client",
+    "install-client": "npm install --prefix client",
+    "install-server": "npm install --prefix server",
+    "install-all": "npm run install-client && npm run install-server"
   },
   "keywords": [],
   "author": "",

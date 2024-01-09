@@ -10,8 +10,9 @@ import {
 } from "../../models/users/users.model";
 import {
 	INewUserInput,
-	ICredentials,
 	IHashedPassUser,
+	SignInCredentials,
+	ICredentials,
 } from "../../types/users.types";
 import { AuthenticatedRequest } from "../../types/jwt.types";
 
@@ -70,8 +71,17 @@ export const httpCreateNewUser: RequestHandler = async (req, res) => {
 };
 
 export const httpLogin: RequestHandler = async (req, res) => {
-	const credentials = req.body as ICredentials;
-	const user = await isUserExists(credentials.userName);
+	const credentials = req.body as SignInCredentials;
+	let user: null | ICredentials;
+	if(credentials.userName){
+		 user = await isUserExists(credentials.userName) as ICredentials;
+	}
+	else if(credentials.email){
+		user=await findUserByEmail(credentials.email) as ICredentials;
+	}
+	else{
+		user=null;
+	}
 	if (!user) {
 		return res.status(404).json({
 			message: "User not found!",
