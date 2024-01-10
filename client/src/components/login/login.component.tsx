@@ -18,23 +18,33 @@ const Login = () => {
 
 	const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setCredentials((prevData) => ({
-			...prevData,
-			[name]: value,
-		}));
+
+		if (name === "usernameOrEmail") {
+			const isEmail = value.includes("@") && value.split("@")[1].includes(".");
+			setCredentials((prevData) => ({
+				...prevData,
+				userName: isEmail ? "" : value,
+				email: isEmail ? value : "",
+			}));
+		} else {
+			setCredentials((prevData) => ({
+				...prevData,
+				password: value,
+			}));
+		}
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (
-			credentials.userName.length === 0 ||
+			(credentials.userName.length === 0 && credentials.email.length === 0) ||
 			credentials.password.length === 0
 		) {
 			alert("Missing required fields!");
 			return;
 		}
 		await dispatch(loginThunk(credentials));
-		navigate('/');
+		navigate("/");
 	};
 
 	return (
@@ -43,9 +53,9 @@ const Login = () => {
 			<form className={loginStyles.loginForm}>
 				<input
 					type='text'
-					name='userName'
+					name='usernameOrEmail'
 					className={loginStyles.loginInput}
-					placeholder='Username'
+					placeholder='Username Or Email'
 					onChange={(e) => handleInputs(e)}
 					required
 				/>

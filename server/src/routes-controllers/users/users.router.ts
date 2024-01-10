@@ -6,14 +6,17 @@ import {
 	httpCreateNewUser,
 	httpLogin,
 	httpAuthenticate,
+	httpSignOut
 } from "./users.controller";
 
 const usersRouter = express.Router();
 
 usersRouter.get("/", httpGetAllUsers);
 usersRouter.get("/auth", verifyJWT, httpAuthenticate);
+usersRouter.get("/signout", verifyJWT,httpSignOut);
 usersRouter.get("/:userId", httpGetUserById);
 usersRouter.post("/signup", httpCreateNewUser);
 usersRouter.post("/login", httpLogin);
+
 
 export default usersRouter;

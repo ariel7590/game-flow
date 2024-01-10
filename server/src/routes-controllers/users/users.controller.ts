@@ -123,3 +123,10 @@ export const httpAuthenticate = async (req: AuthenticatedRequest, res: Response)
 		userName: user.userName,
 	});
 };
+
+export const httpSignOut:RequestHandler=(req,res)=>{
+	res.cookie('jwt', '', { expires: new Date(0), httpOnly: true });
+	return res.status(200).json({
+		auth: false
+	})
+}

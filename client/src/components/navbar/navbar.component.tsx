@@ -7,10 +7,13 @@ import { ICurrentUser } from "../../redux/users/users.types";
 
 
 
-
 const NavBar=()=>{
    
     const user=useSelector((state: RootState)=>state.users.currentUser);
+
+    const handleSignOut=()=>{
+        console.log("kaka")
+    }
 
     return (
         <div className={navbarStyle.navbarContainer}>
@@ -18,9 +21,9 @@ const NavBar=()=>{
             {
                 user.auth
                 ?
-                <div>Welcome {(user as ICurrentUser).userName}</div>     
+                <div>Welcome <span className={navbarStyle.user} onClick={handleSignOut}>{(user as ICurrentUser).userName}</span></div>     
                 :
-                <Link to="/login" className={navbarStyle.signIn}>Sign In</Link>
+                <Link to="/login" className={navbarStyle.user}>Sign In</Link>
             }
             
         </div>

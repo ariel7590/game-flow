@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpAuthenticate = exports.httpLogin = exports.httpCreateNewUser = exports.httpGetUserById = exports.httpGetAllUsers = void 0;
+exports.httpSignOut = exports.httpAuthenticate = exports.httpLogin = exports.httpCreateNewUser = exports.httpGetUserById = exports.httpGetAllUsers = void 0;
 const jwt_config_1 = require("../../jwt/jwt.config");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const users_model_1 = require("../../models/users/users.model");
@@ -62,7 +62,16 @@ const httpCreateNewUser = async (req, res) => {
 exports.httpCreateNewUser = httpCreateNewUser;
 const httpLogin = async (req, res) => {
     const credentials = req.body;
-    const user = await (0, users_model_1.isUserExists)(credentials.userName);
+    let user;
+    if (credentials.userName) {
+        user = await (0, users_model_1.isUserExists)(credentials.userName);
+    }
+    else if (credentials.email) {
+        user = await (0, users_model_1.findUserByEmail)(credentials.email);
+    }
+    else {
+        user = null;
+    }
     if (!user) {
         return res.status(404).json({
             message: "User not found!",
@@ -105,3 +114,10 @@ const httpAuthenticate = async (req, res) => {
     });
 };
 exports.httpAuthenticate = httpAuthenticate;
+const httpSignOut = (req, res) => {
+    res.cookie('jwt', '', { expires: new Date(0), httpOnly: true });
+    return res.status(200).json({
+        auth: false
+    });
+};
+exports.httpSignOut = httpSignOut;
