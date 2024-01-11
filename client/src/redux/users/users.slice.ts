@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signUpThunk, loginThunk, authenticationThunk } from "./users.thunks";
+import { signUpThunk, loginThunk, authenticationThunk, signoutThunk } from "./users.thunks";
 import { IAuthFailed, ICurrentUser, IUserState } from "./users.types";
 
 const initialState = {
@@ -66,6 +66,21 @@ const userSlice = createSlice({
 					auth: false,
 					message: action.payload
 				} as IAuthFailed;
+			})
+			.addCase(signoutThunk.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(signoutThunk.fulfilled, (state) => {
+				state.loading = false;
+				state.error = null;
+				state.currentUser = {
+					auth: false,
+					message: "No token found!",
+				} as IAuthFailed;
+			})
+			.addCase(signoutThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload as string;
 			});
 	},
 });

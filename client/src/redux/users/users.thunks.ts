@@ -69,7 +69,32 @@ export const authenticationThunk = createAsyncThunk<
 			headers: {
 				"Content-Type": "application/json",
 			},
-			withCredentials: true
+			withCredentials: true,
+		});
+
+		return thunkAPI.fulfillWithValue(response.data);
+	} catch (err) {
+		if (err instanceof AxiosError && err.response !== undefined) {
+			return thunkAPI.rejectWithValue(err.response.data.message);
+		} else {
+			throw err;
+		}
+	}
+});
+
+export const signoutThunk = createAsyncThunk<
+	unknown,
+	unknown,
+	{ rejectValue: SerializedError }
+>("users/signout", async (_, thunkAPI) => {
+	try {
+		const response = await axios({
+			method: "get",
+			url: localAPI + usersRoute + "signout",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			withCredentials: true,
 		});
 
 		return thunkAPI.fulfillWithValue(response.data);

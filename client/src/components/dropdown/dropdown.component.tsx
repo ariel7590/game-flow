@@ -1,12 +1,19 @@
-import React, { useState, useEffect, useRef, MouseEvent } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "@mui/material";
 import { IDropdownProps } from "./dropdown.types";
+import * as dropdownStyle from "./dropdown.tailwind";
 
-const Dropdown = ({ children }: IDropdownProps) => {
+const Dropdown = ({
+	children,
+	btnText,
+	btnStyle,
+	btnVariant,
+}: IDropdownProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		const handleOutsideClick = (event: MouseEvent) => {
+		const handleOutsideClick = (event: Event) => {
 			if (
 				dropdownRef.current &&
 				!dropdownRef.current.contains(event.target as Node)
@@ -15,10 +22,10 @@ const Dropdown = ({ children }: IDropdownProps) => {
 			}
 		};
 
-		document.addEventListener("mousedown", handleOutsideClick.bind);
+		document.addEventListener("mousedown", handleOutsideClick);
 
 		return () => {
-			document.removeEventListener("mousedown", handleOutsideClick.bind);
+			document.removeEventListener("mousedown", handleOutsideClick);
 		};
 	}, []);
 
@@ -28,9 +35,15 @@ const Dropdown = ({ children }: IDropdownProps) => {
 
 	return (
 		<div ref={dropdownRef}>
-			<button onClick={toggleDropdown}>Toggle Dropdown</button>
+			<Button
+				className={`${dropdownStyle.btn} ${btnStyle}`}
+				variant={btnVariant}
+				onClick={toggleDropdown}
+			>
+				{btnText}
+			</Button>
 			{isOpen && (
-				<div className='dropdown-content'>
+				<div className={dropdownStyle.openDropdown}>
 					{children}
 				</div>
 			)}
