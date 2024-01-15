@@ -31,6 +31,7 @@ export const httpCreateNewPost: RequestHandler = async (req, res) => {
 		postId,
 		publisher: post.publisher,
 		publisherId: post.publisherId,
+		gameName: post.gameName,
 		title: post.title,
 		body: post.body,
 		media: post.media,

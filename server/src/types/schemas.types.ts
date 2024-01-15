@@ -12,6 +12,7 @@ export interface IPostSchema extends Document {
 	postId: string;
 	publisher: string;
 	publisherId: number;
+	gameName: string;
 	title: string;
 	body: string;
 	media: string[];

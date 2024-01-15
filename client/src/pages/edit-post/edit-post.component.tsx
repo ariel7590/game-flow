@@ -7,6 +7,7 @@ import PostForm from "../../components/post-form/post-form.component";
 
 const EditPost = () => {
 	const [formData, setFormData] = useState({
+		gameName: "",
 		title: "",
 		body: "",
 	});
@@ -17,6 +18,7 @@ const EditPost = () => {
 	useEffect(() => {
 		if (post) {
 			setFormData({
+				gameName: post.gameName,
 				title: post.title,
 				body: post.body,
 			});
@@ -52,6 +54,8 @@ const EditPost = () => {
 		<PostForm
 			handleSubmit={handleSubmit}
 			handleChange={handleChange}
+			editPost={true}
+			gameName={formData.gameName}
 			titleValue={formData.title}
 			bodyValue={formData.body}
 		/>

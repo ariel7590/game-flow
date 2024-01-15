@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import PostForm from "../../components/post-form/post-form.component";
 
 const NewPost = () => {
-	const [formData, setFormData] = useState({ title: "", body: "", media: "" });
+	const [formData, setFormData] = useState({ gameName: "", title: "", body: "", media: "" });
 	const user = useSelector(
 		(state: RootState) => state.users.currentUser as ICurrentUser
 	);
@@ -38,7 +38,7 @@ const NewPost = () => {
 		await dispatch(createPostThunk(post));
 	};
 
-	return <PostForm handleSubmit={handleSubmit} handleChange={handleChange} />;
+	return <PostForm editPost={false} handleSubmit={handleSubmit} handleChange={handleChange} />;
 };
 
 export default NewPost;

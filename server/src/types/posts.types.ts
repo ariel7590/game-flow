@@ -1,6 +1,7 @@
 export interface IReceivedPostContent {
 	publisher: string;
 	publisherId: number;
+	gameName: string;
 	title: string;
 	body: string;
 	media: string[];

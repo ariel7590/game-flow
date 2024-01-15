@@ -9,6 +9,7 @@ export interface ICurrentPost {
 	postId: string;
 	publisher: string;
 	publisherId: number;
+	gameName: string;
 	title: string;
 	body: string;
 	media: string;

@@ -27,7 +27,7 @@ const Post = () => {
 
 	return (
 		<div className={postStyle.postContainer}>
-			<h2>{post!.title}</h2>
+			<h2>{post!.gameName}| {post!.title}</h2>
 			<br />
 			<p>{post!.body}</p>
 			<br />

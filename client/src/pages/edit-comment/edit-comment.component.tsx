@@ -43,6 +43,7 @@ const EditComment = () => {
 	};
 	return (
 		<CommentForm
+			isEdit={true}
 			handleChange={(event) => handleChange(event)}
 			handleSubmit={(event) => handleSubmit(event)}
 			text={content}

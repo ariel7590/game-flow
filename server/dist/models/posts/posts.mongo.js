@@ -18,6 +18,10 @@ const postsSchema = new mongoose_1.default.Schema({
         type: Number,
         required: true,
     },
+    gameName: {
+        type: String,
+        required: true,
+    },
     title: {
         type: String,
         required: true,

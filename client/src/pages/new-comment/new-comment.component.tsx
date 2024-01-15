@@ -36,6 +36,7 @@ const NewComment = () => {
 
 	return (
 		<CommentForm
+			isEdit={false}
 			handleSubmit={(e) => handleSubmit(e)}
 			handleChange={(e) => handleChange(e)}
 		/>
