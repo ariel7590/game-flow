@@ -1,10 +1,13 @@
-import React from "react";
-import Button from '@mui/material/Button';
+import React, { useEffect } from "react";
+import Button from "@mui/material/Button";
 import { useSelector, useDispatch } from "react-redux";
-import { deletePostThunk } from "../../redux/posts/posts.thunks";
+import {
+	deletePostThunk,
+	getCurrentPost,
+} from "../../redux/posts/posts.thunks";
 import * as postStyle from "./post.tailwind";
 import { AppDispatch, RootState } from "../../redux/store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ICurrentUser } from "../../redux/users/users.types";
 import AlertDialog from "../mui/alert-dialog.component";
 
@@ -15,6 +18,14 @@ const Post = () => {
 	).userId;
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
+	const location = useLocation();
+
+	// In case I refresh the post page and it can't take the current post from the state anymore
+	useEffect(() => {
+		if (!post) {
+			dispatch(getCurrentPost(location.pathname.split("/").splice(-1)[0]));
+		}
+	}, []);
 
 	const handleDelete = async () => {
 		await dispatch(deletePostThunk(post!.postId));
@@ -22,14 +33,16 @@ const Post = () => {
 	};
 
 	const handleEdit = () => {
-		navigate(`/forum/post/edit-post/${post?.postId}`);
+		navigate(`/forum/post/edit-post/${post!.postId}`);
 	};
 
 	return (
 		<div className={postStyle.postContainer}>
-			<h2>{post!.gameName}| {post!.title}</h2>
+			<h2>
+				{post?.gameName}| {post?.title}
+			</h2>
 			<br />
-			<p>{post!.body}</p>
+			<p>{post?.body}</p>
 			<br />
 			<div className={postStyle.optionsAndDetailes}>
 				{post?.publisherId === userId ? (
@@ -39,7 +52,9 @@ const Post = () => {
 							title='Delete a post'
 							content='Are you sure you want to delete your post?'
 							onAgree={handleDelete}
-						> Delete </AlertDialog>
+						>
+							Delete
+						</AlertDialog>
 						&nbsp;
 						<Button
 							variant='text'
@@ -50,7 +65,7 @@ const Post = () => {
 						</Button>
 					</div>
 				) : null}
-				<span className={postStyle.publisher}>by: {post!.publisher}</span>
+				<span className={postStyle.publisher}>by: {post?.publisher}</span>
 			</div>
 		</div>
 	);

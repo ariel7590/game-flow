@@ -14,6 +14,18 @@ export const httpGetAllPosts: RequestHandler = async (req, res) => {
 	return res.status(200).json(posts);
 };
 
+export const httpGetPostById: RequestHandler = async (req, res) => {
+	const postId = req.params.postId;
+	const post = await isPostExists(postId);
+	if (post) {
+		return res.status(200).json(post);
+	} else {
+		return res.status(404).json({
+			error: "Post not found!",
+		});
+	}
+};
+
 export const httpCreateNewPost: RequestHandler = async (req, res) => {
 	const post = req.body as IReceivedPostContent;
 	if (!post) {

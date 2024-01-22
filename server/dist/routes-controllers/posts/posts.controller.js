@@ -1,12 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpEditPost = exports.httpDeletePost = exports.httpCreateNewPost = exports.httpGetAllPosts = void 0;
+exports.httpEditPost = exports.httpDeletePost = exports.httpCreateNewPost = exports.httpGetPostById = exports.httpGetAllPosts = void 0;
 const posts_model_1 = require("../../models/posts/posts.model");
 const httpGetAllPosts = async (req, res) => {
     const posts = await (0, posts_model_1.getAllPosts)();
     return res.status(200).json(posts);
 };
 exports.httpGetAllPosts = httpGetAllPosts;
+const httpGetPostById = async (req, res) => {
+    const postId = req.params.postId;
+    const post = await (0, posts_model_1.isPostExists)(postId);
+    if (post) {
+        return res.status(200).json(post);
+    }
+    else {
+        return res.status(404).json({
+            error: "Post not found!",
+        });
+    }
+};
+exports.httpGetPostById = httpGetPostById;
 const httpCreateNewPost = async (req, res) => {
     const post = req.body;
     if (!post) {

@@ -15,7 +15,6 @@ export const getAllPostsThunk = createAsyncThunk<
 			headers: {
 				"Content-Type": "application/json",
 			},
-			withCredentials: true,
 		});
 
 		return thunkAPI.fulfillWithValue(response.data);
@@ -96,6 +95,31 @@ export const editPostThunk = createAsyncThunk<
 			},
 			withCredentials: true,
 			data: post,
+		});
+
+		return thunkAPI.fulfillWithValue(response.data);
+	} catch (err) {
+		if (err instanceof AxiosError && err.response !== undefined) {
+			alert(err.response.data.error);
+			return thunkAPI.rejectWithValue(err.response.data.error);
+		} else {
+			throw err;
+		}
+	}
+});
+
+export const getCurrentPost = createAsyncThunk<
+	unknown,
+	string,
+	{ rejectValue: SerializedError }
+>("posts/getCurrentPost", async (postId: string, thunkAPI) => {
+	try {
+		const response = await axios({
+			method: "get",
+			url: localAPI + postsRoute + postId,
+			headers: {
+				"Content-Type": "application/json",
+			},
 		});
 
 		return thunkAPI.fulfillWithValue(response.data);

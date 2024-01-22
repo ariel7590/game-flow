@@ -4,6 +4,7 @@ import {
 	createPostThunk,
 	deletePostThunk,
 	editPostThunk,
+	getCurrentPost
 } from "./posts.thunks";
 import { IPostState, ICurrentPost } from "./posts.types";
 import { editCommentThunk } from "../comments/comments.thunks";
@@ -85,7 +86,21 @@ const postSlice = createSlice({
 			.addCase(editPostThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
-			});
+			})
+			// in case I refresh the post page (it can't get the currentPost state after a refresh)
+			.addCase(getCurrentPost.pending,(state)=>{
+				state.loading=true;
+			})
+			.addCase(getCurrentPost.fulfilled,(state, action)=>{
+				state.loading=false;
+				state.currentPost=action.payload as ICurrentPost;
+				state.error=null;
+			})
+			.addCase(getCurrentPost.rejected,(state, action)=>{
+				state.loading=false;
+				state.currentPost=null;
+				state.error=action.payload as string;
+			})
 	},
 });
 
