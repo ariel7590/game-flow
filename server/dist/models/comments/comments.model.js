@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.editComment = exports.deleteComment = exports.createNewComment = exports.findCommentWithCommentId = exports.findCommentsWithPostId = void 0;
 const comments_mongo_1 = require("./comments.mongo");
-const utils_1 = require("../../utils");
+const random_string_1 = require("../../utils/random-string");
 async function saveToDB(comment) {
     try {
         return await comments_mongo_1.commentModel.findOneAndUpdate({
@@ -40,7 +40,7 @@ async function findCommentWithCommentId(commentId) {
 }
 exports.findCommentWithCommentId = findCommentWithCommentId;
 async function createNewComment(comment) {
-    const commentId = (0, utils_1.generateRandomStringId)(10);
+    const commentId = (0, random_string_1.generateRandomStringId)(10);
     const newComment = {
         commentId,
         ...comment,

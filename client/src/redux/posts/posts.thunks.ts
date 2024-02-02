@@ -1,17 +1,18 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
-import { ICurrentPost, IPostForEditing, NewPost } from "./posts.types";
+import { IPostForEditing, NewPost } from "./posts.types";
 import { localAPI, postsRoute } from "../routeUrls";
 
-export const getAllPostsThunk = createAsyncThunk<
+export const getPeginatedPostsThunk = createAsyncThunk<
 	unknown,
-	ICurrentPost[],
+	number,
 	{ rejectValue: SerializedError }
->("posts/getAllPosts", async (_, thunkAPI) => {
+>("posts/getAllPosts", async (page, thunkAPI) => {
 	try {
 		const response = await axios({
 			method: "get",
 			url: localAPI + postsRoute,
+			params: {page: page},
 			headers: {
 				"Content-Type": "application/json",
 			},

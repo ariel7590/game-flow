@@ -1,12 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpEditPost = exports.httpDeletePost = exports.httpCreateNewPost = exports.httpGetPostById = exports.httpGetAllPosts = void 0;
+exports.httpEditPost = exports.httpDeletePost = exports.httpCreateNewPost = exports.httpGetPostById = exports.httpGetPaginatedPosts = exports.httpGetAllPosts = void 0;
 const posts_model_1 = require("../../models/posts/posts.model");
+const pagination_1 = require("../../utils/pagination");
 const httpGetAllPosts = async (req, res) => {
     const posts = await (0, posts_model_1.getAllPosts)();
     return res.status(200).json(posts);
 };
 exports.httpGetAllPosts = httpGetAllPosts;
+const httpGetPaginatedPosts = async (req, res) => {
+    const page = req.query.page;
+    console.log(page);
+    const paginationData = (0, pagination_1.paginate)(+page);
+    const posts = await (0, posts_model_1.getPaginatedPosts)(paginationData);
+    return res.status(200).json(posts);
+};
+exports.httpGetPaginatedPosts = httpGetPaginatedPosts;
 const httpGetPostById = async (req, res) => {
     const postId = req.params.postId;
     const post = await (0, posts_model_1.isPostExists)(postId);

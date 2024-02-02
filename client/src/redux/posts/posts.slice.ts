@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-	getAllPostsThunk,
+	getPeginatedPostsThunk,
 	createPostThunk,
 	deletePostThunk,
 	editPostThunk,
@@ -29,15 +29,15 @@ const postSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(getAllPostsThunk.pending, (state) => {
+			.addCase(getPeginatedPostsThunk.pending, (state) => {
 				state.loading = true;
 			})
-			.addCase(getAllPostsThunk.fulfilled, (state, action) => {
+			.addCase(getPeginatedPostsThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.error = null;
 				state.currentPostList = action.payload as ICurrentPost[];
 			})
-			.addCase(getAllPostsThunk.rejected, (state, action) => {
+			.addCase(getPeginatedPostsThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
 				state.currentPostList = null;

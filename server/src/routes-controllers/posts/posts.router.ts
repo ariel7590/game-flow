@@ -5,12 +5,14 @@ import {
 	httpCreateNewPost,
 	httpDeletePost,
 	httpEditPost,
-	httpGetPostById
+	httpGetPostById,
+	httpGetPaginatedPosts
 } from "./posts.controller";
 
 const postsRouter = express.Router();
 
-postsRouter.get("/", httpGetAllPosts);
+// postsRouter.get("/", httpGetAllPosts); //for testing only, I can remove it later
+postsRouter.get("/", httpGetPaginatedPosts);
 postsRouter.post("/", verifyJWT, httpCreateNewPost);
 postsRouter.get("/:postId", httpGetPostById);
 postsRouter.delete("/:postId", verifyJWT, httpDeletePost);

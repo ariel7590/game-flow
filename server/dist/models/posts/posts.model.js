@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePost = exports.editPost = exports.createNewPost = exports.getAllPosts = exports.isPostExists = void 0;
+exports.deletePost = exports.editPost = exports.createNewPost = exports.getPaginatedPosts = exports.getAllPosts = exports.isPostExists = void 0;
 const posts_mongo_1 = require("./posts.mongo");
-const utils_1 = require("../../utils");
+const random_string_1 = require("../../utils/random-string");
 async function savePost(post) {
     try {
         await posts_mongo_1.postModel.findOneAndUpdate({
@@ -39,8 +39,22 @@ async function getAllPosts() {
     }
 }
 exports.getAllPosts = getAllPosts;
+async function getPaginatedPosts(paginatedData) {
+    try {
+        return await posts_mongo_1.postModel
+            .find({
+            deleted: false,
+        }, { _id: 0, __v: 0, deleted: 0 })
+            .skip(paginatedData.skip)
+            .limit(paginatedData.perPage);
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+exports.getPaginatedPosts = getPaginatedPosts;
 async function createNewPost(post) {
-    const newPostId = (0, utils_1.generateRandomStringId)(10);
+    const newPostId = (0, random_string_1.generateRandomStringId)(10);
     const newPost = { postId: newPostId, deleted: false, ...post };
     await savePost(newPost);
     return newPostId;

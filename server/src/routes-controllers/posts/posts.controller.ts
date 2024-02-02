@@ -5,14 +5,24 @@ import {
 	deletePost,
 	isPostExists,
 	editPost,
+	getPaginatedPosts
 } from "../../models/posts/posts.model";
 import { IPostForEditing, IReceivedPostContent } from "../../types/posts.types";
 import { AuthenticatedRequest } from "../../types/jwt.types";
+import { paginate } from "../../utils/pagination";
 
-export const httpGetAllPosts: RequestHandler = async (req, res) => {
+export const httpGetAllPosts: RequestHandler = async (req, res) => { //for testing only, I can remove it later
 	const posts = await getAllPosts();
 	return res.status(200).json(posts);
 };
+
+export const httpGetPaginatedPosts: RequestHandler=async (req, res) => {
+	const page=req.query.page as string;
+	console.log(page)
+	const paginationData=paginate(+page);
+	const posts = await getPaginatedPosts(paginationData);
+	return res.status(200).json(posts);
+}
 
 export const httpGetPostById: RequestHandler = async (req, res) => {
 	const postId = req.params.postId;

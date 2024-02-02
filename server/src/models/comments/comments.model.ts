@@ -1,5 +1,5 @@
 import { commentModel as commentDB } from "./comments.mongo";
-import { generateRandomStringId } from "../../utils";
+import { generateRandomStringId } from "../../utils/random-string";
 import { ICommentInput, IComment } from "../../types/comments.types";
 
 async function saveToDB(comment: IComment) {
