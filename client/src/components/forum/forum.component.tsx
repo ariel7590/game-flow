@@ -28,7 +28,6 @@ const Forum = () => {
 			if (currentPost) {
 				dispatch(exitPost());
 			}
-			console.log(params);
 		}
 
 		initPostsState();

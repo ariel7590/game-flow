@@ -26,3 +26,8 @@ export interface ICommentForEditing {
 	publisherId: number;
 	editorId: number;
 }
+
+export interface ICommentsPage {
+	postId: string;
+	page: number;
+}

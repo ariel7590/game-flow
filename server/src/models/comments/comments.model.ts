@@ -29,6 +29,26 @@ export async function findCommentsWithPostId(postId: string) {
 	}
 }
 
+export async function getPaginatedComments(	postId: string, paginatedData: {
+	skip: number;
+	perPage: number;
+}) {
+	try {
+		return await commentDB
+			.find(
+				{
+					postId: postId, 
+					deleted: false
+				},
+				{ _id: 0, __v: 0, deleted: 0 }
+			)
+			.skip(paginatedData.skip)
+			.limit(paginatedData.perPage);
+	} catch (err) {
+		console.error(err);
+	}
+}
+
 export async function findCommentWithCommentId(commentId: string) {
 	try {
 		return await commentDB.findOne(

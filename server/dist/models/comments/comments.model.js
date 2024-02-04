@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editComment = exports.deleteComment = exports.createNewComment = exports.findCommentWithCommentId = exports.findCommentsWithPostId = void 0;
+exports.editComment = exports.deleteComment = exports.createNewComment = exports.findCommentWithCommentId = exports.getPaginatedComments = exports.findCommentsWithPostId = void 0;
 const comments_mongo_1 = require("./comments.mongo");
 const random_string_1 = require("../../utils/random-string");
 async function saveToDB(comment) {
@@ -24,6 +24,21 @@ async function findCommentsWithPostId(postId) {
     }
 }
 exports.findCommentsWithPostId = findCommentsWithPostId;
+async function getPaginatedComments(postId, paginatedData) {
+    try {
+        return await comments_mongo_1.commentModel
+            .find({
+            postId: postId,
+            deleted: false
+        }, { _id: 0, __v: 0, deleted: 0 })
+            .skip(paginatedData.skip)
+            .limit(paginatedData.perPage);
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+exports.getPaginatedComments = getPaginatedComments;
 async function findCommentWithCommentId(commentId) {
     try {
         return await comments_mongo_1.commentModel.findOne({

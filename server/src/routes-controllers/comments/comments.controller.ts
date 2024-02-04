@@ -10,9 +10,11 @@ import {
 	deleteComment,
 	editComment,
 	findCommentWithCommentId,
+	getPaginatedComments,
 } from "../../models/comments/comments.model";
 import { isPostExists } from "../../models/posts/posts.model";
 import { AuthenticatedRequest } from "../../types/jwt.types";
+import { paginate } from "../../utils/pagination";
 
 export const httpCreateNewComment: RequestHandler = async (req, res) => {
 	const commentInput = req.body as ICommentInput;
@@ -61,6 +63,25 @@ export const httpFindCommentsWithPostId: RequestHandler = async (req, res) => {
 	}
 	return res.status(200).json(comments);
 };
+
+export const httpGetPaginatedComments: RequestHandler=async (req, res) => {
+	const page=req.query.page as string;
+	const postId = req.params.postId as string;
+	if (!postId || postId === "") {
+		return res.status(404).json({
+			error: "Post ID is not found!",
+		});
+	}
+	const perPage=5;
+	const paginationData=paginate(+page, perPage);
+	const comments = await getPaginatedComments(postId, paginationData);
+	if (!comments) {
+		return res.status(404).json({
+			error: "Failed at getting comments for this postId!",
+		});
+	}
+	return res.status(200).json(comments);
+}
 
 export const httpDeleteComment = async (
 	req: AuthenticatedRequest,

@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpEditComment = exports.httpDeleteComment = exports.httpFindCommentsWithPostId = exports.httpCreateNewComment = void 0;
+exports.httpEditComment = exports.httpDeleteComment = exports.httpGetPaginatedComments = exports.httpFindCommentsWithPostId = exports.httpCreateNewComment = void 0;
 const comments_model_1 = require("../../models/comments/comments.model");
 const posts_model_1 = require("../../models/posts/posts.model");
+const pagination_1 = require("../../utils/pagination");
 const httpCreateNewComment = async (req, res) => {
     const commentInput = req.body;
     if (!commentInput) {
@@ -49,6 +50,25 @@ const httpFindCommentsWithPostId = async (req, res) => {
     return res.status(200).json(comments);
 };
 exports.httpFindCommentsWithPostId = httpFindCommentsWithPostId;
+const httpGetPaginatedComments = async (req, res) => {
+    const page = req.query.page;
+    const postId = req.params.postId;
+    if (!postId || postId === "") {
+        return res.status(404).json({
+            error: "Post ID is not found!",
+        });
+    }
+    const perPage = 5;
+    const paginationData = (0, pagination_1.paginate)(+page, perPage);
+    const comments = await (0, comments_model_1.getPaginatedComments)(postId, paginationData);
+    if (!comments) {
+        return res.status(404).json({
+            error: "Failed at getting comments for this postId!",
+        });
+    }
+    return res.status(200).json(comments);
+};
+exports.httpGetPaginatedComments = httpGetPaginatedComments;
 const httpDeleteComment = async (req, res) => {
     const commentId = req.params.commentId;
     if (!commentId || commentId === "") {
