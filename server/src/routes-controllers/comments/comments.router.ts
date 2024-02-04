@@ -5,7 +5,8 @@ import {
 	httpDeleteComment,
 	httpEditComment,
 	httpFindCommentsWithPostId,
-	httpGetPaginatedComments
+	httpGetPaginatedComments,
+	httpRankComment
 } from "./comments.controller";
 
 const commentsRouter = express.Router();
@@ -15,5 +16,6 @@ commentsRouter.get("/:postId", httpGetPaginatedComments);
 commentsRouter.post("/", verifyJWT, httpCreateNewComment);
 commentsRouter.delete("/:commentId", verifyJWT, httpDeleteComment);
 commentsRouter.put("/", verifyJWT, httpEditComment);
+commentsRouter.put("/rank",verifyJWT, httpRankComment)
 
 export default commentsRouter;

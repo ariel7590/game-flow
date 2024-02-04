@@ -4,6 +4,7 @@ import {
 	createNewCommentThunk,
 	deleteCommentThunk,
 	editCommentThunk,
+	rankCommentThunk,
 } from "./comments.thunks";
 import { ICommentsState, IComment } from "./comments.types";
 
@@ -79,6 +80,20 @@ const commentsSlice = createSlice({
 					action.payload as IComment;
 			})
 			.addCase(editCommentThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload as string;
+			})
+			.addCase(rankCommentThunk.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(rankCommentThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.error = null;
+				console.log(action.payload);
+				state.currentComment =
+					action.payload as IComment;
+			})
+			.addCase(rankCommentThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
 			});

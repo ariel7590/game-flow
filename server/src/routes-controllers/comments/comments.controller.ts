@@ -3,6 +3,7 @@ import {
 	IComment,
 	ICommentForEditing,
 	ICommentInput,
+	IRankComment,
 } from "../../types/comments.types";
 import {
 	createNewComment,
@@ -11,6 +12,7 @@ import {
 	editComment,
 	findCommentWithCommentId,
 	getPaginatedComments,
+	rankComment,
 } from "../../models/comments/comments.model";
 import { isPostExists } from "../../models/posts/posts.model";
 import { AuthenticatedRequest } from "../../types/jwt.types";
@@ -64,16 +66,16 @@ export const httpFindCommentsWithPostId: RequestHandler = async (req, res) => {
 	return res.status(200).json(comments);
 };
 
-export const httpGetPaginatedComments: RequestHandler=async (req, res) => {
-	const page=req.query.page as string;
+export const httpGetPaginatedComments: RequestHandler = async (req, res) => {
+	const page = req.query.page as string;
 	const postId = req.params.postId as string;
 	if (!postId || postId === "") {
 		return res.status(404).json({
 			error: "Post ID is not found!",
 		});
 	}
-	const perPage=5;
-	const paginationData=paginate(+page, perPage);
+	const perPage = 5;
+	const paginationData = paginate(+page, perPage);
 	const comments = await getPaginatedComments(postId, paginationData);
 	if (!comments) {
 		return res.status(404).json({
@@ -81,7 +83,7 @@ export const httpGetPaginatedComments: RequestHandler=async (req, res) => {
 		});
 	}
 	return res.status(200).json(comments);
-}
+};
 
 export const httpDeleteComment = async (
 	req: AuthenticatedRequest,
@@ -120,7 +122,10 @@ export const httpDeleteComment = async (
 	});
 };
 
-export const httpEditComment = async (req:AuthenticatedRequest, res: Response) => {
+export const httpEditComment = async (
+	req: AuthenticatedRequest,
+	res: Response
+) => {
 	const comment = req.body as ICommentForEditing;
 	const { commentId, newContent, publisherId, editorId } = comment;
 	const userId = req.userId as number;
@@ -150,4 +155,38 @@ export const httpEditComment = async (req:AuthenticatedRequest, res: Response) =
 		commentId,
 		newContent,
 	});
+};
+
+export const httpRankComment = async (
+	req: AuthenticatedRequest,
+	res: Response
+) => {
+	const rankData = req.body as IRankComment;
+	const { commentId, newRank, rankerId } = rankData;
+	const userId = req.userId as number;
+	if (!userId) {
+		return res.status(400).json({
+			auth: false,
+			message: "Invalid user id",
+		});
+	}
+	if (!rankData || commentId === "" || typeof(newRank)!=='number' || !rankerId) {
+		return res.status(404).json({
+			error: "Missing required fields!",
+		});
+	}
+	const comment = await findCommentWithCommentId(commentId);
+	if (comment && comment.whoRanked.includes(rankerId)) {
+		return res.status(401).json({
+			error:
+				"You already ranked this comment and you're not unathorized to rank this comment again!",
+		});
+	}
+	const rankedComment = await rankComment(commentId, newRank, rankerId);
+	if (!rankedComment) {
+		return res.status(500).json({
+			error: "Couldn't rank comment",
+		});
+	}
+	return res.status(200).json(rankedComment);
 };

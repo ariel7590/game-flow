@@ -31,3 +31,10 @@ export interface ICommentsPage {
 	postId: string;
 	page: number;
 }
+
+export interface IRankComment {
+	commentId: string;
+	newRank: number;
+	rankerId: number;
+}
+

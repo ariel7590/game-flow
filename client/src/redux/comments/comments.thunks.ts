@@ -1,6 +1,6 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
-import { ICommentForEditing, ICommentInput, ICommentsPage } from "./comments.types";
+import { ICommentForEditing, ICommentInput, ICommentsPage, IRankComment } from "./comments.types";
 import { localAPI, commentsRoute } from "../routeUrls";
 
 
@@ -96,6 +96,32 @@ export const editCommentThunk = createAsyncThunk<
 			},
 			withCredentials: true,
             data: JSON.stringify(editableComment)
+		});
+		return thunkAPI.fulfillWithValue(response.data);
+
+	} catch (err) {
+		if (err instanceof AxiosError && err.response !== undefined) {
+			return thunkAPI.rejectWithValue(err.response.data.error);
+		} else {
+			throw err;
+		}
+	}
+});
+
+export const rankCommentThunk = createAsyncThunk<
+	unknown,
+	IRankComment,
+	{ rejectValue: SerializedError }
+>("comments/rankComment", async (rankComment, thunkAPI) => {
+	try {
+		const response = await axios({
+			method: "put",
+			url: localAPI + commentsRoute + "rank",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			withCredentials: true,
+            data: JSON.stringify(rankComment)
 		});
 		return thunkAPI.fulfillWithValue(response.data);
 

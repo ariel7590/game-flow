@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpEditComment = exports.httpDeleteComment = exports.httpGetPaginatedComments = exports.httpFindCommentsWithPostId = exports.httpCreateNewComment = void 0;
+exports.httpRankComment = exports.httpEditComment = exports.httpDeleteComment = exports.httpGetPaginatedComments = exports.httpFindCommentsWithPostId = exports.httpCreateNewComment = void 0;
 const comments_model_1 = require("../../models/comments/comments.model");
 const posts_model_1 = require("../../models/posts/posts.model");
 const pagination_1 = require("../../utils/pagination");
@@ -135,3 +135,33 @@ const httpEditComment = async (req, res) => {
     });
 };
 exports.httpEditComment = httpEditComment;
+const httpRankComment = async (req, res) => {
+    const rankData = req.body;
+    const { commentId, newRank, rankerId } = rankData;
+    const userId = req.userId;
+    if (!userId) {
+        return res.status(400).json({
+            auth: false,
+            message: "Invalid user id",
+        });
+    }
+    if (!rankData || commentId === "" || typeof (newRank) !== 'number' || !rankerId) {
+        return res.status(404).json({
+            error: "Missing required fields!",
+        });
+    }
+    const comment = await (0, comments_model_1.findCommentWithCommentId)(commentId);
+    if (comment && comment.whoRanked.includes(rankerId)) {
+        return res.status(401).json({
+            error: "You already ranked this comment and you're not unathorized to rank this comment again!",
+        });
+    }
+    const rankedComment = await (0, comments_model_1.rankComment)(commentId, newRank, rankerId);
+    if (!rankedComment) {
+        return res.status(500).json({
+            error: "Couldn't rank comment",
+        });
+    }
+    return res.status(200).json(rankedComment);
+};
+exports.httpRankComment = httpRankComment;

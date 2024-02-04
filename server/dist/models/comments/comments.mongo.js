@@ -30,6 +30,10 @@ const commentSchema = new mongoose_1.default.Schema({
         type: Number,
         required: true,
     },
+    whoRanked: {
+        type: [Number],
+        required: true,
+    },
     deleted: {
         type: Boolean,
         required: true,

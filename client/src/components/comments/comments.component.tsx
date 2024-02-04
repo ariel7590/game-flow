@@ -7,7 +7,10 @@ import {
 	createSearchParams,
 } from "react-router-dom";
 import * as commentsStyle from "./comments.tailwind";
-import { getRelevantCommentsThunk } from "../../redux/comments/comments.thunks";
+import {
+	getRelevantCommentsThunk,
+	rankCommentThunk,
+} from "../../redux/comments/comments.thunks";
 import { AppDispatch, RootState } from "../../redux/store";
 import { deleteCommentThunk } from "../../redux/comments/comments.thunks";
 import { enterEditComment } from "../../redux/comments/comments.slice";
@@ -77,19 +80,44 @@ const Comments = () => {
 		});
 	};
 
+	const handleRank = (
+		event: MouseEvent<HTMLDivElement>,
+		commentId: string,
+		rank: number
+	) => {
+		if (event.currentTarget.id === "voteUp") {
+			dispatch(
+				rankCommentThunk({ commentId, newRank: rank + 1, rankerId: userId })
+			);
+		}
+		if (event.currentTarget.id === "voteDown") {
+			dispatch(
+				rankCommentThunk({ commentId, newRank: rank - 1, rankerId: userId })
+			);
+		}
+	};
+
 	return (
 		<div className='w-[50%] flex flex-col items-center'>
 			{comments &&
 				comments.map((comment) => (
 					<div key={comment.commentId} className={commentsStyle.container}>
 						<div className='flex flex-col justify-center'>
-							<div className={commentsStyle.voteUp} />
+							<div
+								id='voteUp'
+								className={commentsStyle.voteUp}
+								onClick={(e) => handleRank(e, comment.commentId, comment.rank)}
+							/>
 							<div className={commentsStyle.rank}>{comment.rank}</div>
-							<div className={commentsStyle.votedown} />
+							<div
+								id='voteDown'
+								className={commentsStyle.votedown}
+								onClick={(e) => handleRank(e, comment.commentId, comment.rank)}
+							/>
 						</div>
 						<div className={commentsStyle.content}>
 							<div className={commentsStyle.body}>{comment.body}</div>
-							<div className="flex justify-between pl-[10px]">
+							<div className='flex justify-between pl-[10px]'>
 								{comment.publisherId === userId ? (
 									<div>
 										<AlertDialog

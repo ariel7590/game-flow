@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editComment = exports.deleteComment = exports.createNewComment = exports.findCommentWithCommentId = exports.getPaginatedComments = exports.findCommentsWithPostId = void 0;
+exports.rankComment = exports.editComment = exports.deleteComment = exports.createNewComment = exports.findCommentWithCommentId = exports.getPaginatedComments = exports.findCommentsWithPostId = void 0;
 const comments_mongo_1 = require("./comments.mongo");
 const random_string_1 = require("../../utils/random-string");
 async function saveToDB(comment) {
@@ -99,3 +99,21 @@ async function editComment(commentId, newContent) {
     }
 }
 exports.editComment = editComment;
+async function rankComment(commentId, newRank, rankerId) {
+    try {
+        const ranked = await comments_mongo_1.commentModel.updateOne({
+            commentId: commentId,
+            deleted: false,
+        }, {
+            rank: newRank,
+            $push: { whoRanked: rankerId }
+        });
+        if (ranked.acknowledged && ranked.matchedCount > 0) {
+            return await findCommentWithCommentId(commentId);
+        }
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+exports.rankComment = rankComment;

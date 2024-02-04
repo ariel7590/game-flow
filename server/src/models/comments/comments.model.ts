@@ -114,3 +114,23 @@ export async function editComment(commentId: string, newContent: string) {
 		console.error(err);
 	}
 }
+
+export async function rankComment(commentId: string, newRank: number, rankerId: number) {
+	try {
+		const ranked = await commentDB.updateOne(
+			{
+				commentId: commentId,
+				deleted: false,
+			},
+			{
+				rank: newRank,
+				$push: { whoRanked: rankerId }
+			}
+		);
+		if(ranked.acknowledged && ranked.matchedCount > 0){
+			return await findCommentWithCommentId(commentId);
+		}
+	} catch (err) {
+		console.error(err);
+	}
+}
