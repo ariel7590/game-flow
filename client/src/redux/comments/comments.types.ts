@@ -11,6 +11,7 @@ export interface IComment {
 	publisher: string;
 	publisherId: number;
 	rank: number;
+	whoRanked: number[];
 }
 
 export interface ICommentInput {

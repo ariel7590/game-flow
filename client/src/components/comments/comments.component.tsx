@@ -82,17 +82,16 @@ const Comments = () => {
 
 	const handleRank = (
 		event: MouseEvent<HTMLDivElement>,
-		commentId: string,
-		rank: number
+		comment: IComment
 	) => {
 		if (event.currentTarget.id === "voteUp") {
 			dispatch(
-				rankCommentThunk({ commentId, newRank: rank + 1, rankerId: userId })
+				rankCommentThunk({ commentId: comment.commentId, newRank: comment.rank + 1, rankerId: userId })
 			);
 		}
 		if (event.currentTarget.id === "voteDown") {
 			dispatch(
-				rankCommentThunk({ commentId, newRank: rank - 1, rankerId: userId })
+				rankCommentThunk({ commentId: comment.commentId, newRank: comment.rank - 1, rankerId: userId })
 			);
 		}
 	};
@@ -105,14 +104,14 @@ const Comments = () => {
 						<div className='flex flex-col justify-center'>
 							<div
 								id='voteUp'
-								className={commentsStyle.voteUp}
-								onClick={(e) => handleRank(e, comment.commentId, comment.rank)}
+								className={`${commentsStyle.voteUp} ${comment && comment.whoRanked && comment.whoRanked.includes(userId) ? commentsStyle.votedUp : null}`}
+								onClick={(e) => handleRank(e, comment)}
 							/>
 							<div className={commentsStyle.rank}>{comment.rank}</div>
 							<div
 								id='voteDown'
-								className={commentsStyle.votedown}
-								onClick={(e) => handleRank(e, comment.commentId, comment.rank)}
+								className={`${commentsStyle.votedown} ${comment && comment.whoRanked && comment.whoRanked.includes(userId) ? commentsStyle.votedDown : null}`}
+								onClick={(e) => handleRank(e, comment)}
 							/>
 						</div>
 						<div className={commentsStyle.content}>

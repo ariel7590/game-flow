@@ -24,7 +24,7 @@ const commentsSlice = createSlice({
 		},
 		exitEditComment: (state) => {
 			state.currentComment = null;
-		}
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -63,8 +63,7 @@ const commentsSlice = createSlice({
 			.addCase(deleteCommentThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.error = null;
-				state.currentCommentsList =
-					action.payload as IComment[]
+				state.currentCommentsList = action.payload as IComment[];
 			})
 			.addCase(deleteCommentThunk.rejected, (state, action) => {
 				state.loading = false;
@@ -76,8 +75,7 @@ const commentsSlice = createSlice({
 			.addCase(editCommentThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.error = null;
-				state.currentComment =
-					action.payload as IComment;
+				state.currentComment = action.payload as IComment;
 			})
 			.addCase(editCommentThunk.rejected, (state, action) => {
 				state.loading = false;
@@ -89,9 +87,16 @@ const commentsSlice = createSlice({
 			.addCase(rankCommentThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.error = null;
-				console.log(action.payload);
-				state.currentComment =
-					action.payload as IComment;
+				state.currentComment = action.payload as IComment;
+				const oldComment = state.currentCommentsList?.filter(
+					(comment) =>
+						comment.commentId === (action.payload as IComment).commentId
+				);
+				state.currentCommentsList?.splice(
+					state.currentCommentsList.indexOf(oldComment![0]),
+					1,
+					action.payload as IComment
+				);
 			})
 			.addCase(rankCommentThunk.rejected, (state, action) => {
 				state.loading = false;
