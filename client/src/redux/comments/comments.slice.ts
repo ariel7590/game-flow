@@ -6,10 +6,11 @@ import {
 	editCommentThunk,
 	rankCommentThunk,
 } from "./comments.thunks";
-import { ICommentsState, IComment } from "./comments.types";
+import { ICommentsState, IComment, IGetCommentsAPI } from "./comments.types";
 
 const initialState = {
 	currentCommentsList: null,
+	pages: 0,
 	currentComment: null,
 	loading: false,
 	error: null,
@@ -34,12 +35,15 @@ const commentsSlice = createSlice({
 			.addCase(getRelevantCommentsThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.error = null;
-				state.currentCommentsList = action.payload as IComment[];
+				state.currentCommentsList = (action.payload as IGetCommentsAPI)
+					.comments as IComment[];
+				state.pages = (action.payload as IGetCommentsAPI).pages;
 			})
 			.addCase(getRelevantCommentsThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
 				state.currentCommentsList = null;
+				state.pages = 0;
 			})
 			.addCase(createNewCommentThunk.pending, (state) => {
 				state.loading = true;

@@ -13,6 +13,7 @@ import {
 	findCommentWithCommentId,
 	getPaginatedComments,
 	rankComment,
+	countNumberOfComments,
 } from "../../models/comments/comments.model";
 import { isPostExists } from "../../models/posts/posts.model";
 import { AuthenticatedRequest } from "../../types/jwt.types";
@@ -82,7 +83,10 @@ export const httpGetPaginatedComments: RequestHandler = async (req, res) => {
 			error: "Failed at getting comments for this postId!",
 		});
 	}
-	return res.status(200).json(comments);
+	const totalNumOfComments=await countNumberOfComments(postId);
+	console.log(totalNumOfComments);
+	const totalNumOfPages= totalNumOfComments ? Math.ceil(totalNumOfComments / perPage) : 1;
+	return res.status(200).json({comments, pages: totalNumOfPages});
 };
 
 export const httpDeleteComment = async (

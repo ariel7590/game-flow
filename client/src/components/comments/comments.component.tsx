@@ -33,6 +33,7 @@ const Comments = () => {
 	const userId = useSelector(
 		(state: RootState) => (state.users.currentUser as ICurrentUser).userId
 	);
+	const totalPages = useSelector((state: RootState) => state.comments.pages);
 
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
@@ -64,7 +65,7 @@ const Comments = () => {
 				return newPage;
 			});
 		}
-		if (event.currentTarget.id === "next") {
+		if (event.currentTarget.id === "next" && page < totalPages) {
 			setPage((prevPage) => {
 				const newPage = ++prevPage;
 				navigateToPage(newPage);
@@ -80,18 +81,23 @@ const Comments = () => {
 		});
 	};
 
-	const handleRank = (
-		event: MouseEvent<HTMLDivElement>,
-		comment: IComment
-	) => {
+	const handleRank = (event: MouseEvent<HTMLDivElement>, comment: IComment) => {
 		if (event.currentTarget.id === "voteUp") {
 			dispatch(
-				rankCommentThunk({ commentId: comment.commentId, newRank: comment.rank + 1, rankerId: userId })
+				rankCommentThunk({
+					commentId: comment.commentId,
+					newRank: comment.rank + 1,
+					rankerId: userId,
+				})
 			);
 		}
 		if (event.currentTarget.id === "voteDown") {
 			dispatch(
-				rankCommentThunk({ commentId: comment.commentId, newRank: comment.rank - 1, rankerId: userId })
+				rankCommentThunk({
+					commentId: comment.commentId,
+					newRank: comment.rank - 1,
+					rankerId: userId,
+				})
 			);
 		}
 	};
@@ -104,13 +110,25 @@ const Comments = () => {
 						<div className='flex flex-col justify-center'>
 							<div
 								id='voteUp'
-								className={`${commentsStyle.voteUp} ${comment && comment.whoRanked && comment.whoRanked.includes(userId) ? commentsStyle.votedUp : null}`}
+								className={`${commentsStyle.voteUp} ${
+									comment &&
+									comment.whoRanked &&
+									comment.whoRanked.includes(userId)
+										? commentsStyle.votedUp
+										: null
+								}`}
 								onClick={(e) => handleRank(e, comment)}
 							/>
 							<div className={commentsStyle.rank}>{comment.rank}</div>
 							<div
 								id='voteDown'
-								className={`${commentsStyle.votedown} ${comment && comment.whoRanked && comment.whoRanked.includes(userId) ? commentsStyle.votedDown : null}`}
+								className={`${commentsStyle.votedown} ${
+									comment &&
+									comment.whoRanked &&
+									comment.whoRanked.includes(userId)
+										? commentsStyle.votedDown
+										: null
+								}`}
 								onClick={(e) => handleRank(e, comment)}
 							/>
 						</div>
@@ -147,15 +165,25 @@ const Comments = () => {
 			<div className='flex justify-between w-24'>
 				<div
 					id='prev'
-					className='cursor-pointer'
+					className={
+						page !== 1
+							? "cursor-pointer text-white"
+							: "pointer-default text-gray-500"
+					}
 					onClick={(e) => handleNewPage(e)}
 				>
 					{"<"}
 				</div>
-				<div>{page}</div>
+				<div>
+					{page} of {totalPages}
+				</div>
 				<div
 					id='next'
-					className='cursor-pointer'
+					className={
+						page < totalPages
+							? "cursor-pointer text-white"
+							: "pointer-default text-gray-500"
+					}
 					onClick={(e) => handleNewPage(e)}
 				>
 					{">"}

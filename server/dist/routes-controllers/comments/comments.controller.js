@@ -66,7 +66,10 @@ const httpGetPaginatedComments = async (req, res) => {
             error: "Failed at getting comments for this postId!",
         });
     }
-    return res.status(200).json(comments);
+    const totalNumOfComments = await (0, comments_model_1.countNumberOfComments)(postId);
+    console.log(totalNumOfComments);
+    const totalNumOfPages = totalNumOfComments ? Math.ceil(totalNumOfComments / perPage) : 1;
+    return res.status(200).json({ comments, pages: totalNumOfPages });
 };
 exports.httpGetPaginatedComments = httpGetPaginatedComments;
 const httpDeleteComment = async (req, res) => {

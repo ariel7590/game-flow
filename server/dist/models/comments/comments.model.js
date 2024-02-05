@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rankComment = exports.editComment = exports.deleteComment = exports.createNewComment = exports.findCommentWithCommentId = exports.getPaginatedComments = exports.findCommentsWithPostId = void 0;
+exports.rankComment = exports.editComment = exports.deleteComment = exports.createNewComment = exports.findCommentWithCommentId = exports.countNumberOfComments = exports.getPaginatedComments = exports.findCommentsWithPostId = void 0;
 const comments_mongo_1 = require("./comments.mongo");
 const random_string_1 = require("../../utils/random-string");
 async function saveToDB(comment) {
@@ -29,7 +29,7 @@ async function getPaginatedComments(postId, paginatedData) {
         return await comments_mongo_1.commentModel
             .find({
             postId: postId,
-            deleted: false
+            deleted: false,
         }, { _id: 0, __v: 0, deleted: 0 })
             .skip(paginatedData.skip)
             .limit(paginatedData.perPage);
@@ -39,6 +39,18 @@ async function getPaginatedComments(postId, paginatedData) {
     }
 }
 exports.getPaginatedComments = getPaginatedComments;
+async function countNumberOfComments(postId) {
+    try {
+        return await comments_mongo_1.commentModel.countDocuments({
+            postId: postId,
+            deleted: false,
+        });
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+exports.countNumberOfComments = countNumberOfComments;
 async function findCommentWithCommentId(commentId) {
     try {
         return await comments_mongo_1.commentModel.findOne({
@@ -106,7 +118,7 @@ async function rankComment(commentId, newRank, rankerId) {
             deleted: false,
         }, {
             rank: newRank,
-            $push: { whoRanked: rankerId }
+            $push: { whoRanked: rankerId },
         });
         if (ranked.acknowledged && ranked.matchedCount > 0) {
             return await findCommentWithCommentId(commentId);

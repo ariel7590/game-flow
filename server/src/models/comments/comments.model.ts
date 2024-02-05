@@ -29,21 +29,35 @@ export async function findCommentsWithPostId(postId: string) {
 	}
 }
 
-export async function getPaginatedComments(	postId: string, paginatedData: {
-	skip: number;
-	perPage: number;
-}) {
+export async function getPaginatedComments(
+	postId: string,
+	paginatedData: {
+		skip: number;
+		perPage: number;
+	}
+) {
 	try {
 		return await commentDB
 			.find(
 				{
-					postId: postId, 
-					deleted: false
+					postId: postId,
+					deleted: false,
 				},
 				{ _id: 0, __v: 0, deleted: 0 }
 			)
 			.skip(paginatedData.skip)
 			.limit(paginatedData.perPage);
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+export async function countNumberOfComments(postId: string) {
+	try {
+		return await commentDB.countDocuments({
+			postId: postId,
+			deleted: false,
+		});
 	} catch (err) {
 		console.error(err);
 	}
@@ -115,7 +129,11 @@ export async function editComment(commentId: string, newContent: string) {
 	}
 }
 
-export async function rankComment(commentId: string, newRank: number, rankerId: number) {
+export async function rankComment(
+	commentId: string,
+	newRank: number,
+	rankerId: number
+) {
 	try {
 		const ranked = await commentDB.updateOne(
 			{
@@ -124,10 +142,10 @@ export async function rankComment(commentId: string, newRank: number, rankerId: 
 			},
 			{
 				rank: newRank,
-				$push: { whoRanked: rankerId }
+				$push: { whoRanked: rankerId },
 			}
 		);
-		if(ranked.acknowledged && ranked.matchedCount > 0){
+		if (ranked.acknowledged && ranked.matchedCount > 0) {
 			return await findCommentWithCommentId(commentId);
 		}
 	} catch (err) {

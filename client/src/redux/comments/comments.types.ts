@@ -1,8 +1,14 @@
 export interface ICommentsState {
 	currentCommentsList: IComment[] | null;
+	pages: number;
 	currentComment: IComment | null;
 	loading: boolean;
 	error: string | null;
+}
+
+export interface IGetCommentsAPI {
+	comments: IComment[] | null;
+	pages: number;
 }
 
 export interface IComment {

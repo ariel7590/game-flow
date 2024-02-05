@@ -2,15 +2,19 @@ import React, { useEffect, useState, MouseEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { exitPost } from "../../redux/posts/posts.slice";
-import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
+import {
+	createSearchParams,
+	useNavigate,
+	useSearchParams,
+} from "react-router-dom";
 import { getPeginatedPostsThunk } from "../../redux/posts/posts.thunks";
 import { enterPost } from "../../redux/posts/posts.slice";
 import * as forumStyle from "./forum.tailwind";
 import { ICurrentPost } from "../../redux/posts/posts.types";
 
 const Forum = () => {
-	const [params]=useSearchParams();
-	const [page, setPage] = useState(+(params.get('page') as string) || 1);
+	const [params] = useSearchParams();
+	const [page, setPage] = useState(+(params.get("page") as string) || 1);
 	const posts = useSelector((state: RootState) => state.posts.currentPostList);
 	const currentPost = useSelector(
 		(state: RootState) => state.posts.currentPost
@@ -35,7 +39,7 @@ const Forum = () => {
 
 	const handlePostNavigation = (post: ICurrentPost) => {
 		dispatch(enterPost(post));
-		navigate(`/forum/post/${post.postId}`);
+		navigateToPage(`/forum/post/${post.postId}`, 1);
 	};
 
 	const handleNewPost = () => {
@@ -50,22 +54,22 @@ const Forum = () => {
 		if (event.currentTarget.id === "prev" && page > 1) {
 			setPage((prevPage) => {
 				const newPage = --prevPage;
-				navigateToPage(newPage);
+				navigateToPage("/forum", newPage);
 				return newPage;
 			});
 		}
 		if (event.currentTarget.id === "next") {
 			setPage((prevPage) => {
 				const newPage = ++prevPage;
-				navigateToPage(newPage);
+				navigateToPage("/forum", newPage);
 				return newPage;
 			});
 		}
 	};
 
-	const navigateToPage = (newPage: number) => {
+	const navigateToPage = (path: string, newPage: number) => {
 		navigate({
-			pathname: "/forum",
+			pathname: path,
 			search: `?${createSearchParams({ page: newPage.toString() })}`,
 		});
 	};

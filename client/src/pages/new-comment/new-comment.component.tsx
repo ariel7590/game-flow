@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, createSearchParams } from "react-router-dom";
 import CommentForm from "../../components/comment-form/comment-form.component";
 import { createNewCommentThunk } from "../../redux/comments/comments.thunks";
 import { ICurrentUser } from "../../redux/users/users.types";
@@ -13,6 +13,9 @@ const NewComment = () => {
 	);
 	const postId = useSelector(
 		(state: RootState) => state.posts.currentPost!.postId
+	);
+	const totalPages=useSelector(
+		(state: RootState) => state.comments.pages
 	);
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
@@ -31,7 +34,11 @@ const NewComment = () => {
 				publisherId: user.userId,
 			})
 		);
-		navigate(`/forum/post/${postId}`);
+		navigate({
+			pathname: `/forum/post/${postId}`,
+			search: `?${createSearchParams({ page: totalPages.toString() })}`,
+		}
+			);
 	};
 
 	return (
