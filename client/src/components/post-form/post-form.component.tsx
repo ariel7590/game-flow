@@ -1,4 +1,4 @@
-import React, { FormEvent, ChangeEvent } from "react";
+import React, { FormEvent, ChangeEvent, useState } from "react";
 import * as postFormStyles from "./post-form.tailwind";
 
 interface IPostFormProps {
@@ -20,6 +20,14 @@ const PostForm = ({
 	titleValue,
 	bodyValue,
 }: IPostFormProps) => {
+	const [file, setFile] = useState<File | null>(null);
+
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			setFile(e.target.files[0]);
+		}
+	};
+
 	return (
 		<div className={postFormStyles.container}>
 			{editPost ? (
@@ -56,6 +64,18 @@ const PostForm = ({
 					onChange={handleChange}
 					value={bodyValue}
 				/>
+				<div className='flex justify-between w-[90%]'>
+					<label htmlFor='browse' className={postFormStyles.browse}>
+						+Upload Image
+					</label>
+					<label>{file?.name}</label>
+					<input
+						type='file'
+						id='browse'
+						className='invisible'
+						onChange={(e) => handleFileChange(e)}
+					/>
+				</div>
 				<button type='submit' className={postFormStyles.submit}>
 					Send
 				</button>
