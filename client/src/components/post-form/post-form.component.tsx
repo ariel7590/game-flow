@@ -1,4 +1,4 @@
-import React, { FormEvent, ChangeEvent, useState } from "react";
+import React, { FormEvent, ChangeEvent } from "react";
 import * as postFormStyles from "./post-form.tailwind";
 
 interface IPostFormProps {
@@ -6,27 +6,25 @@ interface IPostFormProps {
 	handleChange: (
 		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => void;
+	handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
 	editPost: boolean;
 	gameName?: string;
 	titleValue?: string;
 	bodyValue?: string;
+	fileName?: string;
 }
 
 const PostForm = ({
 	handleSubmit,
 	handleChange,
+	handleFileChange,
 	editPost,
 	gameName,
 	titleValue,
 	bodyValue,
+	fileName
 }: IPostFormProps) => {
-	const [file, setFile] = useState<File | null>(null);
-
-	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files && e.target.files.length > 0) {
-			setFile(e.target.files[0]);
-		}
-	};
+	
 
 	return (
 		<div className={postFormStyles.container}>
@@ -45,7 +43,7 @@ const PostForm = ({
 						name='gameName'
 						className={postFormStyles.title}
 						placeholder='Game Name'
-						onChange={handleChange}
+						onChange={(e) => handleChange(e)}
 						value={gameName}
 					/>
 					<input
@@ -53,7 +51,7 @@ const PostForm = ({
 						name='title'
 						className={postFormStyles.title}
 						placeholder='Title'
-						onChange={handleChange}
+						onChange={(e) => handleChange(e)}
 						value={titleValue}
 					/>
 				</div>
@@ -61,14 +59,14 @@ const PostForm = ({
 					name='body'
 					className={postFormStyles.body}
 					placeholder='Content...'
-					onChange={handleChange}
+					onChange={(e) => handleChange(e)}
 					value={bodyValue}
 				/>
 				<div className='flex justify-between w-[90%]'>
 					<label htmlFor='browse' className={postFormStyles.browse}>
 						+Upload Image
 					</label>
-					<label>{file?.name}</label>
+					<label>{fileName}</label>
 					<input
 						type='file'
 						id='browse'

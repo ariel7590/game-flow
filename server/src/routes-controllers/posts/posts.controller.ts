@@ -1,28 +1,30 @@
 import { RequestHandler, Response } from "express";
+import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
 import {
 	getAllPosts,
 	createNewPost,
 	deletePost,
 	isPostExists,
 	editPost,
-	getPaginatedPosts
+	getPaginatedPosts,
 } from "../../models/posts/posts.model";
 import { IPostForEditing, IReceivedPostContent } from "../../types/posts.types";
 import { AuthenticatedRequest } from "../../types/jwt.types";
 import { paginate } from "../../utils/pagination";
 
-export const httpGetAllPosts: RequestHandler = async (req, res) => { //for testing only, I can remove it later
+export const httpGetAllPosts: RequestHandler = async (req, res) => {
+	//for testing only, I can remove it later
 	const posts = await getAllPosts();
 	return res.status(200).json(posts);
 };
 
-export const httpGetPaginatedPosts: RequestHandler=async (req, res) => {
-	const page=req.query.page as string;
-	console.log(page)
-	const paginationData=paginate(+page);
+export const httpGetPaginatedPosts: RequestHandler = async (req, res) => {
+	const page = req.query.page as string;
+	console.log(page);
+	const paginationData = paginate(+page);
 	const posts = await getPaginatedPosts(paginationData);
 	return res.status(200).json(posts);
-}
+};
 
 export const httpGetPostById: RequestHandler = async (req, res) => {
 	const postId = req.params.postId;
@@ -48,6 +50,15 @@ export const httpCreateNewPost: RequestHandler = async (req, res) => {
 			error: "Missing required post properties!",
 		});
 	}
+	let uploadResult: UploadApiResponse | null = null;
+	let uploadSecureUrl = "";
+	if (req.file) {
+		uploadResult = await cloudinary.uploader.upload(req.file.path);
+		console.log("File uploaded to Cloudinary:", uploadResult);
+		uploadSecureUrl=uploadResult.secure_url;
+	}
+	const mediaUrls:string[]=[];
+	mediaUrls.push(uploadSecureUrl);
 	const postId = await createNewPost(post);
 	return res.status(201).json({
 		postId,
@@ -56,7 +67,7 @@ export const httpCreateNewPost: RequestHandler = async (req, res) => {
 		gameName: post.gameName,
 		title: post.title,
 		body: post.body,
-		media: post.media,
+		media: mediaUrls,
 	});
 };
 

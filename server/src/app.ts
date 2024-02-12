@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import bodyParser from "body-parser";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
@@ -17,6 +18,8 @@ app.use(
 app.use(morgan("combined"));
 app.use(cookieParser());
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 //routers
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);

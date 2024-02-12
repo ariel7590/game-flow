@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpEditPost = exports.httpDeletePost = exports.httpCreateNewPost = exports.httpGetPostById = exports.httpGetPaginatedPosts = exports.httpGetAllPosts = void 0;
+const cloudinary_1 = require("cloudinary");
 const posts_model_1 = require("../../models/posts/posts.model");
 const pagination_1 = require("../../utils/pagination");
 const httpGetAllPosts = async (req, res) => {
+    //for testing only, I can remove it later
     const posts = await (0, posts_model_1.getAllPosts)();
     return res.status(200).json(posts);
 };
@@ -41,6 +43,15 @@ const httpCreateNewPost = async (req, res) => {
             error: "Missing required post properties!",
         });
     }
+    let uploadResult = null;
+    let uploadSecureUrl = "";
+    if (req.file) {
+        uploadResult = await cloudinary_1.v2.uploader.upload(req.file.path);
+        console.log("File uploaded to Cloudinary:", uploadResult);
+        uploadSecureUrl = uploadResult.secure_url;
+    }
+    const mediaUrls = [];
+    mediaUrls.push(uploadSecureUrl);
     const postId = await (0, posts_model_1.createNewPost)(post);
     return res.status(201).json({
         postId,
@@ -49,7 +60,7 @@ const httpCreateNewPost = async (req, res) => {
         gameName: post.gameName,
         title: post.title,
         body: post.body,
-        media: post.media,
+        media: mediaUrls,
     });
 };
 exports.httpCreateNewPost = httpCreateNewPost;

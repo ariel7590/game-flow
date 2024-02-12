@@ -12,7 +12,7 @@ export const getPeginatedPostsThunk = createAsyncThunk<
 		const response = await axios({
 			method: "get",
 			url: localAPI + postsRoute,
-			params: {page: page},
+			params: { page: page },
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -35,14 +35,22 @@ export const createPostThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("posts/createPost", async (post, thunkAPI) => {
 	try {
+		const formData = new FormData();
+		formData.append("gameName", post.gameName);
+		formData.append("title", post.title);
+		formData.append("body", post.body);
+		if (post.media) {
+			formData.append("media", post.media);
+		}
+
 		const response = await axios({
 			method: "post",
 			url: localAPI + postsRoute,
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "multipart/form-data",
 			},
 			withCredentials: true,
-			data: JSON.stringify(post),
+			data: formData,
 		});
 
 		return thunkAPI.fulfillWithValue(response.data);
