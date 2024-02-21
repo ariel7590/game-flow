@@ -50,20 +50,23 @@ export const httpCreateNewPost: RequestHandler = async (req, res) => {
 			error: "Missing required post properties!",
 		});
 	}
+	const publisherId=+post.publisherId;
 	let uploadResult: UploadApiResponse | null = null;
 	let uploadSecureUrl = "";
 	if (req.file) {
-		uploadResult = await cloudinary.uploader.upload(req.file.path);
+		uploadResult = await cloudinary.uploader.upload(req.file.path,{
+			folder: "game-flow"
+		});
 		console.log("File uploaded to Cloudinary:", uploadResult);
 		uploadSecureUrl=uploadResult.secure_url;
 	}
 	const mediaUrls:string[]=[];
 	mediaUrls.push(uploadSecureUrl);
-	const postId = await createNewPost(post);
+	const postId = await createNewPost({...post, publisherId, media: mediaUrls});
 	return res.status(201).json({
 		postId,
 		publisher: post.publisher,
-		publisherId: post.publisherId,
+		publisherId: publisherId,
 		gameName: post.gameName,
 		title: post.title,
 		body: post.body,

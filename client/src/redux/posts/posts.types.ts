@@ -12,7 +12,7 @@ export interface ICurrentPost {
 	gameName: string;
 	title: string;
 	body: string;
-	media: File | null;
+	media: File | string[] | null;
 }
 
 export type NewPost = Omit<ICurrentPost, "postId">;

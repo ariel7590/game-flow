@@ -43,6 +43,26 @@ const Post = () => {
 			</h2>
 			<br />
 			<p>{post?.body}</p>
+			{
+				post && post.media && Array.isArray(post.media) && typeof (post.media[0]) === 'string'
+					?
+					<div>
+						<br />
+						{
+							post.media.map((imgUrl) => {
+								return (
+									<img
+										key={(post.media as string[]).indexOf(imgUrl)}
+										src={imgUrl}
+										alt={`image ${(post.media as string[]).indexOf(imgUrl)}`}
+									/>
+								)
+							})
+						}
+					</ div>
+					:
+					null
+			}
 			<br />
 			<div className={postStyle.optionsAndDetailes}>
 				{post?.publisherId === userId ? (

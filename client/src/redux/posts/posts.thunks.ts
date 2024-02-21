@@ -36,11 +36,13 @@ export const createPostThunk = createAsyncThunk<
 >("posts/createPost", async (post, thunkAPI) => {
 	try {
 		const formData = new FormData();
+		formData.append("publisher", post.publisher);
+		formData.append("publisherId", post.publisherId.toString());
 		formData.append("gameName", post.gameName);
 		formData.append("title", post.title);
 		formData.append("body", post.body);
 		if (post.media) {
-			formData.append("media", post.media);
+			formData.append("media", post.media as File);
 		}
 
 		const response = await axios({
