@@ -1,6 +1,7 @@
 export interface ICommentInput {
 	postId: string;
 	body: string;
+	media: string[];
 	publisher: string;
 	publisherId: number;
 }

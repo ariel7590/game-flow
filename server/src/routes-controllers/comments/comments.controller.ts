@@ -1,4 +1,5 @@
 import { RequestHandler, Response } from "express";
+import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
 import {
 	IComment,
 	ICommentForEditing,
@@ -29,7 +30,8 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 	if (
 		commentInput.body === "" ||
 		commentInput.postId === "" ||
-		commentInput.publisher === ""
+		commentInput.publisher === "" ||
+		!commentInput.publisherId
 	) {
 		return res.status(400).json({
 			error: "Missing required comment properties!",
@@ -41,13 +43,26 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 			error: "Post not found!",
 		});
 	}
-	const newComment = await createNewComment(commentInput);
+	const publisherId = +commentInput.publisherId;
+	let uploadResult: UploadApiResponse | null = null;
+	let uploadSecureUrl = "";
+	if (req.file) {
+		uploadResult = await cloudinary.uploader.upload(req.file.path, {
+			folder: "game-flow"
+		});
+		console.log("File uploaded to Cloudinary:", uploadResult);
+		uploadSecureUrl = uploadResult.secure_url;
+	}
+	const mediaUrls: string[] = [];
+	mediaUrls.push(uploadSecureUrl);
+	const newComment = await createNewComment({ ...commentInput, publisherId, media: mediaUrls });
 	return res.status(201).json({
 		commetId: newComment.commentId,
 		publisher: newComment.publisher,
 		publisherId: newComment.publisherId,
 		body: newComment.body,
 		rank: newComment.rank,
+		media: mediaUrls
 	});
 };
 
@@ -83,10 +98,10 @@ export const httpGetPaginatedComments: RequestHandler = async (req, res) => {
 			error: "Failed at getting comments for this postId!",
 		});
 	}
-	const totalNumOfComments=await countNumberOfComments(postId);
+	const totalNumOfComments = await countNumberOfComments(postId);
 	console.log(totalNumOfComments);
-	const totalNumOfPages= totalNumOfComments ? Math.ceil(totalNumOfComments / perPage) : 1;
-	return res.status(200).json({comments, pages: totalNumOfPages});
+	const totalNumOfPages = totalNumOfComments ? Math.ceil(totalNumOfComments / perPage) : 1;
+	return res.status(200).json({ comments, pages: totalNumOfPages });
 };
 
 export const httpDeleteComment = async (
@@ -174,7 +189,7 @@ export const httpRankComment = async (
 			message: "Invalid user id",
 		});
 	}
-	if (!rankData || commentId === "" || typeof(newRank)!=='number' || !rankerId) {
+	if (!rankData || commentId === "" || typeof (newRank) !== 'number' || !rankerId) {
 		return res.status(404).json({
 			error: "Missing required fields!",
 		});

@@ -30,6 +30,9 @@ const commentSchema = new mongoose.Schema<ICommentSchema>({
 		type: [Number],
 		required: true,
 	},
+	media: {
+		type: [String],
+	},
 	deleted: {
 		type: Boolean,
 		required: true,

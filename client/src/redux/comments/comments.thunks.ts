@@ -37,14 +37,23 @@ export const createNewCommentThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("comments/createNewComment", async (comment, thunkAPI) => {
 	try {
+		const formData = new FormData();
+		formData.append("postId", comment.postId);
+		formData.append("body", comment.body);
+		formData.append("publisher", comment.publisher);
+		formData.append("publisherId", comment.publisherId.toString());
+		if (comment.media) {
+			formData.append("media", comment.media as File);
+		}
+
 		const response = await axios({
 			method: "post",
 			url: localAPI + commentsRoute,
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "multipart/form-data",
 			},
 			withCredentials: true,
-			data: JSON.stringify(comment),
+			data: formData,
 		});
 		return thunkAPI.fulfillWithValue(response.data);
 

@@ -25,6 +25,7 @@ export interface ICommentInput {
 	body: string;
 	publisher: string;
 	publisherId: number;
+	media: File | null;
 }
 
 export interface ICommentForEditing {

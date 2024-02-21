@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpRankComment = exports.httpEditComment = exports.httpDeleteComment = exports.httpGetPaginatedComments = exports.httpFindCommentsWithPostId = exports.httpCreateNewComment = void 0;
+const cloudinary_1 = require("cloudinary");
 const comments_model_1 = require("../../models/comments/comments.model");
 const posts_model_1 = require("../../models/posts/posts.model");
 const pagination_1 = require("../../utils/pagination");
@@ -13,7 +14,8 @@ const httpCreateNewComment = async (req, res) => {
     }
     if (commentInput.body === "" ||
         commentInput.postId === "" ||
-        commentInput.publisher === "") {
+        commentInput.publisher === "" ||
+        !commentInput.publisherId) {
         return res.status(400).json({
             error: "Missing required comment properties!",
         });
@@ -24,13 +26,26 @@ const httpCreateNewComment = async (req, res) => {
             error: "Post not found!",
         });
     }
-    const newComment = await (0, comments_model_1.createNewComment)(commentInput);
+    const publisherId = +commentInput.publisherId;
+    let uploadResult = null;
+    let uploadSecureUrl = "";
+    if (req.file) {
+        uploadResult = await cloudinary_1.v2.uploader.upload(req.file.path, {
+            folder: "game-flow"
+        });
+        console.log("File uploaded to Cloudinary:", uploadResult);
+        uploadSecureUrl = uploadResult.secure_url;
+    }
+    const mediaUrls = [];
+    mediaUrls.push(uploadSecureUrl);
+    const newComment = await (0, comments_model_1.createNewComment)({ ...commentInput, publisherId, media: mediaUrls });
     return res.status(201).json({
         commetId: newComment.commentId,
         publisher: newComment.publisher,
         publisherId: newComment.publisherId,
         body: newComment.body,
         rank: newComment.rank,
+        media: mediaUrls
     });
 };
 exports.httpCreateNewComment = httpCreateNewComment;
