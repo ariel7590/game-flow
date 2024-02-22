@@ -58,6 +58,8 @@ const NewComment = () => {
 			isEdit={false}
 			handleSubmit={(e) => handleSubmit(e)}
 			handleChange={(e) => handleChange(e)}
+			handleFileChange={(e)=>handleFileChange(e)}
+			fileName={formData.media?.name}
 		/>
 	);
 };

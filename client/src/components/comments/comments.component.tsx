@@ -134,6 +134,7 @@ const Comments = () => {
 						</div>
 						<div className={commentsStyle.content}>
 							<div className={commentsStyle.body}>{comment.body}</div>
+							<img className="p-5" src={comment.media[0]} alt={comment.media[0]} />
 							<div className='flex justify-between pl-[10px]'>
 								{comment.publisherId === userId ? (
 									<div>

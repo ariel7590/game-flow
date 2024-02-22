@@ -14,6 +14,7 @@ export interface IGetCommentsAPI {
 export interface IComment {
 	commentId: string;
 	body: string;
+	media: string[];
 	publisher: string;
 	publisherId: number;
 	rank: number;
