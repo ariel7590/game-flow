@@ -5,11 +5,18 @@ import { useNavigate } from "react-router-dom";
 import { RootState, AppDispatch } from "../../redux/store";
 import PostForm from "../../components/post-form/post-form.component";
 
+interface IFormData{
+	gameName: string;
+	title: string;
+	body: string;
+	media: string[] | File | null;
+}
 const EditPost = () => {
-	const [formData, setFormData] = useState({
+	const [formData, setFormData] = useState<IFormData>({
 		gameName: "",
 		title: "",
 		body: "",
+		media: []
 	});
 	const post = useSelector((state: RootState) => state.posts.currentPost);
 	const dispatch = useDispatch<AppDispatch>();
@@ -21,6 +28,7 @@ const EditPost = () => {
 				gameName: post.gameName,
 				title: post.title,
 				body: post.body,
+				media: post.media as string[]
 			});
 		}
 	}, [post]);
@@ -50,14 +58,22 @@ const EditPost = () => {
 		setFormData({ ...formData, [name]: value });
 	};
 
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			setFormData({...formData, media: e.target.files[0]});
+		}
+	};
+
 	return (
 		<PostForm
 			handleSubmit={handleSubmit}
 			handleChange={handleChange}
+			handleFileChange={e=>handleFileChange(e)}
 			editPost={true}
 			gameName={formData.gameName}
 			titleValue={formData.title}
 			bodyValue={formData.body}
+			fileName={(formData.media as string[])[0]}
 		/>
 	);
 };
