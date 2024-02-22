@@ -14,5 +14,6 @@ export interface IPostForEditing {
 	postId: string;
 	newTitle: string;
 	newContent: string;
+	newMedia: string[];
 	publisherId: number;
 }

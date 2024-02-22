@@ -98,11 +98,24 @@ export const editPostThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("posts/editPost", async (post, thunkAPI) => {
 	try {
+	// 	postId: string;
+	// newTitle: string;
+	// newContent: string;
+	// newMedia: string[];
+	// publisherId: number;
+		const formData = new FormData();
+		formData.append("postId", post.postId);
+		formData.append("newTitle", post.newTitle);
+		formData.append("newContent", post.newContent);
+		formData.append("publisherId", post.publisherId.toString());
+		if(post.newMedia && Array.isArray(post.newMedia) && typeof(post.newMedia[0])==="string"){
+			formData.append("newMedia", post.newMedia);
+		}
 		const response = await axios({
 			method: "put",
 			url: localAPI + postsRoute,
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "multipart/form-data",
 			},
 			withCredentials: true,
 			data: post,

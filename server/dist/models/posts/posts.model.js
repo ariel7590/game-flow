@@ -60,7 +60,7 @@ async function createNewPost(post) {
     return newPostId;
 }
 exports.createNewPost = createNewPost;
-async function editPost(postId, newTitle, newContent) {
+async function editPost(postId, newTitle, newContent, newMedia) {
     try {
         const edited = await posts_mongo_1.postModel.updateOne({
             postId,
@@ -68,6 +68,7 @@ async function editPost(postId, newTitle, newContent) {
         }, {
             title: newTitle,
             body: newContent,
+            media: newMedia,
         });
         if (edited.acknowledged && edited.matchedCount > 0) {
             return await isPostExists(postId);

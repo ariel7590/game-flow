@@ -37,7 +37,9 @@ const httpCreateNewComment = async (req, res) => {
         uploadSecureUrl = uploadResult.secure_url;
     }
     const mediaUrls = [];
-    mediaUrls.push(uploadSecureUrl);
+    if (uploadResult) {
+        mediaUrls.push(uploadSecureUrl);
+    }
     const newComment = await (0, comments_model_1.createNewComment)({ ...commentInput, publisherId, media: mediaUrls });
     return res.status(201).json({
         commetId: newComment.commentId,

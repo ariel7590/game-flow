@@ -54,7 +54,9 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 		uploadSecureUrl = uploadResult.secure_url;
 	}
 	const mediaUrls: string[] = [];
-	mediaUrls.push(uploadSecureUrl);
+	if (uploadResult){
+		mediaUrls.push(uploadSecureUrl);
+	}
 	const newComment = await createNewComment({ ...commentInput, publisherId, media: mediaUrls });
 	return res.status(201).json({
 		commetId: newComment.commentId,

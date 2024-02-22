@@ -74,7 +74,8 @@ export async function createNewPost(post: IReceivedPostContent) {
 export async function editPost(
 	postId: string,
 	newTitle: string,
-	newContent: string
+	newContent: string,
+	newMedia: string[],
 ) {
 	try {
 		const edited = await postsDB.updateOne(
@@ -85,6 +86,7 @@ export async function editPost(
 			{
 				title: newTitle,
 				body: newContent,
+				media: newMedia,
 			}
 		);
 		if (edited.acknowledged && edited.matchedCount > 0) {

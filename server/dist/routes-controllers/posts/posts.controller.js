@@ -54,7 +54,9 @@ const httpCreateNewPost = async (req, res) => {
         uploadSecureUrl = uploadResult.secure_url;
     }
     const mediaUrls = [];
-    mediaUrls.push(uploadSecureUrl);
+    if (uploadResult) {
+        mediaUrls.push(uploadSecureUrl);
+    }
     const postId = await (0, posts_model_1.createNewPost)({ ...post, publisherId, media: mediaUrls });
     return res.status(201).json({
         postId,
@@ -99,35 +101,54 @@ const httpDeletePost = async (req, res) => {
 };
 exports.httpDeletePost = httpDeletePost;
 const httpEditPost = async (req, res) => {
-    const post = req.body;
-    const userId = req.userId;
-    if (!userId) {
-        return res.status(400).json({
-            auth: false,
-            message: "Invalid user id",
-        });
+    try {
+        const post = req.body;
+        const userId = req.userId;
+        if (!userId) {
+            return res.status(400).json({
+                auth: false,
+                message: "Invalid user id",
+            });
+        }
+        const { postId, newTitle, newContent, publisherId, newMedia } = post;
+        if (!post ||
+            postId === "" ||
+            newTitle === "" ||
+            newContent === "" ||
+            !publisherId) {
+            return res.status(404).json({
+                error: "Missing required fields!",
+            });
+        }
+        if (publisherId !== userId) {
+            return res.status(401).json({
+                error: "You are unathorized to edit this post!",
+            });
+        }
+        let mediaUrls = [];
+        if (req.file) {
+            const uploadResult = await cloudinary_1.v2.uploader.upload(req.file.path, {
+                folder: "game-flow"
+            });
+            console.log("File uploaded to Cloudinary:", uploadResult);
+            const uploadSecureUrl = uploadResult.secure_url;
+            mediaUrls.push(uploadSecureUrl);
+        }
+        if (mediaUrls.length === 0) {
+            mediaUrls = newMedia;
+        }
+        const editedPost = await (0, posts_model_1.editPost)(postId, newTitle, newContent, mediaUrls);
+        if (!editedPost) {
+            return res.status(500).json({
+                error: "Couldn't edit post",
+            });
+        }
+        return res.status(200).json(editedPost);
     }
-    const { postId, newTitle, newContent, publisherId } = post;
-    if (!post ||
-        postId === "" ||
-        newTitle === "" ||
-        newContent === "" ||
-        !publisherId) {
-        return res.status(404).json({
-            error: "Missing required fields!",
-        });
-    }
-    if (publisherId !== userId) {
-        return res.status(401).json({
-            error: "You are unathorized to edit this post!",
-        });
-    }
-    const editedPost = await (0, posts_model_1.editPost)(postId, newTitle, newContent);
-    if (!editedPost) {
+    catch (error) {
         return res.status(500).json({
-            error: "Couldn't edit post",
+            error
         });
     }
-    return res.status(200).json(editedPost);
 };
 exports.httpEditPost = httpEditPost;

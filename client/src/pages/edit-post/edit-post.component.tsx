@@ -73,7 +73,7 @@ const EditPost = () => {
 			gameName={formData.gameName}
 			titleValue={formData.title}
 			bodyValue={formData.body}
-			fileName={(formData.media as string[])[0]}
+			fileName={(formData.media as string[])[0] || (formData.media as File).name}
 		/>
 	);
 };
