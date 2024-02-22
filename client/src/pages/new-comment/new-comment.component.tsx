@@ -6,8 +6,13 @@ import CommentForm from "../../components/comment-form/comment-form.component";
 import { createNewCommentThunk } from "../../redux/comments/comments.thunks";
 import { ICurrentUser } from "../../redux/users/users.types";
 
+
 const NewComment = () => {
-	const [formData, setFormData] = useState("");
+	const [formData, setFormData] = useState<{body: string; media: File | null}>({
+		body: "",
+		media: null
+	});
+
 	const user = useSelector(
 		(state: RootState) => state.users.currentUser as ICurrentUser
 	);
@@ -21,7 +26,13 @@ const NewComment = () => {
 	const navigate = useNavigate();
 
 	const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-		setFormData(event.target.value);
+		setFormData({...formData, body: event.target.value});
+	};
+
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			setFormData({...formData, media: e.target.files[0]});
+		}
 	};
 
 	const handleSubmit = (event: FormEvent) => {
@@ -29,7 +40,8 @@ const NewComment = () => {
 		dispatch(
 			createNewCommentThunk({
 				postId,
-				body: formData,
+				body: formData.body,
+				media: formData.media,
 				publisher: user.userName,
 				publisherId: user.userId,
 			})
