@@ -14,5 +14,5 @@ postsRouter.get("/", posts_controller_1.httpGetPaginatedPosts);
 postsRouter.post("/", jwt_config_1.verifyJWT, upload.single('media'), posts_controller_1.httpCreateNewPost);
 postsRouter.get("/:postId", posts_controller_1.httpGetPostById);
 postsRouter.delete("/:postId", jwt_config_1.verifyJWT, posts_controller_1.httpDeletePost);
-postsRouter.put("/", jwt_config_1.verifyJWT, posts_controller_1.httpEditPost);
+postsRouter.put("/", jwt_config_1.verifyJWT, upload.single('newMedia'), posts_controller_1.httpEditPost);
 exports.default = postsRouter;

@@ -120,7 +120,9 @@ const httpEditPost = async (req, res) => {
                 error: "Missing required fields!",
             });
         }
-        if (publisherId !== userId) {
+        const publisherIdNum = +publisherId;
+        // const newMediaArr:string[]=JSON.parse(newMedia);
+        if (publisherIdNum !== userId) {
             return res.status(401).json({
                 error: "You are unathorized to edit this post!",
             });
@@ -134,8 +136,8 @@ const httpEditPost = async (req, res) => {
             const uploadSecureUrl = uploadResult.secure_url;
             mediaUrls.push(uploadSecureUrl);
         }
-        if (mediaUrls.length === 0) {
-            mediaUrls = newMedia;
+        if (mediaUrls.length === 0 && newMedia && newMedia.trim() !== "") {
+            mediaUrls = JSON.parse(newMedia);
         }
         const editedPost = await (0, posts_model_1.editPost)(postId, newTitle, newContent, mediaUrls);
         if (!editedPost) {
@@ -146,6 +148,7 @@ const httpEditPost = async (req, res) => {
         return res.status(200).json(editedPost);
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             error
         });

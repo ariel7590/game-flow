@@ -43,6 +43,7 @@ const EditPost = () => {
 					newTitle: formData.title,
 					newContent: formData.body,
 					publisherId: post.publisherId,
+					newMedia: formData.media
 				})
 			);
 			navigate(`/forum/post/${post.postId}`);

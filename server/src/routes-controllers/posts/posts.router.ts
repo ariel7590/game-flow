@@ -18,6 +18,6 @@ postsRouter.get("/", httpGetPaginatedPosts);
 postsRouter.post("/", verifyJWT, upload.single('media'), httpCreateNewPost);
 postsRouter.get("/:postId", httpGetPostById);
 postsRouter.delete("/:postId", verifyJWT, httpDeletePost);
-postsRouter.put("/",verifyJWT, httpEditPost);
+postsRouter.put("/",verifyJWT, upload.single('newMedia'), httpEditPost);
 
 export default postsRouter;

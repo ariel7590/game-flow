@@ -14,6 +14,6 @@ export interface IPostForEditing {
 	postId: string;
 	newTitle: string;
 	newContent: string;
-	newMedia: string[];
-	publisherId: number;
+	newMedia: string; // Recieved from the client as a JSON string
+	publisherId: string; // Recieved from the client as a string
 }
