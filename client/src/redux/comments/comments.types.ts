@@ -32,6 +32,7 @@ export interface ICommentInput {
 export interface ICommentForEditing {
 	commentId: string;
 	newContent: string;
+	newMedia: File | string[] | null;
 	publisherId: number;
 	editorId: number;
 }

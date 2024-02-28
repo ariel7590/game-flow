@@ -97,14 +97,28 @@ export const editCommentThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("comments/editComment", async (editableComment, thunkAPI) => {
 	try {
+				// newMedia: formData.media,
+		const formData = new FormData();
+		formData.append("commentId", editableComment.commentId);
+		formData.append("newContent", editableComment.newContent);
+		formData.append("publisherId", editableComment.publisherId.toString());
+		formData.append("editorId", editableComment.editorId.toString());
+
+		if(editableComment.newMedia && Array.isArray(editableComment.newMedia) && typeof(editableComment.newMedia[0])==="string"){
+			formData.append("newMedia", JSON.stringify(editableComment.newMedia));
+		}
+		if (editableComment.newMedia && !(Array.isArray(editableComment.newMedia))) {
+			formData.append("newMedia", editableComment.newMedia as File);
+		}
+
 		const response = await axios({
 			method: "put",
 			url: localAPI + commentsRoute,
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "multipart/form-data",
 			},
 			withCredentials: true,
-            data: JSON.stringify(editableComment)
+            data: formData
 		});
 		return thunkAPI.fulfillWithValue(response.data);
 

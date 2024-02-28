@@ -6,8 +6,16 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { editCommentThunk } from "../../redux/comments/comments.thunks";
 import { ICurrentUser } from "../../redux/users/users.types";
 
+interface IFormData {
+	body: string;
+	media: string[] | File | null;
+}
+
 const EditComment = () => {
-	const [content, setContent] = useState("");
+	const [formData, setFormData] = useState<IFormData>({
+		body: "",
+		media: [],
+	});
 
 	const comment = useSelector(
 		(state: RootState) => state.comments.currentComment
@@ -25,19 +33,31 @@ const EditComment = () => {
 
 	useEffect(() => {
 		if (comment) {
-			setContent(comment.body);
+			setFormData({body: comment.body, media: comment.media});
 		}
 	}, [comment]);
 
 	const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-		setContent(event.target.value);
+		setFormData({...formData, body: event.target.value});
+	};
+
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			setFormData({ ...formData, media: e.target.files[0] });
+		}
 	};
 
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault();
 		const commentId = location.pathname.slice(-20);
 		await dispatch(
-			editCommentThunk({ commentId, newContent: content, publisherId: comment!.publisherId, editorId: userId })
+			editCommentThunk({
+				commentId,
+				newContent: formData.body,
+				newMedia: formData.media,
+				publisherId: comment!.publisherId,
+				editorId: userId,
+			})
 		);
 		navigate("/" + location.pathname.slice(1, 32));
 	};
@@ -45,8 +65,12 @@ const EditComment = () => {
 		<CommentForm
 			isEdit={true}
 			handleChange={(event) => handleChange(event)}
+			handleFileChange={(event) => handleFileChange(event)}
 			handleSubmit={(event) => handleSubmit(event)}
-			text={content}
+			text={formData.body}
+			fileName={
+				(formData.media as string[])[0] || (formData.media as File).name
+			}
 		/>
 	);
 };
