@@ -136,7 +136,6 @@ export const httpEditPost = async (
 			});
 		}
 		const publisherIdNum=+publisherId;
-		// const newMediaArr:string[]=JSON.parse(newMedia);
 		if (publisherIdNum !== userId) {
 			return res.status(401).json({
 				error: "You are unathorized to edit this post!",

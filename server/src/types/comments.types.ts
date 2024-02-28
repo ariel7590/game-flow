@@ -15,8 +15,9 @@ export interface IComment extends ICommentInput {
 export interface ICommentForEditing {
 	commentId: string;
 	newContent: string;
-    publisherId: number;
+    publisherId: string; // received as string from the client due to FormData constrains
     editorId: number;
+	newMedia: string; // received as string from the client due to FormData constrains
 }
 
 export interface IRankComment {

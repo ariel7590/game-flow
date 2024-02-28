@@ -148,7 +148,7 @@ export const httpEditComment = async (
 	res: Response
 ) => {
 	const comment = req.body as ICommentForEditing;
-	const { commentId, newContent, publisherId, editorId } = comment;
+	const { commentId, newContent, publisherId, editorId, newMedia } = comment;
 	const userId = req.userId as number;
 	if (!userId) {
 		return res.status(400).json({
@@ -161,12 +161,26 @@ export const httpEditComment = async (
 			error: "Missing required fields!",
 		});
 	}
-	if (editorId !== publisherId) {
+	const publisherIdNum=+publisherId;
+	const editorIdNum=+editorId;
+	if (editorIdNum !== publisherIdNum) {
 		return res.status(401).json({
 			error: "You are unathorized to edit this comment!",
 		});
 	}
-	const editedComment = await editComment(commentId, newContent);
+	let mediaUrls:string[]=[];
+		if (req.file) {
+			const uploadResult = await cloudinary.uploader.upload(req.file.path,{
+				folder: "game-flow"
+			});
+			console.log("File uploaded to Cloudinary:", uploadResult);
+			const uploadSecureUrl=uploadResult.secure_url;
+			mediaUrls.push(uploadSecureUrl);
+		}
+		if(mediaUrls.length===0 && newMedia && newMedia.trim() !== ""){
+			mediaUrls=JSON.parse(newMedia);
+		}
+	const editedComment = await editComment(commentId, newContent, mediaUrls);
 	if (!editedComment) {
 		return res.status(500).json({
 			error: "Couldn't edit comment",
@@ -175,6 +189,7 @@ export const httpEditComment = async (
 	return res.status(200).json({
 		commentId,
 		newContent,
+		newMedia: mediaUrls
 	});
 };
 

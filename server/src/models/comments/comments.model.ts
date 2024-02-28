@@ -112,7 +112,7 @@ export async function deleteComment(commentId: string, postId: string) {
 	}
 }
 
-export async function editComment(commentId: string, newContent: string) {
+export async function editComment(commentId: string, newContent: string, newMedia: string[]) {
 	try {
 		const edited = await commentDB.updateOne(
 			{
@@ -121,6 +121,7 @@ export async function editComment(commentId: string, newContent: string) {
 			},
 			{
 				body: newContent,
+				media: newMedia
 			}
 		);
 		return edited.acknowledged && edited.matchedCount > 0;

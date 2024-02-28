@@ -96,13 +96,14 @@ async function deleteComment(commentId, postId) {
     }
 }
 exports.deleteComment = deleteComment;
-async function editComment(commentId, newContent) {
+async function editComment(commentId, newContent, newMedia) {
     try {
         const edited = await comments_mongo_1.commentModel.updateOne({
             commentId: commentId,
             deleted: false,
         }, {
             body: newContent,
+            media: newMedia
         });
         return edited.acknowledged && edited.matchedCount > 0;
     }
