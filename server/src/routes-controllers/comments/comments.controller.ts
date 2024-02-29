@@ -68,6 +68,22 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 	});
 };
 
+export const httpFindCommentWithCommentId: RequestHandler = async (req, res)=>{
+	const commentId=req.params.commentId as string;
+	if(!commentId || commentId===""){
+		return res.status(404).json({
+			error: "Post ID is not found!",
+		});
+	}
+	const comment=await findCommentWithCommentId(commentId);
+	if(!comment){
+		return res.status(404).json({
+			error: "Failed at getting comments for this postId!",
+		});
+	}
+	return res.status(200).json(comment);
+}
+
 export const httpFindCommentsWithPostId: RequestHandler = async (req, res) => {
 	const postId = req.params.postId as string;
 	if (!postId || postId === "") {

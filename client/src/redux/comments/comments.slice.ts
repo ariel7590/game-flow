@@ -5,6 +5,7 @@ import {
 	deleteCommentThunk,
 	editCommentThunk,
 	rankCommentThunk,
+	getCommentByIdthunk
 } from "./comments.thunks";
 import { ICommentsState, IComment, IGetCommentsAPI } from "./comments.types";
 
@@ -44,6 +45,19 @@ const commentsSlice = createSlice({
 				state.error = action.payload as string;
 				state.currentCommentsList = null;
 				state.pages = 0;
+			})
+			.addCase(getCommentByIdthunk.pending ,(state)=>{
+				state.loading=true;
+			})
+			.addCase(getCommentByIdthunk.fulfilled ,(state, action)=>{
+				state.loading=false;
+				state.currentComment=action.payload as IComment;
+				state.error=null;
+			})
+			.addCase(getCommentByIdthunk.rejected ,(state, action)=>{
+				state.loading=false;
+				state.error=action.payload as string;
+				state.currentComment=null;
 			})
 			.addCase(createNewCommentThunk.pending, (state) => {
 				state.loading = true;

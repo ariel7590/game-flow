@@ -5,6 +5,7 @@ import {
 	httpCreateNewComment,
 	httpDeleteComment,
 	httpEditComment,
+	httpFindCommentWithCommentId,
 	httpFindCommentsWithPostId,
 	httpGetPaginatedComments,
 	httpRankComment
@@ -19,5 +20,6 @@ commentsRouter.post("/", verifyJWT, upload.single('media'), httpCreateNewComment
 commentsRouter.delete("/:commentId", verifyJWT, httpDeleteComment);
 commentsRouter.put("/", verifyJWT, upload.single('newMedia'), httpEditComment);
 commentsRouter.put("/rank", verifyJWT, httpRankComment)
+commentsRouter.get("/find/:commentId",httpFindCommentWithCommentId);
 
 export default commentsRouter;

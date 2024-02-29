@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import CommentForm from "../../components/comment-form/comment-form.component";
 import { AppDispatch, RootState } from "../../redux/store";
-import { editCommentThunk } from "../../redux/comments/comments.thunks";
+import {
+	editCommentThunk,
+	getCommentByIdthunk,
+} from "../../redux/comments/comments.thunks";
 import { ICurrentUser } from "../../redux/users/users.types";
 
 interface IFormData {
@@ -33,12 +36,18 @@ const EditComment = () => {
 
 	useEffect(() => {
 		if (comment) {
-			setFormData({body: comment.body, media: comment.media});
+			setFormData({ body: comment.body, media: comment.media });
+		} else {
+			if (userId && !(isNaN(userId))) {
+				const commentId = location.pathname.split("/").reverse()[0];
+				console.log(commentId);
+				dispatch(getCommentByIdthunk(commentId));
+			}
 		}
-	}, [comment]);
+	}, [comment, userId]);
 
 	const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-		setFormData({...formData, body: event.target.value});
+		setFormData({ ...formData, body: event.target.value });
 	};
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {

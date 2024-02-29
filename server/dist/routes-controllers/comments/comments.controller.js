@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpRankComment = exports.httpEditComment = exports.httpDeleteComment = exports.httpGetPaginatedComments = exports.httpFindCommentsWithPostId = exports.httpCreateNewComment = void 0;
+exports.httpRankComment = exports.httpEditComment = exports.httpDeleteComment = exports.httpGetPaginatedComments = exports.httpFindCommentsWithPostId = exports.httpFindCommentWithCommentId = exports.httpCreateNewComment = void 0;
 const cloudinary_1 = require("cloudinary");
 const comments_model_1 = require("../../models/comments/comments.model");
 const posts_model_1 = require("../../models/posts/posts.model");
@@ -51,6 +51,22 @@ const httpCreateNewComment = async (req, res) => {
     });
 };
 exports.httpCreateNewComment = httpCreateNewComment;
+const httpFindCommentWithCommentId = async (req, res) => {
+    const commentId = req.params.commentId;
+    if (!commentId || commentId === "") {
+        return res.status(404).json({
+            error: "Post ID is not found!",
+        });
+    }
+    const comment = await (0, comments_model_1.findCommentWithCommentId)(commentId);
+    if (!comment) {
+        return res.status(404).json({
+            error: "Failed at getting comments for this postId!",
+        });
+    }
+    return res.status(200).json(comment);
+};
+exports.httpFindCommentWithCommentId = httpFindCommentWithCommentId;
 const httpFindCommentsWithPostId = async (req, res) => {
     const postId = req.params.postId;
     if (!postId || postId === "") {

@@ -15,4 +15,5 @@ commentsRouter.post("/", jwt_config_1.verifyJWT, upload.single('media'), comment
 commentsRouter.delete("/:commentId", jwt_config_1.verifyJWT, comments_controller_1.httpDeleteComment);
 commentsRouter.put("/", jwt_config_1.verifyJWT, upload.single('newMedia'), comments_controller_1.httpEditComment);
 commentsRouter.put("/rank", jwt_config_1.verifyJWT, comments_controller_1.httpRankComment);
+commentsRouter.get("/find/:commentId", comments_controller_1.httpFindCommentWithCommentId);
 exports.default = commentsRouter;
