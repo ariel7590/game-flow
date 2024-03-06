@@ -40,7 +40,6 @@ const EditComment = () => {
 		} else {
 			if (userId && !(isNaN(userId))) {
 				const commentId = location.pathname.split("/").reverse()[0];
-				console.log(commentId);
 				dispatch(getCommentByIdthunk(commentId));
 			}
 		}

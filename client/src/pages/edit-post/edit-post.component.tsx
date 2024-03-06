@@ -1,9 +1,10 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editPostThunk } from "../../redux/posts/posts.thunks";
+import { editPostThunk, getCurrentPost } from "../../redux/posts/posts.thunks";
 import { useNavigate } from "react-router-dom";
 import { RootState, AppDispatch } from "../../redux/store";
 import PostForm from "../../components/post-form/post-form.component";
+import { ICurrentUser } from "../../redux/users/users.types";
 
 interface IFormData{
 	gameName: string;
@@ -19,6 +20,9 @@ const EditPost = () => {
 		media: []
 	});
 	const post = useSelector((state: RootState) => state.posts.currentPost);
+	const userId = useSelector(
+		(state: RootState) => (state.users.currentUser as ICurrentUser).userId
+	);
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 
@@ -30,8 +34,13 @@ const EditPost = () => {
 				body: post.body,
 				media: post.media as string[]
 			});
+		}else {
+			if (userId && !(isNaN(userId))) {
+				const postId = location.pathname.split("/").reverse()[0];
+				dispatch(getCurrentPost(postId));
+			}
 		}
-	}, [post]);
+	}, [post, userId]);
 
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault();

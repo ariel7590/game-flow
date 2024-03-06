@@ -19,7 +19,11 @@ function App() {
 	const dispatch=useDispatch<AppDispatch>();
 
 	useEffect(()=>{
-		dispatch(authenticationThunk({}));
+		async function authentication(){
+			await dispatch(authenticationThunk({}));
+		}
+		
+		authentication();
 	},[])
 	
 	return (
