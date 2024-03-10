@@ -4,12 +4,14 @@ import thunkMiddleware from "redux-thunk";
 import userReducer from "./users/users.slice";
 import postsReducer from "./posts/posts.slice";
 import commentsReducer from "./comments/comments.slice";
+import aiGuideReducer from "./ai-guide/ai-guide.slice";
 
 export const store = configureStore({
 	reducer: {
 		users: userReducer,
 		posts: postsReducer,
 		comments: commentsReducer,
+		aiGuide: aiGuideReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().prepend(logger).concat(thunkMiddleware),
