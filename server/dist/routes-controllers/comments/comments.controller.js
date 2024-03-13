@@ -100,7 +100,6 @@ const httpGetPaginatedComments = async (req, res) => {
         });
     }
     const totalNumOfComments = await (0, comments_model_1.countNumberOfComments)(postId);
-    console.log(totalNumOfComments);
     const totalNumOfPages = totalNumOfComments ? Math.ceil(totalNumOfComments / perPage) : 1;
     return res.status(200).json({ comments, pages: totalNumOfPages });
 };
@@ -170,7 +169,7 @@ const httpEditComment = async (req, res) => {
         const uploadSecureUrl = uploadResult.secure_url;
         mediaUrls.push(uploadSecureUrl);
     }
-    if (mediaUrls.length === 0 && newMedia && newMedia.trim() !== "") {
+    if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
         mediaUrls = JSON.parse(newMedia);
     }
     const editedComment = await (0, comments_model_1.editComment)(commentId, newContent, mediaUrls);
@@ -202,7 +201,7 @@ const httpRankComment = async (req, res) => {
         });
     }
     const comment = await (0, comments_model_1.findCommentWithCommentId)(commentId);
-    if (comment && comment.whoRanked.includes(rankerId)) {
+    if (comment?.whoRanked.includes(rankerId)) {
         return res.status(401).json({
             error: "You already ranked this comment and you're not unathorized to rank this comment again!",
         });

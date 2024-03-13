@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePost = exports.editPost = exports.createNewPost = exports.getPaginatedPosts = exports.getAllPosts = exports.isPostExists = void 0;
+exports.countNumberOfPosts = exports.deletePost = exports.editPost = exports.createNewPost = exports.getPaginatedPosts = exports.getAllPosts = exports.isPostExists = void 0;
 const posts_mongo_1 = require("./posts.mongo");
 const random_string_1 = require("../../utils/random-string");
 async function savePost(post) {
@@ -96,3 +96,14 @@ async function deletePost(postId) {
     }
 }
 exports.deletePost = deletePost;
+async function countNumberOfPosts() {
+    try {
+        return await posts_mongo_1.postModel.countDocuments({
+            deleted: false,
+        });
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+exports.countNumberOfPosts = countNumberOfPosts;

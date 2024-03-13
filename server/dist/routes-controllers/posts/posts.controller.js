@@ -12,10 +12,16 @@ const httpGetAllPosts = async (req, res) => {
 exports.httpGetAllPosts = httpGetAllPosts;
 const httpGetPaginatedPosts = async (req, res) => {
     const page = req.query.page;
-    console.log(page);
     const paginationData = (0, pagination_1.paginate)(+page);
     const posts = await (0, posts_model_1.getPaginatedPosts)(paginationData);
-    return res.status(200).json(posts);
+    if (!posts) {
+        return res.status(404).json({
+            error: "Posts were not found!",
+        });
+    }
+    const totalNumOfPosts = await (0, posts_model_1.countNumberOfPosts)();
+    const totalNumOfPages = totalNumOfPosts ? Math.ceil(totalNumOfPosts / 10) : 1;
+    return res.status(200).json({ posts, pages: totalNumOfPages });
 };
 exports.httpGetPaginatedPosts = httpGetPaginatedPosts;
 const httpGetPostById = async (req, res) => {
@@ -135,7 +141,7 @@ const httpEditPost = async (req, res) => {
             const uploadSecureUrl = uploadResult.secure_url;
             mediaUrls.push(uploadSecureUrl);
         }
-        if (mediaUrls.length === 0 && newMedia && newMedia.trim() !== "") {
+        if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
             mediaUrls = JSON.parse(newMedia);
         }
         const editedPost = await (0, posts_model_1.editPost)(postId, newTitle, newContent, mediaUrls);

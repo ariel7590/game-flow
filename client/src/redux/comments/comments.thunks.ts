@@ -131,14 +131,13 @@ export const editCommentThunk = createAsyncThunk<
 		formData.append("editorId", editableComment.editorId.toString());
 
 		if (
-			editableComment.newMedia &&
-			Array.isArray(editableComment.newMedia) &&
-			typeof editableComment.newMedia[0] === "string"
+			Array.isArray(editableComment?.newMedia) &&
+			typeof editableComment?.newMedia[0] === "string"
 		) {
 			formData.append("newMedia", JSON.stringify(editableComment.newMedia));
 		}
-		if (editableComment.newMedia && !Array.isArray(editableComment.newMedia)) {
-			formData.append("newMedia", editableComment.newMedia as File);
+		if (!Array.isArray(editableComment?.newMedia)) {
+			formData.append("newMedia", editableComment?.newMedia as File);
 		}
 
 		const response = await axios({

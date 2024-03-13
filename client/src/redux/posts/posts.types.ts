@@ -3,6 +3,7 @@ export interface IPostState {
 	currentPost: ICurrentPost | null;
 	loading: boolean;
 	error: string | null;
+	totalNumOfPages: number;
 }
 
 export interface ICurrentPost {
@@ -23,4 +24,9 @@ export interface IPostForEditing {
 	newMedia: string[] | File | null;
 	newContent: string;
 	publisherId: number;
+}
+
+export interface IGetPostsAPI {
+	posts: ICurrentPost[] | null;
+	pages: number;
 }

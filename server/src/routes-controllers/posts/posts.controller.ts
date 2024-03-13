@@ -7,6 +7,7 @@ import {
 	isPostExists,
 	editPost,
 	getPaginatedPosts,
+	countNumberOfPosts
 } from "../../models/posts/posts.model";
 import { IPostForEditing, IReceivedPostContent } from "../../types/posts.types";
 import { AuthenticatedRequest } from "../../types/jwt.types";
@@ -20,10 +21,16 @@ export const httpGetAllPosts: RequestHandler = async (req, res) => {
 
 export const httpGetPaginatedPosts: RequestHandler = async (req, res) => {
 	const page = req.query.page as string;
-	console.log(page);
 	const paginationData = paginate(+page);
 	const posts = await getPaginatedPosts(paginationData);
-	return res.status(200).json(posts);
+	if (!posts) {
+		return res.status(404).json({
+			error: "Posts were not found!",
+		});
+	}
+	const totalNumOfPosts = await countNumberOfPosts();
+	const totalNumOfPages = totalNumOfPosts ? Math.ceil(totalNumOfPosts / 10) : 1;
+	return res.status(200).json({posts, pages: totalNumOfPages});
 };
 
 export const httpGetPostById: RequestHandler = async (req, res) => {
@@ -150,7 +157,7 @@ export const httpEditPost = async (
 			const uploadSecureUrl=uploadResult.secure_url;
 			mediaUrls.push(uploadSecureUrl);
 		}
-		if(mediaUrls.length===0 && newMedia && newMedia.trim() !== ""){
+		if(mediaUrls.length===0 && newMedia?.trim() !== ""){
 			mediaUrls=JSON.parse(newMedia);
 		}
 		const editedPost = await editPost(postId, newTitle, newContent, mediaUrls);

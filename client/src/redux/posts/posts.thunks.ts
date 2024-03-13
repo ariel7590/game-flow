@@ -103,10 +103,10 @@ export const editPostThunk = createAsyncThunk<
 		formData.append("newTitle", post.newTitle);
 		formData.append("newContent", post.newContent);
 		formData.append("publisherId", post.publisherId.toString());
-		if(post.newMedia && Array.isArray(post.newMedia) && typeof(post.newMedia[0])==="string"){
+		if(post?.newMedia && Array.isArray(post.newMedia) && typeof(post.newMedia?.[0]) === "string"){
 			formData.append("newMedia", JSON.stringify(post.newMedia));
 		}
-		if (post.newMedia && !(Array.isArray(post.newMedia))) {
+		if (post?.newMedia && !(Array.isArray(post.newMedia))) {
 			formData.append("newMedia", post.newMedia as File);
 		}
 		const response = await axios({

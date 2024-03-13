@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import usersRouter from "./routes-controllers/users/users.router";
 import postsRouter from "./routes-controllers/posts/posts.router";
 import commentsRouter from "./routes-controllers/comments/comments.router";
+import aiGuideRouter from "./routes-controllers/ai-guide/ai-guide.router";
 
 const app = express();
 app.use(
@@ -24,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
 app.use("/comments", commentsRouter);
+app.use('/aiGuide', aiGuideRouter);
 app.get("/", (req, res) => {
 	res.send("Works!");
 });

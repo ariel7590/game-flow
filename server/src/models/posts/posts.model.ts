@@ -114,3 +114,13 @@ export async function deletePost(postId: string) {
 		console.error(err);
 	}
 }
+
+export async function countNumberOfPosts() {
+	try {
+		return await postsDB.countDocuments({
+			deleted: false,
+		});
+	} catch (err) {
+		console.error(err);
+	}
+}

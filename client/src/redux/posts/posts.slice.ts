@@ -6,7 +6,7 @@ import {
 	editPostThunk,
 	getCurrentPost
 } from "./posts.thunks";
-import { IPostState, ICurrentPost } from "./posts.types";
+import { IPostState, ICurrentPost, IGetPostsAPI } from "./posts.types";
 import { editCommentThunk } from "../comments/comments.thunks";
 
 const initialState = {
@@ -14,6 +14,7 @@ const initialState = {
 	currentPost: null,
 	loading: false,
 	error: null,
+	totalNumOfPages: 0,
 } as IPostState;
 
 const postSlice = createSlice({
@@ -35,7 +36,8 @@ const postSlice = createSlice({
 			.addCase(getPeginatedPostsThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.error = null;
-				state.currentPostList = action.payload as ICurrentPost[];
+				state.currentPostList = (action.payload as IGetPostsAPI).posts as ICurrentPost[];
+				state.totalNumOfPages = (action.payload as IGetPostsAPI).pages;
 			})
 			.addCase(getPeginatedPostsThunk.rejected, (state, action) => {
 				state.loading = false;

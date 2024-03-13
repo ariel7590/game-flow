@@ -49,7 +49,7 @@ const Post = () => {
 			<br />
 			<p>{post?.body}</p>
 			{
-				post && post.media && Array.isArray(post.media) && typeof (post.media[0]) === 'string'
+				post?.media && Array.isArray(post.media) && typeof (post.media[0]) === 'string'
 					?
 					<div>
 						<br />

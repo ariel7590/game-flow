@@ -104,16 +104,13 @@ const Comments = () => {
 
 	return (
 		<div className='w-[50%] flex flex-col items-center'>
-			{comments &&
-				comments.map((comment) => (
-					<div key={comment.commentId} className={commentsStyle.container}>
+			{comments?.map((comment) => (
+					<div key={comment?.commentId} className={commentsStyle.container}>
 						<div className='flex flex-col justify-center'>
 							<div
 								id='voteUp'
 								className={`${commentsStyle.voteUp} ${
-									comment &&
-									comment.whoRanked &&
-									comment.whoRanked.includes(userId)
+									comment?.whoRanked?.includes(userId)
 										? commentsStyle.votedUp
 										: null
 								}`}
@@ -123,9 +120,7 @@ const Comments = () => {
 							<div
 								id='voteDown'
 								className={`${commentsStyle.votedown} ${
-									comment &&
-									comment.whoRanked &&
-									comment.whoRanked.includes(userId)
+									comment?.whoRanked?.includes(userId)
 										? commentsStyle.votedDown
 										: null
 								}`}

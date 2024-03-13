@@ -15,8 +15,7 @@ const Dropdown = ({
 	useEffect(() => {
 		const handleOutsideClick = (event: Event) => {
 			if (
-				dropdownRef.current &&
-				!dropdownRef.current.contains(event.target as Node)
+				!dropdownRef.current?.contains(event.target as Node)
 			) {
 				setIsOpen(false);
 			}

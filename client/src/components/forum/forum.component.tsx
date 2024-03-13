@@ -15,9 +15,8 @@ import { ICurrentPost } from "../../redux/posts/posts.types";
 const Forum = () => {
 	const [params] = useSearchParams();
 	const [page, setPage] = useState(+(params.get("page") as string) || 1);
-	const posts = useSelector((state: RootState) => state.posts.currentPostList);
-	const currentPost = useSelector(
-		(state: RootState) => state.posts.currentPost
+	const { currentPostList, currentPost, totalNumOfPages } = useSelector(
+		(state: RootState) => state.posts
 	);
 	const isUserAuth = useSelector(
 		(state: RootState) => state.users.currentUser.auth
@@ -58,7 +57,7 @@ const Forum = () => {
 				return newPage;
 			});
 		}
-		if (event.currentTarget.id === "next") {
+		if (event.currentTarget.id === "next" && page < totalNumOfPages) {
 			setPage((prevPage) => {
 				const newPage = ++prevPage;
 				navigateToPage("/forum", newPage);
@@ -88,7 +87,7 @@ const Forum = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{posts?.map((post) => {
+						{currentPostList?.map((post) => {
 							return (
 								<tr key={post.postId}>
 									<td
@@ -107,7 +106,11 @@ const Forum = () => {
 				<div className='flex justify-between w-24'>
 					<div
 						id='prev'
-						className='cursor-pointer'
+						className={
+							page !== 1
+								? "cursor-pointer text-white"
+								: "pointer-default text-gray-500"
+						}
 						onClick={(e) => handleNewPage(e)}
 					>
 						{"<"}
@@ -115,7 +118,11 @@ const Forum = () => {
 					<div>{page}</div>
 					<div
 						id='next'
-						className='cursor-pointer'
+						className={
+							page < totalNumOfPages
+								? "cursor-pointer text-white"
+								: "pointer-default text-gray-500"
+						}
 						onClick={(e) => handleNewPage(e)}
 					>
 						{">"}
