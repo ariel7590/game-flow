@@ -1,14 +1,12 @@
 import { v2 as cloudinary } from "cloudinary";
-import dotenv from "dotenv";
-
-dotenv.config();
+import config from "config";
 
 export async function cloudinaryConfig() {
 	try {
 		await cloudinary.config({
 			cloud_name: "dwobsryyr",
-			api_key: process.env.CLOUDINARY_API_KEY,
-			api_secret: process.env.CLOUDINARY_SECRET_KEY,
+			api_key: config.get("cloudinaryAPI"),
+			api_secret: config.get("cloudinarySecret"),
 			secure: true,
 		});
 		console.log("Cloudinary configured successfully");

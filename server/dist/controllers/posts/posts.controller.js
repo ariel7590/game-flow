@@ -2,31 +2,31 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpEditPost = exports.httpDeletePost = exports.httpCreateNewPost = exports.httpGetPostById = exports.httpGetPaginatedPosts = exports.httpGetAllPosts = void 0;
 const cloudinary_1 = require("cloudinary");
-const posts_model_1 = require("../../models/posts/posts.model");
+const posts_da_1 = require("../../data-access/posts/posts.da");
 const pagination_1 = require("../../utils/pagination");
 const httpGetAllPosts = async (req, res) => {
     //for testing only, I can remove it later
-    const posts = await (0, posts_model_1.getAllPosts)();
+    const posts = await (0, posts_da_1.getAllPosts)();
     return res.status(200).json(posts);
 };
 exports.httpGetAllPosts = httpGetAllPosts;
 const httpGetPaginatedPosts = async (req, res) => {
     const page = req.query.page;
     const paginationData = (0, pagination_1.paginate)(+page);
-    const posts = await (0, posts_model_1.getPaginatedPosts)(paginationData);
+    const posts = await (0, posts_da_1.getPaginatedPosts)(paginationData);
     if (!posts) {
         return res.status(404).json({
             error: "Posts were not found!",
         });
     }
-    const totalNumOfPosts = await (0, posts_model_1.countNumberOfPosts)();
+    const totalNumOfPosts = await (0, posts_da_1.countNumberOfPosts)();
     const totalNumOfPages = totalNumOfPosts ? Math.ceil(totalNumOfPosts / 10) : 1;
     return res.status(200).json({ posts, pages: totalNumOfPages });
 };
 exports.httpGetPaginatedPosts = httpGetPaginatedPosts;
 const httpGetPostById = async (req, res) => {
     const postId = req.params.postId;
-    const post = await (0, posts_model_1.isPostExists)(postId);
+    const post = await (0, posts_da_1.isPostExists)(postId);
     if (post) {
         return res.status(200).json(post);
     }
@@ -63,7 +63,7 @@ const httpCreateNewPost = async (req, res) => {
     if (uploadResult) {
         mediaUrls.push(uploadSecureUrl);
     }
-    const postId = await (0, posts_model_1.createNewPost)({ ...post, publisherId, media: mediaUrls });
+    const postId = await (0, posts_da_1.createNewPost)({ ...post, publisherId, media: mediaUrls });
     return res.status(201).json({
         postId,
         publisher: post.publisher,
@@ -89,14 +89,14 @@ const httpDeletePost = async (req, res) => {
             message: "Invalid user id",
         });
     }
-    const isExists = await (0, posts_model_1.isPostExists)(postId);
+    const isExists = await (0, posts_da_1.isPostExists)(postId);
     if (isExists) {
         if (isExists.publisherId !== userId) {
             return res.status(401).json({
                 error: "You are unathorized to delete this post!",
             });
         }
-        await (0, posts_model_1.deletePost)(postId);
+        await (0, posts_da_1.deletePost)(postId);
         return res.status(200).json({
             ok: `Post with ID ${postId} has been deleted!`,
         });
@@ -144,7 +144,7 @@ const httpEditPost = async (req, res) => {
         if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
             mediaUrls = JSON.parse(newMedia);
         }
-        const editedPost = await (0, posts_model_1.editPost)(postId, newTitle, newContent, mediaUrls);
+        const editedPost = await (0, posts_da_1.editPost)(postId, newTitle, newContent, mediaUrls);
         if (!editedPost) {
             return res.status(500).json({
                 error: "Couldn't edit post",

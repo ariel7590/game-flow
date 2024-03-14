@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpRankComment = exports.httpEditComment = exports.httpDeleteComment = exports.httpGetPaginatedComments = exports.httpFindCommentsWithPostId = exports.httpFindCommentWithCommentId = exports.httpCreateNewComment = void 0;
 const cloudinary_1 = require("cloudinary");
-const comments_model_1 = require("../../models/comments/comments.model");
-const posts_model_1 = require("../../models/posts/posts.model");
+const comments_da_1 = require("../../data-access/comments/comments.da");
+const posts_da_1 = require("../../data-access/posts/posts.da");
 const pagination_1 = require("../../utils/pagination");
 const httpCreateNewComment = async (req, res) => {
     const commentInput = req.body;
@@ -20,7 +20,7 @@ const httpCreateNewComment = async (req, res) => {
             error: "Missing required comment properties!",
         });
     }
-    const post = await (0, posts_model_1.isPostExists)(commentInput.postId);
+    const post = await (0, posts_da_1.isPostExists)(commentInput.postId);
     if (!post) {
         return res.status(404).json({
             error: "Post not found!",
@@ -40,7 +40,7 @@ const httpCreateNewComment = async (req, res) => {
     if (uploadResult) {
         mediaUrls.push(uploadSecureUrl);
     }
-    const newComment = await (0, comments_model_1.createNewComment)({ ...commentInput, publisherId, media: mediaUrls });
+    const newComment = await (0, comments_da_1.createNewComment)({ ...commentInput, publisherId, media: mediaUrls });
     return res.status(201).json({
         commetId: newComment.commentId,
         publisher: newComment.publisher,
@@ -58,7 +58,7 @@ const httpFindCommentWithCommentId = async (req, res) => {
             error: "Post ID is not found!",
         });
     }
-    const comment = await (0, comments_model_1.findCommentWithCommentId)(commentId);
+    const comment = await (0, comments_da_1.findCommentWithCommentId)(commentId);
     if (!comment) {
         return res.status(404).json({
             error: "Failed at getting comments for this postId!",
@@ -74,7 +74,7 @@ const httpFindCommentsWithPostId = async (req, res) => {
             error: "Post ID is not found!",
         });
     }
-    const comments = await (0, comments_model_1.findCommentsWithPostId)(postId);
+    const comments = await (0, comments_da_1.findCommentsWithPostId)(postId);
     if (!comments) {
         return res.status(404).json({
             error: "Failed at getting comments for this postId!",
@@ -93,13 +93,13 @@ const httpGetPaginatedComments = async (req, res) => {
     }
     const perPage = 5;
     const paginationData = (0, pagination_1.paginate)(+page, perPage);
-    const comments = await (0, comments_model_1.getPaginatedComments)(postId, paginationData);
+    const comments = await (0, comments_da_1.getPaginatedComments)(postId, paginationData);
     if (!comments) {
         return res.status(404).json({
             error: "Failed at getting comments for this postId!",
         });
     }
-    const totalNumOfComments = await (0, comments_model_1.countNumberOfComments)(postId);
+    const totalNumOfComments = await (0, comments_da_1.countNumberOfComments)(postId);
     const totalNumOfPages = totalNumOfComments ? Math.ceil(totalNumOfComments / perPage) : 1;
     return res.status(200).json({ comments, pages: totalNumOfPages });
 };
@@ -118,14 +118,14 @@ const httpDeleteComment = async (req, res) => {
             message: "Invalid user id",
         });
     }
-    const comment = await (0, comments_model_1.findCommentWithCommentId)(commentId);
+    const comment = await (0, comments_da_1.findCommentWithCommentId)(commentId);
     if (comment) {
         if (comment.publisherId !== userId) {
             return res.status(401).json({
                 error: "You are unathorized to delete this comment!",
             });
         }
-        const updatedComments = await (0, comments_model_1.deleteComment)(commentId, comment.postId);
+        const updatedComments = await (0, comments_da_1.deleteComment)(commentId, comment.postId);
         if (!updatedComments) {
             return res.status(500).json({
                 error: "Couldn't delete comment",
@@ -172,7 +172,7 @@ const httpEditComment = async (req, res) => {
     if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
         mediaUrls = JSON.parse(newMedia);
     }
-    const editedComment = await (0, comments_model_1.editComment)(commentId, newContent, mediaUrls);
+    const editedComment = await (0, comments_da_1.editComment)(commentId, newContent, mediaUrls);
     if (!editedComment) {
         return res.status(500).json({
             error: "Couldn't edit comment",
@@ -200,13 +200,13 @@ const httpRankComment = async (req, res) => {
             error: "Missing required fields!",
         });
     }
-    const comment = await (0, comments_model_1.findCommentWithCommentId)(commentId);
+    const comment = await (0, comments_da_1.findCommentWithCommentId)(commentId);
     if (comment?.whoRanked.includes(rankerId)) {
         return res.status(401).json({
             error: "You already ranked this comment and you're not unathorized to rank this comment again!",
         });
     }
-    const rankedComment = await (0, comments_model_1.rankComment)(commentId, newRank, rankerId);
+    const rankedComment = await (0, comments_da_1.rankComment)(commentId, newRank, rankerId);
     if (!rankedComment) {
         return res.status(500).json({
             error: "Couldn't rank comment",

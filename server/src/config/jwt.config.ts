@@ -1,6 +1,7 @@
 import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import config from "config";
 import { AuthenticatedRequest } from "../types/jwt.types";
 
 dotenv.config();
@@ -8,7 +9,7 @@ dotenv.config();
 export const jwtExp = 30 * 24 * 60 * 60;
 
 export function createJWT(payload: { email: string; id: number }) {
-	return jwt.sign(payload, process.env.JWT_SECRET_KEY!, {
+	return jwt.sign(payload, config.get("JWTSecret")!, {
 		expiresIn: jwtExp,
 	});
 }
@@ -26,7 +27,7 @@ export function verifyJWT(
 		});
 	}
 
-	jwt.verify(token, process.env.JWT_SECRET_KEY!, (err, decoded) => {
+	jwt.verify(token, config.get("JWTSecret")!, (err, decoded) => {
 		if (err) {
 			return res.status(403).json({
 				auth: false,

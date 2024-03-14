@@ -1,13 +1,11 @@
 import http from 'http'
-import dotenv from 'dotenv'
+import config from 'config';
 import app from './app'
-import { mongoConnect } from './services/mongo';
-import { cloudinaryConfig } from './services/cloudinary';
+import { mongoConnect } from './utils/mongo-connect';
+import { cloudinaryConfig } from './config/cloudinary';
 
 
-const PORT = process.env.PORT || 8000;
-
-dotenv.config();
+const PORT = config.get('port');
 
 const server = http.createServer(app);
 

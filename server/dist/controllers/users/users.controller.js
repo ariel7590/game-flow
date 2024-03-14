@@ -4,12 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpSignOut = exports.httpAuthenticate = exports.httpLogin = exports.httpCreateNewUser = exports.httpGetUserById = exports.httpGetAllUsers = void 0;
-const jwt_config_1 = require("../../jwt/jwt.config");
+const jwt_config_1 = require("../../config/jwt.config");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const users_model_1 = require("../../models/users/users.model");
+const users_da_1 = require("../../data-access/users/users.da");
 const httpGetAllUsers = async (req, res) => {
     // this function is for testing only, I can delete it later
-    const users = await (0, users_model_1.getAllUsers)();
+    const users = await (0, users_da_1.getAllUsers)();
     return res.status(200).json(users);
 };
 exports.httpGetAllUsers = httpGetAllUsers;
@@ -21,7 +21,7 @@ const httpGetUserById = async (req, res) => {
             error: "Invalid user id",
         });
     }
-    const user = await (0, users_model_1.getUserById)(userId);
+    const user = await (0, users_da_1.getUserById)(userId);
     if (!user) {
         return res.status(404).json({
             error: "user not found",
@@ -37,7 +37,7 @@ const httpCreateNewUser = async (req, res) => {
             message: "Missing required user properties!",
         });
     }
-    const userWithEmail = await (0, users_model_1.findUserByEmail)(user.email);
+    const userWithEmail = await (0, users_da_1.findUserByEmail)(user.email);
     if (userWithEmail) {
         return res.status(400).json({
             message: "Account with this email already exists!",
@@ -50,7 +50,7 @@ const httpCreateNewUser = async (req, res) => {
         password: hashedPassword,
         salt: salt,
     };
-    const userId = await (0, users_model_1.createNewUser)(hashedPassUser);
+    const userId = await (0, users_da_1.createNewUser)(hashedPassUser);
     const token = (0, jwt_config_1.createJWT)({ email: user.email, id: userId });
     res.cookie("jwt", token, { httpOnly: true, maxAge: jwt_config_1.jwtExp * 1000 });
     return res.status(201).json({
@@ -64,10 +64,10 @@ const httpLogin = async (req, res) => {
     const credentials = req.body;
     let user;
     if (credentials.userName) {
-        user = await (0, users_model_1.isUserExists)(credentials.userName);
+        user = await (0, users_da_1.isUserExists)(credentials.userName);
     }
     else if (credentials.email) {
-        user = await (0, users_model_1.findUserByEmail)(credentials.email);
+        user = await (0, users_da_1.findUserByEmail)(credentials.email);
     }
     else {
         user = null;
@@ -100,7 +100,7 @@ const httpAuthenticate = async (req, res) => {
             message: "Invalid user id",
         });
     }
-    const user = await (0, users_model_1.getUserById)(userId);
+    const user = await (0, users_da_1.getUserById)(userId);
     if (!user) {
         return res.status(404).json({
             auth: false,

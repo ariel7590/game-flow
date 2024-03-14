@@ -1,4 +1,4 @@
-import { createJWT, jwtExp } from "../../jwt/jwt.config";
+import { createJWT, jwtExp } from "../../config/jwt.config";
 import { RequestHandler, Response } from "express";
 import bcrypt from "bcrypt";
 import {
@@ -7,7 +7,7 @@ import {
 	createNewUser,
 	getUserById,
 	isUserExists,
-} from "../../models/users/users.model";
+} from "../../data-access/users/users.da";
 import {
 	INewUserInput,
 	IHashedPassUser,

@@ -15,8 +15,8 @@ import {
 	getPaginatedComments,
 	rankComment,
 	countNumberOfComments,
-} from "../../models/comments/comments.model";
-import { isPostExists } from "../../models/posts/posts.model";
+} from "../../data-access/comments/comments.da";
+import { isPostExists } from "../../data-access/posts/posts.da";
 import { AuthenticatedRequest } from "../../types/jwt.types";
 import { paginate } from "../../utils/pagination";
 

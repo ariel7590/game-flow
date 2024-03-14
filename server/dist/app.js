@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const config_1 = __importDefault(require("config"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -14,7 +15,7 @@ const comments_router_1 = __importDefault(require("./routes/comments/comments.ro
 const ai_guide_router_1 = __importDefault(require("./routes/ai-guide/ai-guide.router"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: config_1.default.get('origin'),
     credentials: true,
 }));
 app.use((0, morgan_1.default)("combined"));

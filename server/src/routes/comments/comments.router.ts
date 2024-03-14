@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { verifyJWT } from "../../jwt/jwt.config";
+import { verifyJWT } from "../../config/jwt.config";
 import {
 	httpCreateNewComment,
 	httpDeleteComment,

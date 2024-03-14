@@ -8,7 +8,7 @@ import {
 	editPost,
 	getPaginatedPosts,
 	countNumberOfPosts
-} from "../../models/posts/posts.model";
+} from "../../data-access/posts/posts.da";
 import { IPostForEditing, IReceivedPostContent } from "../../types/posts.types";
 import { AuthenticatedRequest } from "../../types/jwt.types";
 import { paginate } from "../../utils/pagination";

@@ -1,7 +1,6 @@
-import mongoose, { mongo } from "mongoose";
-import dotenv from "dotenv";
+import mongoose from "mongoose";
+import config from 'config';
 
-dotenv.config();
 
 mongoose.connection.once("open", () => {
 	console.log("Connected to MongoDB");
@@ -12,7 +11,7 @@ mongoose.connection.on("error", (err) => {
 });
 
 export async function mongoConnect() {
-	await mongoose.connect(process.env.MONGO_URL!);
+	await mongoose.connect(config.get('dbUri'));
 }
 
 export async function mongoDisconnect() {

@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import config from 'config';
 import bodyParser from "body-parser";
 import cors from "cors";
 import morgan from "morgan";
@@ -12,7 +13,7 @@ import aiGuideRouter from "./routes/ai-guide/ai-guide.router";
 const app = express();
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin: config.get('origin'),
 		credentials: true,
 	})
 );
