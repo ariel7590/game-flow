@@ -7,7 +7,7 @@ import {
 	httpLogin,
 	httpAuthenticate,
 	httpSignOut
-} from "./users.controller";
+} from "../../controllers/users/users.controller";
 
 const usersRouter = express.Router();
 

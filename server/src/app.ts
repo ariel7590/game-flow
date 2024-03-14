@@ -4,10 +4,10 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import usersRouter from "./routes-controllers/users/users.router";
-import postsRouter from "./routes-controllers/posts/posts.router";
-import commentsRouter from "./routes-controllers/comments/comments.router";
-import aiGuideRouter from "./routes-controllers/ai-guide/ai-guide.router";
+import usersRouter from "./routes/users/users.router";
+import postsRouter from "./routes/posts/posts.router";
+import commentsRouter from "./routes/comments/comments.router";
+import aiGuideRouter from "./routes/ai-guide/ai-guide.router";
 
 const app = express();
 app.use(

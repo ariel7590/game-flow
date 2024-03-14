@@ -9,7 +9,7 @@ import {
 	httpFindCommentsWithPostId,
 	httpGetPaginatedComments,
 	httpRankComment
-} from "./comments.controller";
+} from "../../controllers/comments/comments.controller";
 
 const commentsRouter = express.Router();
 const upload = multer({ dest: 'uploads/' });

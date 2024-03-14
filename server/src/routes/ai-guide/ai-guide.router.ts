@@ -1,5 +1,5 @@
 import express from 'express';
-import { httpGenerateGuide } from './ai-guide.controller';
+import { httpGenerateGuide } from '../../controllers/ai-guide/ai-guide.controller';
 
 const aiGuideRouter=express.Router();
 

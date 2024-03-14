@@ -8,7 +8,7 @@ import {
 	httpEditPost,
 	httpGetPostById,
 	httpGetPaginatedPosts
-} from "./posts.controller";
+} from "../../controllers/posts/posts.controller";
 
 const postsRouter = express.Router();
 const upload = multer({ dest: 'uploads/' });
