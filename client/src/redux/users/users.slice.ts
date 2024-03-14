@@ -17,71 +17,83 @@ const userSlice = createSlice({
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(signUpThunk.pending, (state) => {
-				state.loading = true;
-				state.error = null;
-			})
-			.addCase(signUpThunk.fulfilled, (state, action) => {
-				state.loading = false;
-				state.error = null;
-				state.currentUser = action.payload as ICurrentUser;
-			})
-			.addCase(signUpThunk.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload as string;
-				state.currentUser = {
+			.addCase(signUpThunk.pending, (state) => ({
+				...state,
+				loading: true,
+				error: null,
+			}))
+			.addCase(signUpThunk.fulfilled, (state, action) => ({
+				...state,
+				loading: false,
+				error: null,
+				currentUser: action.payload as ICurrentUser,
+			}))
+			.addCase(signUpThunk.rejected, (state, action) => ({
+				...state,
+				loading: false,
+				error: action.payload as string,
+				currentUser: {
 					auth: false,
 					message: action.payload as string,
-				};
-			})
-			.addCase(loginThunk.pending, (state) => {
-				state.loading = true;
-				state.error = null;
-			})
-			.addCase(loginThunk.fulfilled, (state, action) => {
-				state.loading = false;
-				state.error = null;
-				state.currentUser = action.payload as ICurrentUser;
-			})
-			.addCase(loginThunk.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload as string;
-				state.currentUser = {
+				},
+			}))
+			.addCase(loginThunk.pending, (state) => ({
+				...state,
+				loading: true,
+				error: null,
+			}))
+			.addCase(loginThunk.fulfilled, (state, action) => ({
+				...state,
+				loading: false,
+				error: null,
+				currentUser: action.payload as ICurrentUser,
+			}))
+			.addCase(loginThunk.rejected, (state, action) => ({
+				...state,
+				loading: false,
+				error: action.payload as string,
+				currentUser: {
 					auth: false,
 					message: action.payload as string,
-				};
-			})
-			.addCase(authenticationThunk.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(authenticationThunk.fulfilled, (state, action) => {
-				state.loading = false;
-				state.error = null;
-				state.currentUser = action.payload as ICurrentUser;
-			})
-			.addCase(authenticationThunk.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload as IAuthFailed;
-				state.currentUser = {
+				},
+			}))
+			.addCase(authenticationThunk.pending, (state) => ({
+				...state,
+				loading: true,
+			}))
+			.addCase(authenticationThunk.fulfilled, (state, action) => ({
+				...state,
+				loading: false,
+				error: null,
+				currentUser: action.payload as ICurrentUser,
+			}))
+			.addCase(authenticationThunk.rejected, (state, action) => ({
+				...state,
+				loading: false,
+				error: action.payload as IAuthFailed,
+				currentUser: {
 					auth: false,
 					message: action.payload
-				} as IAuthFailed;
-			})
-			.addCase(signoutThunk.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(signoutThunk.fulfilled, (state) => {
-				state.loading = false;
-				state.error = null;
-				state.currentUser = {
+				} as IAuthFailed,
+			}))
+			.addCase(signoutThunk.pending, (state) => ({
+				...state,
+				loading: true,
+			}))
+			.addCase(signoutThunk.fulfilled, (state) => ({
+				...state,
+				loading: false,
+				error: null,
+				currentUser: {
 					auth: false,
 					message: "No token found!",
-				} as IAuthFailed;
-			})
-			.addCase(signoutThunk.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload as string;
-			});
+				} as IAuthFailed,
+			}))
+			.addCase(signoutThunk.rejected, (state, action) => ({
+				...state,
+				loading: false,
+				error: action.payload as string,
+			}));
 	},
 });
 

@@ -14,19 +14,22 @@ const aiGuideSlice = createSlice({
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(getGeneratedAnswer.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(getGeneratedAnswer.fulfilled, (state, action) => {
-				state.loading = false;
-				state.error = null;
-				state.answer = action.payload as string;
-			})
-			.addCase(getGeneratedAnswer.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload as string;
-				state.answer = null;
-			});
+			.addCase(getGeneratedAnswer.pending, (state) => ({
+				...state,
+				loading: true,
+			}))
+			.addCase(getGeneratedAnswer.fulfilled, (state, action) => ({
+				...state,
+				loading: false,
+				error: null,
+				answer: action.payload as string,
+			}))
+			.addCase(getGeneratedAnswer.rejected, (state, action) => ({
+				...state,
+				loading: false,
+				error: action.payload as string,
+				answer: null,
+			}));
 	},
 });
 
