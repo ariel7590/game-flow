@@ -116,9 +116,10 @@ const httpEditPost = async (req, res) => {
                 message: "Invalid user id",
             });
         }
-        const { postId, newTitle, newContent, publisherId, newMedia } = post;
+        const { postId, newGameName, newTitle, newContent, publisherId, newMedia } = post;
         if (!post ||
             postId === "" ||
+            newGameName === "" ||
             newTitle === "" ||
             newContent === "" ||
             !publisherId) {
@@ -144,7 +145,7 @@ const httpEditPost = async (req, res) => {
         if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
             mediaUrls = JSON.parse(newMedia);
         }
-        const editedPost = await (0, posts_da_1.editPost)(postId, newTitle, newContent, mediaUrls);
+        const editedPost = await (0, posts_da_1.editPost)(postId, newGameName, newTitle, newContent, mediaUrls);
         if (!editedPost) {
             return res.status(500).json({
                 error: "Couldn't edit post",

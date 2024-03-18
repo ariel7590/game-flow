@@ -1,12 +1,13 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import {
 	ICommentForEditing,
 	ICommentInput,
 	ICommentsPage,
 	IRankComment,
 } from "./comments.types";
-import { localAPI, commentsRoute } from "../routeUrls";
+import axiosInstance from "../../config/axios.config";
+import { commentsRoute } from "../../config/routeUrls";
 
 export const getRelevantCommentsThunk = createAsyncThunk<
 	unknown,
@@ -14,12 +15,9 @@ export const getRelevantCommentsThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("comments/getRelevantComments", async (commentData, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "get",
-			url: localAPI + commentsRoute + commentData.postId,
-			headers: {
-				"Content-Type": "application/json",
-			},
+			url: commentsRoute + commentData.postId,
 			params: {
 				page: commentData.page,
 			},
@@ -41,14 +39,10 @@ export const getCommentByIdthunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("comments/getCommentById", async (commentId, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "get",
-			url: localAPI + commentsRoute + "find/" + commentId,
-			headers: {
-				"Content-Type": "application/json",
-			},
+			url: commentsRoute + "find/" + commentId,
 		});
-
 		return thunkAPI.fulfillWithValue(response.data);
 	} catch (err) {
 		if (err instanceof AxiosError && err.response !== undefined) {
@@ -74,13 +68,12 @@ export const createNewCommentThunk = createAsyncThunk<
 			formData.append("media", comment.media as File);
 		}
 
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "post",
-			url: localAPI + commentsRoute,
+			url: commentsRoute,
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
-			withCredentials: true,
 			data: formData,
 		});
 		return thunkAPI.fulfillWithValue(response.data);
@@ -99,13 +92,9 @@ export const deleteCommentThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("comments/deleteComment", async (commentId, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "delete",
-			url: localAPI + commentsRoute + commentId,
-			headers: {
-				"Content-Type": "application/json",
-			},
-			withCredentials: true,
+			url: commentsRoute + commentId,
 		});
 		return thunkAPI.fulfillWithValue(response.data);
 	} catch (err) {
@@ -123,7 +112,6 @@ export const editCommentThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("comments/editComment", async (editableComment, thunkAPI) => {
 	try {
-		// newMedia: formData.media,
 		const formData = new FormData();
 		formData.append("commentId", editableComment.commentId);
 		formData.append("newContent", editableComment.newContent);
@@ -140,13 +128,12 @@ export const editCommentThunk = createAsyncThunk<
 			formData.append("newMedia", editableComment?.newMedia as File);
 		}
 
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "put",
-			url: localAPI + commentsRoute,
+			url: commentsRoute,
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
-			withCredentials: true,
 			data: formData,
 		});
 		return thunkAPI.fulfillWithValue(response.data);
@@ -165,13 +152,9 @@ export const rankCommentThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("comments/rankComment", async (rankComment, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "put",
-			url: localAPI + commentsRoute + "rank",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			withCredentials: true,
+			url: commentsRoute + "rank",
 			data: JSON.stringify(rankComment),
 		});
 		return thunkAPI.fulfillWithValue(response.data);

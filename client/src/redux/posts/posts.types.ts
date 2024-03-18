@@ -20,6 +20,7 @@ export type NewPost = Omit<ICurrentPost, "postId">;
 
 export interface IPostForEditing {
 	postId: string;
+	newGameName: string,
 	newTitle: string;
 	newMedia: string[] | File | null;
 	newContent: string;

@@ -1,7 +1,8 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { ISignUpPayload, ILoginPayload } from "./users.types";
-import { localAPI, usersRoute } from "../routeUrls";
+import { usersRoute } from "../../config/routeUrls";
+import axiosInstance from "../../config/axios.config";
 
 export const signUpThunk = createAsyncThunk<
 	unknown,
@@ -9,13 +10,9 @@ export const signUpThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("users/signup", async (user, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "post",
-			url: localAPI + usersRoute + "signup",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			withCredentials: true,
+			url: usersRoute + "signup",
 			data: JSON.stringify(user),
 		});
 
@@ -36,13 +33,9 @@ export const loginThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("users/login", async (user, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "post",
-			url: localAPI + usersRoute + "login",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			withCredentials: true,
+			url: usersRoute + "login",
 			data: JSON.stringify(user),
 		});
 
@@ -63,13 +56,9 @@ export const authenticationThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("users/authenticate", async (_, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "get",
-			url: localAPI + usersRoute + "auth",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			withCredentials: true,
+			url: usersRoute + "auth",
 		});
 
 		return thunkAPI.fulfillWithValue(response.data);
@@ -88,13 +77,9 @@ export const signoutThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("users/signout", async (_, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "get",
-			url: localAPI + usersRoute + "signout",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			withCredentials: true,
+			url: usersRoute + "signout",
 		});
 
 		return thunkAPI.fulfillWithValue(response.data);

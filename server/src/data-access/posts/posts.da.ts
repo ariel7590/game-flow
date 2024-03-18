@@ -73,6 +73,7 @@ export async function createNewPost(post: IReceivedPostContent) {
 
 export async function editPost(
 	postId: string,
+	newGameName: string,
 	newTitle: string,
 	newContent: string,
 	newMedia: string[],
@@ -84,6 +85,7 @@ export async function editPost(
 				deleted: false,
 			},
 			{
+				gameName: newGameName,
 				title: newTitle,
 				body: newContent,
 				media: newMedia,

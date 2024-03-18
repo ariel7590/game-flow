@@ -1,9 +1,7 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
-import {
-	
-} from "./ai-guide.types";
-import { localAPI, aiGuideRoute } from "../routeUrls";
+import { AxiosError } from "axios";
+import axiosInstance from "../../config/axios.config";
+import { aiGuideRoute } from "../../config/routeUrls";
 
 export const getGeneratedAnswer = createAsyncThunk<
 	unknown,
@@ -11,17 +9,13 @@ export const getGeneratedAnswer = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("ai-guide/getGeneratedAnswer", async (prompt, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "post",
-			url: localAPI + aiGuideRoute,
-			headers: {
-				"Content-Type": "application/json",
+			url: aiGuideRoute,
+			data: {
+				prompt,
 			},
-			data:{
-                prompt
-            }
 		});
-
 		return thunkAPI.fulfillWithValue(response.data);
 	} catch (err) {
 		if (err instanceof AxiosError && err.response !== undefined) {

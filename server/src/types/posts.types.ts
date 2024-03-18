@@ -12,6 +12,7 @@ export interface IPost extends IReceivedPostContent {
 }
 export interface IPostForEditing {
 	postId: string;
+	newGameName: string;
 	newTitle: string;
 	newContent: string;
 	newMedia: string; // Recieved from the client as a JSON string

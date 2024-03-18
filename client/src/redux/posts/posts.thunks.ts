@@ -1,7 +1,8 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { IPostForEditing, NewPost } from "./posts.types";
-import { localAPI, postsRoute } from "../routeUrls";
+import { postsRoute } from "../../config/routeUrls";
+import axiosInstance from "../../config/axios.config";
 
 export const getPeginatedPostsThunk = createAsyncThunk<
 	unknown,
@@ -9,13 +10,10 @@ export const getPeginatedPostsThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("posts/getAllPosts", async (page, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "get",
-			url: localAPI + postsRoute,
+			url: postsRoute,
 			params: { page: page },
-			headers: {
-				"Content-Type": "application/json",
-			},
 		});
 
 		return thunkAPI.fulfillWithValue(response.data);
@@ -45,13 +43,12 @@ export const createPostThunk = createAsyncThunk<
 			formData.append("media", post.media as File);
 		}
 
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "post",
-			url: localAPI + postsRoute,
+			url: postsRoute,
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
-			withCredentials: true,
 			data: formData,
 		});
 
@@ -72,13 +69,9 @@ export const deletePostThunk = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("posts/deletePost", async (postId: string, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "delete",
-			url: localAPI + postsRoute + postId,
-			headers: {
-				"Content-Type": "application/json",
-			},
-			withCredentials: true,
+			url: postsRoute + postId,
 		});
 
 		return thunkAPI.fulfillWithValue(response.data);
@@ -100,6 +93,7 @@ export const editPostThunk = createAsyncThunk<
 	try {
 		const formData = new FormData();
 		formData.append("postId", post.postId);
+		formData.append("newGameName", post.newGameName);
 		formData.append("newTitle", post.newTitle);
 		formData.append("newContent", post.newContent);
 		formData.append("publisherId", post.publisherId.toString());
@@ -109,13 +103,12 @@ export const editPostThunk = createAsyncThunk<
 		if (post?.newMedia && !(Array.isArray(post.newMedia))) {
 			formData.append("newMedia", post.newMedia as File);
 		}
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "put",
-			url: localAPI + postsRoute,
+			url: postsRoute,
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
-			withCredentials: true,
 			data: formData,
 		});
 
@@ -136,12 +129,9 @@ export const getCurrentPost = createAsyncThunk<
 	{ rejectValue: SerializedError }
 >("posts/getCurrentPost", async (postId: string, thunkAPI) => {
 	try {
-		const response = await axios({
+		const response = await axiosInstance({
 			method: "get",
-			url: localAPI + postsRoute + postId,
-			headers: {
-				"Content-Type": "application/json",
-			},
+			url: postsRoute + postId,
 		});
 
 		return thunkAPI.fulfillWithValue(response.data);

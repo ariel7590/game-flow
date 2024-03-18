@@ -49,6 +49,7 @@ const EditPost = () => {
 			await dispatch(
 				editPostThunk({
 					postId: post.postId,
+					newGameName: formData.gameName,
 					newTitle: formData.title,
 					newContent: formData.body,
 					publisherId: post.publisherId,

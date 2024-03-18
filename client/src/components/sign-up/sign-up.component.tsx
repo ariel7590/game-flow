@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as signUpStyles from "./sign-up.tailwind";
 import { ISignUpData } from "./sign-up.types";
 import { signUpThunk } from "../../redux/users/users.thunks";
 import { AppDispatch } from "../../redux/store";
-
 
 const SignUp = () => {
 	const [data, setData] = useState<ISignUpData>({
@@ -14,7 +14,8 @@ const SignUp = () => {
 		confirmPassword: "",
 	});
 
-	const dispatch=useDispatch<AppDispatch>();
+	const dispatch = useDispatch<AppDispatch>();
+	const navigate = useNavigate();
 
 	const handleData = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -24,9 +25,14 @@ const SignUp = () => {
 		}));
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if(data.userName.length===0 || data.email.length===0 || data.password.length===0 || data.confirmPassword.length===0){
+		if (
+			data.userName.length === 0 ||
+			data.email.length === 0 ||
+			data.password.length === 0 ||
+			data.confirmPassword.length === 0
+		) {
 			alert("Missing required fields!");
 			return;
 		}
@@ -34,12 +40,15 @@ const SignUp = () => {
 			alert("Passwords don't match!");
 			return;
 		}
-		const user={
+		const user = {
 			userName: data.userName,
 			email: data.email,
-			password: data.password
+			password: data.password,
+		};
+		const response = await dispatch(signUpThunk(user));
+		if(response.payload){
+			navigate("/");
 		}
-		dispatch(signUpThunk(user));
 	};
 	return (
 		<div className={signUpStyles.signUpContainer}>

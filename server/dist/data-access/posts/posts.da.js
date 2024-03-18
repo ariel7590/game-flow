@@ -60,12 +60,13 @@ async function createNewPost(post) {
     return newPostId;
 }
 exports.createNewPost = createNewPost;
-async function editPost(postId, newTitle, newContent, newMedia) {
+async function editPost(postId, newGameName, newTitle, newContent, newMedia) {
     try {
         const edited = await posts_model_1.postModel.updateOne({
             postId,
             deleted: false,
         }, {
+            gameName: newGameName,
             title: newTitle,
             body: newContent,
             media: newMedia,
