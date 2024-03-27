@@ -1,10 +1,11 @@
 import joi from 'joi';
-import { RequestHandler } from 'express';
+import { Response, NextFunction } from 'express';
+import { AuthenticatedRequest } from '../../types/jwt.types';
 
-export const validate = (schema:joi.Schema): RequestHandler => (req, res, next) => {
+export const validate = (schema: joi.Schema) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-        const { body, params, query } = req;
-        const input = { body, query, params };
+        const { body, params, query, file, userId } = req;
+        const input = { body, params, query, file, userId };
         const { error } = schema.validate(input, { abortEarly: false });
         if (!error) {
             next();

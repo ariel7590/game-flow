@@ -5,5 +5,6 @@ export const validateGenerateGuide = joi.object({
         prompt: joi.string().required()
     }),
     params: joi.object(),
-    query: joi.object()
+    query: joi.object(),
+    file: joi.object(),
 })

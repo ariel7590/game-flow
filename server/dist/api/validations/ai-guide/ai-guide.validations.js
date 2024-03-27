@@ -10,5 +10,6 @@ exports.validateGenerateGuide = joi_1.default.object({
         prompt: joi_1.default.string().required()
     }),
     params: joi_1.default.object(),
-    query: joi_1.default.object()
+    query: joi_1.default.object(),
+    file: joi_1.default.object(),
 });

@@ -7,19 +7,6 @@ const posts_da_1 = require("../../data-access/posts/posts.da");
 const pagination_1 = require("../../utils/pagination");
 const httpCreateNewComment = async (req, res) => {
     const commentInput = req.body;
-    if (!commentInput) {
-        return res.status(400).json({
-            error: "Missing required comment!",
-        });
-    }
-    if (commentInput.body === "" ||
-        commentInput.postId === "" ||
-        commentInput.publisher === "" ||
-        !commentInput.publisherId) {
-        return res.status(400).json({
-            error: "Missing required comment properties!",
-        });
-    }
     const post = await (0, posts_da_1.isPostExists)(commentInput.postId);
     if (!post) {
         return res.status(404).json({
@@ -53,11 +40,6 @@ const httpCreateNewComment = async (req, res) => {
 exports.httpCreateNewComment = httpCreateNewComment;
 const httpFindCommentWithCommentId = async (req, res) => {
     const commentId = req.params.commentId;
-    if (!commentId || commentId === "") {
-        return res.status(404).json({
-            error: "Post ID is not found!",
-        });
-    }
     const comment = await (0, comments_da_1.findCommentWithCommentId)(commentId);
     if (!comment) {
         return res.status(404).json({
@@ -86,11 +68,6 @@ exports.httpFindCommentsWithPostId = httpFindCommentsWithPostId;
 const httpGetPaginatedComments = async (req, res) => {
     const page = req.query.page;
     const postId = req.params.postId;
-    if (!postId || postId === "") {
-        return res.status(404).json({
-            error: "Post ID is not found!",
-        });
-    }
     const perPage = 5;
     const paginationData = (0, pagination_1.paginate)(+page, perPage);
     const comments = await (0, comments_da_1.getPaginatedComments)(postId, paginationData);
@@ -106,18 +83,7 @@ const httpGetPaginatedComments = async (req, res) => {
 exports.httpGetPaginatedComments = httpGetPaginatedComments;
 const httpDeleteComment = async (req, res) => {
     const commentId = req.params.commentId;
-    if (!commentId || commentId === "") {
-        return res.status(404).json({
-            error: "Comment ID is not found!",
-        });
-    }
     const userId = req.userId;
-    if (!userId) {
-        return res.status(400).json({
-            auth: false,
-            message: "Invalid user id",
-        });
-    }
     const comment = await (0, comments_da_1.findCommentWithCommentId)(commentId);
     if (comment) {
         if (comment.publisherId !== userId) {
@@ -141,18 +107,6 @@ exports.httpDeleteComment = httpDeleteComment;
 const httpEditComment = async (req, res) => {
     const comment = req.body;
     const { commentId, newContent, publisherId, editorId, newMedia } = comment;
-    const userId = req.userId;
-    if (!userId) {
-        return res.status(400).json({
-            auth: false,
-            message: "Invalid user id",
-        });
-    }
-    if (!comment || commentId === "" || newContent === "") {
-        return res.status(404).json({
-            error: "Missing required fields!",
-        });
-    }
     const publisherIdNum = +publisherId;
     const editorIdNum = +editorId;
     if (editorIdNum !== publisherIdNum) {
@@ -188,18 +142,6 @@ exports.httpEditComment = httpEditComment;
 const httpRankComment = async (req, res) => {
     const rankData = req.body;
     const { commentId, newRank, rankerId } = rankData;
-    const userId = req.userId;
-    if (!userId) {
-        return res.status(400).json({
-            auth: false,
-            message: "Invalid user id",
-        });
-    }
-    if (!rankData || commentId === "" || typeof (newRank) !== 'number' || !rankerId) {
-        return res.status(404).json({
-            error: "Missing required fields!",
-        });
-    }
     const comment = await (0, comments_da_1.findCommentWithCommentId)(commentId);
     if (comment?.whoRanked.includes(rankerId)) {
         return res.status(401).json({

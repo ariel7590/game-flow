@@ -10,16 +10,26 @@ import {
 	httpGetPaginatedComments,
 	httpRankComment
 } from "../../controllers/comments/comments.controller";
+import {
+	validateCreateNewComment,
+	validateFindCommentWithCommentId,
+	validateGetPaginatedComments,
+	validateDeleteComment,
+	validateEditComment,
+	validateRankComment
+} from "../../api/validations/comments/comments.validations";
+import { validate } from '../../api/middlewares/validate-resourse.middleware';
 
 const commentsRouter = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
 // commentsRouter.get("/:postId", httpFindCommentsWithPostId);
-commentsRouter.get("/:postId", httpGetPaginatedComments);
-commentsRouter.post("/", verifyJWT, upload.single('media'), httpCreateNewComment);
-commentsRouter.delete("/:commentId", verifyJWT, httpDeleteComment);
-commentsRouter.put("/", verifyJWT, upload.single('newMedia'), httpEditComment);
-commentsRouter.put("/rank", verifyJWT, httpRankComment)
-commentsRouter.get("/find/:commentId",httpFindCommentWithCommentId);
+commentsRouter.get("/:postId", validate(validateGetPaginatedComments), httpGetPaginatedComments);
+commentsRouter.post("/", verifyJWT, upload.single('media'), validate(validateCreateNewComment), httpCreateNewComment);
+commentsRouter.delete("/:commentId", verifyJWT, validate(validateDeleteComment), httpDeleteComment);
+commentsRouter.put("/", verifyJWT, upload.single('newMedia'), validate(validateEditComment), httpEditComment);
+commentsRouter.put("/rank", verifyJWT, validate(validateRankComment), httpRankComment)
+commentsRouter.get("/find/:commentId", validate(validateFindCommentWithCommentId
+), httpFindCommentWithCommentId);
 
 export default commentsRouter;

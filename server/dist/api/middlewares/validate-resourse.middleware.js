@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validate = void 0;
 const validate = (schema) => (req, res, next) => {
     try {
-        const { body, params, query } = req;
-        const input = { body, query, params };
+        const { body, params, query, file, userId } = req;
+        const input = { body, params, query, file, userId };
         const { error } = schema.validate(input, { abortEarly: false });
         if (!error) {
             next();

@@ -22,21 +22,6 @@ import { paginate } from "../../utils/pagination";
 
 export const httpCreateNewComment: RequestHandler = async (req, res) => {
 	const commentInput = req.body as ICommentInput;
-	if (!commentInput) {
-		return res.status(400).json({
-			error: "Missing required comment!",
-		});
-	}
-	if (
-		commentInput.body === "" ||
-		commentInput.postId === "" ||
-		commentInput.publisher === "" ||
-		!commentInput.publisherId
-	) {
-		return res.status(400).json({
-			error: "Missing required comment properties!",
-		});
-	}
 	const post = await isPostExists(commentInput.postId);
 	if (!post) {
 		return res.status(404).json({
@@ -54,7 +39,7 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 		uploadSecureUrl = uploadResult.secure_url;
 	}
 	const mediaUrls: string[] = [];
-	if (uploadResult){
+	if (uploadResult) {
 		mediaUrls.push(uploadSecureUrl);
 	}
 	const newComment = await createNewComment({ ...commentInput, publisherId, media: mediaUrls });
@@ -68,15 +53,10 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 	});
 };
 
-export const httpFindCommentWithCommentId: RequestHandler = async (req, res)=>{
-	const commentId=req.params.commentId as string;
-	if(!commentId || commentId===""){
-		return res.status(404).json({
-			error: "Post ID is not found!",
-		});
-	}
-	const comment=await findCommentWithCommentId(commentId);
-	if(!comment){
+export const httpFindCommentWithCommentId: RequestHandler = async (req, res) => {
+	const commentId = req.params.commentId as string;
+	const comment = await findCommentWithCommentId(commentId);
+	if (!comment) {
 		return res.status(404).json({
 			error: "Failed at getting comments for this postId!",
 		});
@@ -103,11 +83,6 @@ export const httpFindCommentsWithPostId: RequestHandler = async (req, res) => {
 export const httpGetPaginatedComments: RequestHandler = async (req, res) => {
 	const page = req.query.page as string;
 	const postId = req.params.postId as string;
-	if (!postId || postId === "") {
-		return res.status(404).json({
-			error: "Post ID is not found!",
-		});
-	}
 	const perPage = 5;
 	const paginationData = paginate(+page, perPage);
 	const comments = await getPaginatedComments(postId, paginationData);
@@ -126,18 +101,7 @@ export const httpDeleteComment = async (
 	res: Response
 ) => {
 	const commentId = req.params.commentId as string;
-	if (!commentId || commentId === "") {
-		return res.status(404).json({
-			error: "Comment ID is not found!",
-		});
-	}
 	const userId = req.userId as number;
-	if (!userId) {
-		return res.status(400).json({
-			auth: false,
-			message: "Invalid user id",
-		});
-	}
 	const comment = await findCommentWithCommentId(commentId);
 	if (comment) {
 		if (comment.publisherId !== userId) {
@@ -158,43 +122,28 @@ export const httpDeleteComment = async (
 	});
 };
 
-export const httpEditComment = async (
-	req: AuthenticatedRequest,
-	res: Response
-) => {
+export const httpEditComment: RequestHandler = async (req,res) => {
 	const comment = req.body as ICommentForEditing;
 	const { commentId, newContent, publisherId, editorId, newMedia } = comment;
-	const userId = req.userId as number;
-	if (!userId) {
-		return res.status(400).json({
-			auth: false,
-			message: "Invalid user id",
-		});
-	}
-	if (!comment || commentId === "" || newContent === "") {
-		return res.status(404).json({
-			error: "Missing required fields!",
-		});
-	}
-	const publisherIdNum=+publisherId;
-	const editorIdNum=+editorId;
+	const publisherIdNum = +publisherId;
+	const editorIdNum = +editorId;
 	if (editorIdNum !== publisherIdNum) {
 		return res.status(401).json({
 			error: "You are unathorized to edit this comment!",
 		});
 	}
-	let mediaUrls:string[]=[];
-		if (req.file) {
-			const uploadResult = await cloudinary.uploader.upload(req.file.path,{
-				folder: "game-flow"
-			});
-			console.log("File uploaded to Cloudinary:", uploadResult);
-			const uploadSecureUrl=uploadResult.secure_url;
-			mediaUrls.push(uploadSecureUrl);
-		}
-		if(mediaUrls.length===0 && newMedia?.trim() !== ""){
-			mediaUrls=JSON.parse(newMedia);
-		}
+	let mediaUrls: string[] = [];
+	if (req.file) {
+		const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+			folder: "game-flow"
+		});
+		console.log("File uploaded to Cloudinary:", uploadResult);
+		const uploadSecureUrl = uploadResult.secure_url;
+		mediaUrls.push(uploadSecureUrl);
+	}
+	if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
+		mediaUrls = JSON.parse(newMedia);
+	}
 	const editedComment = await editComment(commentId, newContent, mediaUrls);
 	if (!editedComment) {
 		return res.status(500).json({
@@ -208,24 +157,9 @@ export const httpEditComment = async (
 	});
 };
 
-export const httpRankComment = async (
-	req: AuthenticatedRequest,
-	res: Response
-) => {
+export const httpRankComment: RequestHandler = async (req,res) => {
 	const rankData = req.body as IRankComment;
 	const { commentId, newRank, rankerId } = rankData;
-	const userId = req.userId as number;
-	if (!userId) {
-		return res.status(400).json({
-			auth: false,
-			message: "Invalid user id",
-		});
-	}
-	if (!rankData || commentId === "" || typeof (newRank) !== 'number' || !rankerId) {
-		return res.status(404).json({
-			error: "Missing required fields!",
-		});
-	}
 	const comment = await findCommentWithCommentId(commentId);
 	if (comment?.whoRanked.includes(rankerId)) {
 		return res.status(401).json({
