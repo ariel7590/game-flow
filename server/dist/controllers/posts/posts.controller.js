@@ -44,11 +44,6 @@ const httpCreateNewPost = async (req, res) => {
             error: "Missing required post!",
         });
     }
-    if (post.body === "" || post.publisher === "" || post.title === "") {
-        return res.status(400).json({
-            error: "Missing required post properties!",
-        });
-    }
     const publisherId = +post.publisherId;
     let uploadResult = null;
     let uploadSecureUrl = "";
@@ -77,18 +72,7 @@ const httpCreateNewPost = async (req, res) => {
 exports.httpCreateNewPost = httpCreateNewPost;
 const httpDeletePost = async (req, res) => {
     const postId = req.params.postId;
-    if (!postId || postId === "") {
-        return res.status(400).json({
-            error: "Invalid post id",
-        });
-    }
     const userId = req.userId;
-    if (!userId) {
-        return res.status(400).json({
-            auth: false,
-            message: "Invalid user id",
-        });
-    }
     const isExists = await (0, posts_da_1.isPostExists)(postId);
     if (isExists) {
         if (isExists.publisherId !== userId) {
@@ -110,23 +94,7 @@ const httpEditPost = async (req, res) => {
     try {
         const post = req.body;
         const userId = req.userId;
-        if (!userId) {
-            return res.status(400).json({
-                auth: false,
-                message: "Invalid user id",
-            });
-        }
         const { postId, newGameName, newTitle, newContent, publisherId, newMedia } = post;
-        if (!post ||
-            postId === "" ||
-            newGameName === "" ||
-            newTitle === "" ||
-            newContent === "" ||
-            !publisherId) {
-            return res.status(404).json({
-                error: "Missing required fields!",
-            });
-        }
         const publisherIdNum = +publisherId;
         if (publisherIdNum !== userId) {
             return res.status(401).json({

@@ -52,11 +52,6 @@ export const httpCreateNewPost: RequestHandler = async (req, res) => {
 			error: "Missing required post!",
 		});
 	}
-	if (post.body === "" || post.publisher === "" || post.title === "") {
-		return res.status(400).json({
-			error: "Missing required post properties!",
-		});
-	}
 	const publisherId=+post.publisherId;
 	let uploadResult: UploadApiResponse | null = null;
 	let uploadSecureUrl = "";
@@ -88,18 +83,7 @@ export const httpDeletePost = async (
 	res: Response
 ) => {
 	const postId = req.params.postId;
-	if (!postId || postId === "") {
-		return res.status(400).json({
-			error: "Invalid post id",
-		});
-	}
 	const userId = req.userId as number;
-	if (!userId) {
-		return res.status(400).json({
-			auth: false,
-			message: "Invalid user id",
-		});
-	}
 	const isExists = await isPostExists(postId);
 	if (isExists) {
 		if (isExists.publisherId !== userId) {
@@ -124,25 +108,7 @@ export const httpEditPost = async (
 	try{
 		const post = req.body as IPostForEditing;
 		const userId = req.userId as number;
-		if (!userId) {
-			return res.status(400).json({
-				auth: false,
-				message: "Invalid user id",
-			});
-		}
 		const { postId, newGameName, newTitle, newContent, publisherId, newMedia } = post;
-		if (
-			!post ||
-			postId === "" ||
-			newGameName === "" ||
-			newTitle === "" ||
-			newContent === "" ||
-			!publisherId
-		) {
-			return res.status(404).json({
-				error: "Missing required fields!",
-			});
-		}
 		const publisherIdNum=+publisherId;
 		if (publisherIdNum !== userId) {
 			return res.status(401).json({

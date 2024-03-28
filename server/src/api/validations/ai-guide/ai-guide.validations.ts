@@ -7,4 +7,5 @@ export const validateGenerateGuide = joi.object({
     params: joi.object(),
     query: joi.object(),
     file: joi.object(),
+    userId: joi.number().optional()
 })

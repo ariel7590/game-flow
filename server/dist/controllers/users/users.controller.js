@@ -32,11 +32,6 @@ const httpGetUserById = async (req, res) => {
 exports.httpGetUserById = httpGetUserById;
 const httpCreateNewUser = async (req, res) => {
     const user = req.body;
-    if (!user.userName || !user.password || !user.email) {
-        return res.status(400).json({
-            message: "Missing required user properties!",
-        });
-    }
     const userWithEmail = await (0, users_da_1.findUserByEmail)(user.email);
     if (userWithEmail) {
         return res.status(400).json({

@@ -42,11 +42,6 @@ export const httpGetUserById: RequestHandler = async (req, res) => {
 
 export const httpCreateNewUser: RequestHandler = async (req, res) => {
 	const user = req.body as INewUserInput;
-	if (!user.userName || !user.password || !user.email) {
-		return res.status(400).json({
-			message: "Missing required user properties!",
-		});
-	}
 	const userWithEmail = await findUserByEmail(user.email);
 	if (userWithEmail) {
 		return res.status(400).json({
