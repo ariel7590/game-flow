@@ -1,4 +1,4 @@
-import { createJWT, jwtExp } from "../../config/jwt.config";
+import { createJWT, jwtExp } from "../../../config/jwt.config";
 import { RequestHandler, Response } from "express";
 import bcrypt from "bcrypt";
 import {

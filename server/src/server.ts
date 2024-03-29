@@ -1,7 +1,7 @@
 import http from 'http'
 import config from 'config';
 import app from './app'
-import { mongoConnect } from './utils/mongo-connect';
+import { mongoConnect } from './api/utils/mongo-connect';
 import { cloudinaryConfig } from './config/cloudinary';
 
 

@@ -1,6 +1,6 @@
 import joi from 'joi';
 import { Response, NextFunction } from 'express';
-import { AuthenticatedRequest } from '../../types/jwt.types';
+import { AuthenticatedRequest } from '../types/jwt.types';
 
 export const validate = (schema: joi.Schema) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {

@@ -1,6 +1,6 @@
 import express from "express";
 import multer from 'multer';
-import { verifyJWT } from "../../config/jwt.config";
+import { verifyJWT } from "../../../config/jwt.config";
 import {
 	httpGetAllPosts,
 	httpCreateNewPost,
@@ -9,14 +9,14 @@ import {
 	httpGetPostById,
 	httpGetPaginatedPosts
 } from "../../controllers/posts/posts.controller";
-import { validate } from '../../api/middlewares/validate-resourse.middleware';
+import { validate } from '../../middlewares/validate-resourse.middleware';
 import { 
 	validateGetPaginatedPosts,
 	validateGetPostById,
 	validateCreateNewPost,
 	validateDeletePost,
 	validateEditPost,
- } from "../../api/validations/posts/posts.validation";
+ } from "../../validations/posts/posts.validation";
 
 const postsRouter = express.Router();
 const upload = multer({ dest: 'uploads/' });

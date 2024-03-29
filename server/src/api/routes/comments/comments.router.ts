@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { verifyJWT } from "../../config/jwt.config";
+import { verifyJWT } from "../../../config/jwt.config";
 import {
 	httpCreateNewComment,
 	httpDeleteComment,
@@ -17,8 +17,8 @@ import {
 	validateDeleteComment,
 	validateEditComment,
 	validateRankComment
-} from "../../api/validations/comments/comments.validations";
-import { validate } from '../../api/middlewares/validate-resourse.middleware';
+} from "../../validations/comments/comments.validations";
+import { validate } from '../../middlewares/validate-resourse.middleware';
 
 const commentsRouter = express.Router();
 const upload = multer({ dest: 'uploads/' });
