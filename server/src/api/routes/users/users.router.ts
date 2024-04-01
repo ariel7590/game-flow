@@ -12,6 +12,7 @@ import {validate} from '../../middlewares/validate-resourse.middleware';
 import { validateCreateNewUser,
 	 validateAuthenticate,
 	 validateSignOut,  
+	 validateLogin,
 	} from "../../validations/users/users.validations";
 
 const usersRouter = express.Router();
@@ -21,7 +22,7 @@ usersRouter.get("/auth", verifyJWT, validate(validateAuthenticate), httpAuthenti
 usersRouter.get("/signout", verifyJWT, validate(validateSignOut), httpSignOut);
 usersRouter.get("/:userId", httpGetUserById);
 usersRouter.post("/signup", validate(validateCreateNewUser), httpCreateNewUser);
-usersRouter.post("/login", httpLogin);
+usersRouter.post("/login", validate(validateLogin), httpLogin);
 
 
 export default usersRouter;
