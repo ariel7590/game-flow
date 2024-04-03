@@ -8,7 +8,7 @@ import { ICurrentUser } from "../../redux/users/users.types";
 
 
 const NewComment = () => {
-	const [formData, setFormData] = useState<{body: string; media: File | null}>({
+	const [formData, setFormData] = useState<{ body: string; media: File | null }>({
 		body: "",
 		media: null
 	});
@@ -19,20 +19,20 @@ const NewComment = () => {
 	const postId = useSelector(
 		(state: RootState) => state.posts.currentPost!.postId
 	);
-	const totalPages=useSelector(
+	const totalPages = useSelector(
 		(state: RootState) => state.comments.pages
 	);
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 
 	const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-		setFormData({...formData, body: event.target.value});
+		setFormData({ ...formData, body: event.target.value });
 	};
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files && e.target.files.length > 0) {
-			setFormData({...formData, media: e.target.files[0]});
-		}
+		e.target.files && e.target.files.length > 0
+			? setFormData({ ...formData, media: e.target.files[0] })
+			: null;
 	};
 
 	const handleSubmit = (event: FormEvent) => {
@@ -50,7 +50,7 @@ const NewComment = () => {
 			pathname: `/forum/post/${postId}`,
 			search: `?${createSearchParams({ page: totalPages.toString() })}`,
 		}
-			);
+		);
 	};
 
 	return (
@@ -58,7 +58,7 @@ const NewComment = () => {
 			isEdit={false}
 			handleSubmit={(e) => handleSubmit(e)}
 			handleChange={(e) => handleChange(e)}
-			handleFileChange={(e)=>handleFileChange(e)}
+			handleFileChange={(e) => handleFileChange(e)}
 			fileName={formData.media?.name}
 		/>
 	);

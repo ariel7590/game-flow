@@ -23,11 +23,11 @@ const Post = () => {
 	// In case I refresh the post page and it can't take the current post from the state anymore
 	useEffect(() => {
 		if (!post) {
-			const reversedUrlArr=location.pathname.split("/").reverse();
-			let id=reversedUrlArr[0];
-			if(id===""){
-				id=reversedUrlArr[1];
-			}
+			const reversedUrlArr = location.pathname.split("/").reverse();
+			let id = reversedUrlArr[0];
+			id === ""
+				? id = reversedUrlArr[1]
+				: null;
 			dispatch(getCurrentPost(id));
 		}
 	}, []);

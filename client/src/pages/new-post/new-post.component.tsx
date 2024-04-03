@@ -32,9 +32,9 @@ const NewPost = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (currentPost) {
-			navigate(`/forum/post/${currentPost.postId}`);
-		}
+		currentPost
+		? navigate(`/forum/post/${currentPost.postId}`)
+		: null;
 	}, [currentPost]);
 
 	const handleChange = (
@@ -45,9 +45,9 @@ const NewPost = () => {
 	};
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files && e.target.files.length > 0) {
-			setFormData({...formData, media: e.target.files[0]});
-		}
+		e.target.files && e.target.files.length > 0
+		? setFormData({...formData, media: e.target.files[0]})
+		: null;
 	};
 
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {

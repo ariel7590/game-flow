@@ -11,11 +11,9 @@ const LoginSignupPage = () => {
 	const [mode, setMode] = useState(loginSignup.Login);
 
 	const handleMode = () => {
-		if (mode === loginSignup.Login) {
-			setMode(loginSignup.Signup);
-		} else {
-			setMode(loginSignup.Login);
-		}
+		mode === loginSignup.Login
+		? setMode(loginSignup.Signup)
+		: setMode(loginSignup.Login);
 	};
 
 const pageStyle='flex justify-center items-center min-h-[50vh]';

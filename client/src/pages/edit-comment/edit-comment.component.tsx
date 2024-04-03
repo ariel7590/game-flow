@@ -50,9 +50,9 @@ const EditComment = () => {
 	};
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files && e.target.files.length > 0) {
-			setFormData({ ...formData, media: e.target.files[0] });
-		}
+		e.target.files && e.target.files.length > 0
+		? setFormData({ ...formData, media: e.target.files[0] })
+		: null;
 	};
 
 	const handleSubmit = async (event: FormEvent) => {

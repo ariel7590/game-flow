@@ -6,7 +6,7 @@ import { RootState, AppDispatch } from "../../redux/store";
 import PostForm from "../../components/post-form/post-form.component";
 import { ICurrentUser } from "../../redux/users/users.types";
 
-interface IFormData{
+interface IFormData {
 	gameName: string;
 	title: string;
 	body: string;
@@ -34,7 +34,7 @@ const EditPost = () => {
 				body: post.body,
 				media: post.media as string[]
 			});
-		}else {
+		} else {
 			if (userId && !(isNaN(userId))) {
 				const postId = location.pathname.split("/").reverse()[0];
 				dispatch(getCurrentPost(postId));
@@ -45,7 +45,7 @@ const EditPost = () => {
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault();
 
-		if (post) {
+		post ? (
 			await dispatch(
 				editPostThunk({
 					postId: post.postId,
@@ -55,11 +55,9 @@ const EditPost = () => {
 					publisherId: post.publisherId,
 					newMedia: formData.media
 				})
-			);
-			navigate(`/forum/post/${post.postId}`);
-		} else {
-			console.log("Something went wrong with the editing!");
-		}
+			),
+			navigate(`/forum/post/${post.postId}`)
+		) : console.log("Something went wrong with the editing!");
 	};
 
 	const handleChange = (
@@ -70,16 +68,16 @@ const EditPost = () => {
 	};
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files && e.target.files.length > 0) {
-			setFormData({...formData, media: e.target.files[0]});
-		}
+		e.target.files && e.target.files.length > 0
+			? setFormData({ ...formData, media: e.target.files[0] })
+			: null;
 	};
 
 	return (
 		<PostForm
 			handleSubmit={handleSubmit}
 			handleChange={handleChange}
-			handleFileChange={e=>handleFileChange(e)}
+			handleFileChange={e => handleFileChange(e)}
 			editPost={true}
 			gameName={formData.gameName}
 			titleValue={formData.title}

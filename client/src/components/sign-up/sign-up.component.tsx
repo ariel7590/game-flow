@@ -46,9 +46,9 @@ const SignUp = () => {
 			password: data.password,
 		};
 		const response = await dispatch(signUpThunk(user));
-		if(response.payload){
-			navigate("/");
-		}
+		response.payload
+			? navigate("/")
+			: null;
 	};
 	return (
 		<div className={signUpStyles.signUpContainer}>
