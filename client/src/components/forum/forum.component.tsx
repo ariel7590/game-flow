@@ -28,9 +28,9 @@ const Forum = () => {
 	useEffect(() => {
 		async function initPostsState() {
 			await dispatch(getPeginatedPostsThunk(page));
-			if (currentPost) {
-				dispatch(exitPost());
-			}
+			currentPost
+				? dispatch(exitPost())
+				: null;
 		}
 
 		initPostsState();
@@ -42,28 +42,26 @@ const Forum = () => {
 	};
 
 	const handleNewPost = () => {
-		if (isUserAuth) {
-			navigate("/forum/new-post");
-		} else {
-			navigate("/login");
-		}
+		isUserAuth
+			? navigate("/forum/new-post")
+			: navigate("/login");
 	};
 
 	const handleNewPage = (event: MouseEvent<HTMLDivElement>) => {
-		if (event.currentTarget.id === "prev" && page > 1) {
-			setPage((prevPage) => {
+		event.currentTarget.id === "prev" && page > 1
+			? setPage((prevPage) => {
 				const newPage = --prevPage;
 				navigateToPage("/forum", newPage);
 				return newPage;
-			});
-		}
-		if (event.currentTarget.id === "next" && page < totalNumOfPages) {
-			setPage((prevPage) => {
+			})
+			: null;
+			event.currentTarget.id === "next" && page < totalNumOfPages
+			? setPage((prevPage) => {
 				const newPage = ++prevPage;
 				navigateToPage("/forum", newPage);
 				return newPage;
-			});
-		}
+			})
+			: null;
 	};
 
 	const navigateToPage = (path: string, newPage: number) => {

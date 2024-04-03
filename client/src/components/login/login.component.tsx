@@ -18,20 +18,12 @@ const Login = () => {
 
 	const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-
-		if (name === "usernameOrEmail") {
-			const isEmail = value.includes("@") && value.split("@")[1].includes(".");
-			setCredentials((prevData) => ({
-				...prevData,
-				userName: isEmail ? "" : value,
-				email: isEmail ? value : "",
-			}));
-		} else {
-			setCredentials((prevData) => ({
-				...prevData,
-				password: value,
-			}));
-		}
+		setCredentials((prevData) => ({
+			...prevData,
+			userName: name === "usernameOrEmail" ? (value.includes("@") && value.split("@")[1].includes(".") ? "" : value) : prevData.userName,
+			email: name === "usernameOrEmail" ? (value.includes("@") && value.split("@")[1].includes(".") ? value : "") : prevData.email,
+			password: name !== "usernameOrEmail" ? value : prevData.password
+		}));
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {

@@ -41,8 +41,9 @@ const Comments = () => {
 
 	useEffect(() => {
 		async function getRelevantComments() {
-			if (postId)
-				await dispatch(getRelevantCommentsThunk({ postId: postId!, page }));
+			postId
+				? await dispatch(getRelevantCommentsThunk({ postId: postId!, page }))
+				: null;
 		}
 		getRelevantComments();
 	}, [dispatch, postId, page]);
@@ -58,20 +59,20 @@ const Comments = () => {
 	};
 
 	const handleNewPage = (event: MouseEvent<HTMLDivElement>) => {
-		if (event.currentTarget.id === "prev" && page > 1) {
-			setPage((prevPage) => {
+		event.currentTarget.id === "prev" && page > 1
+			? setPage((prevPage) => {
 				const newPage = --prevPage;
 				navigateToPage(newPage);
 				return newPage;
-			});
-		}
-		if (event.currentTarget.id === "next" && page < totalPages) {
-			setPage((prevPage) => {
+			})
+			: null;
+		event.currentTarget.id === "next" && page < totalPages
+			? setPage((prevPage) => {
 				const newPage = ++prevPage;
 				navigateToPage(newPage);
 				return newPage;
-			});
-		}
+			})
+			: null;
 	};
 
 	const navigateToPage = (newPage: number) => {
@@ -82,82 +83,80 @@ const Comments = () => {
 	};
 
 	const handleRank = (event: MouseEvent<HTMLDivElement>, comment: IComment) => {
-		if (event.currentTarget.id === "voteUp") {
-			dispatch(
+		event.currentTarget.id === "voteUp"
+			? dispatch(
 				rankCommentThunk({
 					commentId: comment.commentId,
 					newRank: comment.rank + 1,
 					rankerId: userId,
 				})
-			);
-		}
-		if (event.currentTarget.id === "voteDown") {
-			dispatch(
+			)
+			: null;
+		event.currentTarget.id === "voteDown"
+			? dispatch(
 				rankCommentThunk({
 					commentId: comment.commentId,
 					newRank: comment.rank - 1,
 					rankerId: userId,
 				})
-			);
-		}
+			)
+			: null;
 	};
 
 	return (
 		<div className='w-[50%] flex flex-col items-center'>
 			{comments?.map((comment) => (
-					<div key={comment?.commentId} className={commentsStyle.container}>
-						<div className='flex flex-col justify-center'>
-							<div
-								id='voteUp'
-								className={`${commentsStyle.voteUp} ${
-									comment?.whoRanked?.includes(userId)
-										? commentsStyle.votedUp
-										: null
+				<div key={comment?.commentId} className={commentsStyle.container}>
+					<div className='flex flex-col justify-center'>
+						<div
+							id='voteUp'
+							className={`${commentsStyle.voteUp} ${comment?.whoRanked?.includes(userId)
+								? commentsStyle.votedUp
+								: null
 								}`}
-								onClick={(e) => handleRank(e, comment)}
-							/>
-							<div className={commentsStyle.rank}>{comment.rank}</div>
-							<div
-								id='voteDown'
-								className={`${commentsStyle.votedown} ${
-									comment?.whoRanked?.includes(userId)
-										? commentsStyle.votedDown
-										: null
+							onClick={(e) => handleRank(e, comment)}
+						/>
+						<div className={commentsStyle.rank}>{comment.rank}</div>
+						<div
+							id='voteDown'
+							className={`${commentsStyle.votedown} ${comment?.whoRanked?.includes(userId)
+								? commentsStyle.votedDown
+								: null
 								}`}
-								onClick={(e) => handleRank(e, comment)}
-							/>
-						</div>
-						<div className={commentsStyle.content}>
-							<div className={commentsStyle.body}>{comment.body}</div>
-							<img className="p-5" src={comment.media[0]} alt={comment.media[0]} />
-							<div className='flex justify-between pl-[10px]'>
-								{comment.publisherId === userId ? (
-									<div>
-										<AlertDialog
-											btnClassName={commentsStyle.commentDeleteEdit}
-											title='Delete a comment'
-											content='Are you sure you want to delete this comment?'
-											onAgree={() => handleDelete(comment.commentId)}
-										>
-											Delete
-										</AlertDialog>
-										&nbsp;
-										<Button
-											variant='text'
-											className={commentsStyle.commentDeleteEdit}
-											onClick={() => handleEdit(comment)}
-										>
-											Edit
-										</Button>
-									</div>
-								) : null}
-								<div className={commentsStyle.publisher}>
-									by: {comment.publisher}
+							onClick={(e) => handleRank(e, comment)}
+						/>
+					</div>
+					<div className={commentsStyle.content}>
+						<div className={commentsStyle.body}>{comment.body}</div>
+						<img className="p-5" src={comment.media[0]} alt={comment.media[0]} />
+						<div className='flex justify-between pl-[10px]'>
+							{comment.publisherId === userId ? (
+								<div>
+									<AlertDialog
+										btnClassName={commentsStyle.commentDeleteEdit}
+										title='Delete a comment'
+										content='Are you sure you want to delete this comment?'
+										onAgree={() => handleDelete(comment.commentId)}
+									>
+										Delete
+									</AlertDialog>
+									&nbsp;
+									<Button
+										variant='text'
+										className={commentsStyle.commentDeleteEdit}
+										onClick={() => handleEdit(comment)}
+									>
+										Edit
+									</Button>
 								</div>
+							) : null}
+							<div className={commentsStyle.publisher}>
+								by: {comment.publisher}
 							</div>
 						</div>
 					</div>
-				))}
+				</div>
+			))}
 			<div className='flex justify-between w-24'>
 				<div
 					id='prev'
