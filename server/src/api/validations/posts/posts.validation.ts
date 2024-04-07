@@ -56,11 +56,11 @@ export const validateDeletePost = joi.object({
 
 export const validateEditPost = joi.object({
     body: joi.object({
-        postId: joi.string().required(),
+    postId: joi.string().required(),
 	newGameName: joi.string().required(),
 	newTitle: joi.string().required(),
 	newContent: joi.string().required(),
-	newMedia: joi.string().required(),
+	newMedia: joi.string().optional(),
 	publisherId: joi.string().required()
     }),
     file: joi.object({

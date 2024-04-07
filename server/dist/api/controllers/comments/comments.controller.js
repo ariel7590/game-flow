@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpRankComment = exports.httpEditComment = exports.httpDeleteComment = exports.httpGetPaginatedComments = exports.httpFindCommentsWithPostId = exports.httpFindCommentWithCommentId = exports.httpCreateNewComment = void 0;
-const cloudinary_1 = require("cloudinary");
 const comments_da_1 = require("../../data-access/comments/comments.da");
 const posts_da_1 = require("../../data-access/posts/posts.da");
 const pagination_1 = require("../../utils/pagination");
+const cloudinary_service_1 = require("../../services/cloudinary.service");
 const httpCreateNewComment = async (req, res) => {
     const commentInput = req.body;
     const post = await (0, posts_da_1.isPostExists)(commentInput.postId);
@@ -14,19 +14,14 @@ const httpCreateNewComment = async (req, res) => {
         });
     }
     const publisherId = +commentInput.publisherId;
-    let uploadResult = null;
-    let uploadSecureUrl = "";
+    let uploadSecureUrl;
     if (req.file) {
-        uploadResult = await cloudinary_1.v2.uploader.upload(req.file.path, {
-            folder: "game-flow"
-        });
-        console.log("File uploaded to Cloudinary:", uploadResult);
-        uploadSecureUrl = uploadResult.secure_url;
+        uploadSecureUrl = await (0, cloudinary_service_1.uploadToCloudinary)(req.file.path);
     }
     const mediaUrls = [];
-    if (uploadResult) {
-        mediaUrls.push(uploadSecureUrl);
-    }
+    typeof uploadSecureUrl !== "undefined"
+        ? mediaUrls.push(uploadSecureUrl)
+        : null;
     const newComment = await (0, comments_da_1.createNewComment)({ ...commentInput, publisherId, media: mediaUrls });
     return res.status(201).json({
         commetId: newComment.commentId,
@@ -116,12 +111,10 @@ const httpEditComment = async (req, res) => {
     }
     let mediaUrls = [];
     if (req.file) {
-        const uploadResult = await cloudinary_1.v2.uploader.upload(req.file.path, {
-            folder: "game-flow"
-        });
-        console.log("File uploaded to Cloudinary:", uploadResult);
-        const uploadSecureUrl = uploadResult.secure_url;
-        mediaUrls.push(uploadSecureUrl);
+        const uploadSecureUrl = await (0, cloudinary_service_1.uploadToCloudinary)(req.file.path);
+        typeof uploadSecureUrl !== "undefined"
+            ? mediaUrls.push(uploadSecureUrl)
+            : null;
     }
     if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
         mediaUrls = JSON.parse(newMedia);

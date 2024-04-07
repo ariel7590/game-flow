@@ -1,5 +1,4 @@
 import { RequestHandler, Response } from "express";
-import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
 import {
 	IComment,
 	ICommentForEditing,
@@ -19,6 +18,7 @@ import {
 import { isPostExists } from "../../data-access/posts/posts.da";
 import { AuthenticatedRequest } from "../../types/jwt.types";
 import { paginate } from "../../utils/pagination";
+import { uploadToCloudinary } from "../../services/cloudinary.service";
 
 export const httpCreateNewComment: RequestHandler = async (req, res) => {
 	const commentInput = req.body as ICommentInput;
@@ -29,19 +29,14 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 		});
 	}
 	const publisherId = +commentInput.publisherId;
-	let uploadResult: UploadApiResponse | null = null;
-	let uploadSecureUrl = "";
+	let uploadSecureUrl:string|undefined;
 	if (req.file) {
-		uploadResult = await cloudinary.uploader.upload(req.file.path, {
-			folder: "game-flow"
-		});
-		console.log("File uploaded to Cloudinary:", uploadResult);
-		uploadSecureUrl = uploadResult.secure_url;
+		uploadSecureUrl = await uploadToCloudinary(req.file.path);
 	}
 	const mediaUrls: string[] = [];
-	if (uploadResult) {
-		mediaUrls.push(uploadSecureUrl);
-	}
+	typeof uploadSecureUrl !== "undefined"
+		? mediaUrls.push(uploadSecureUrl)
+		: null;
 	const newComment = await createNewComment({ ...commentInput, publisherId, media: mediaUrls });
 	return res.status(201).json({
 		commetId: newComment.commentId,
@@ -134,12 +129,10 @@ export const httpEditComment: RequestHandler = async (req,res) => {
 	}
 	let mediaUrls: string[] = [];
 	if (req.file) {
-		const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-			folder: "game-flow"
-		});
-		console.log("File uploaded to Cloudinary:", uploadResult);
-		const uploadSecureUrl = uploadResult.secure_url;
-		mediaUrls.push(uploadSecureUrl);
+		const uploadSecureUrl = await uploadToCloudinary(req.file.path);
+		typeof uploadSecureUrl !== "undefined"
+		? mediaUrls.push(uploadSecureUrl)
+		: null;
 	}
 	if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
 		mediaUrls = JSON.parse(newMedia);

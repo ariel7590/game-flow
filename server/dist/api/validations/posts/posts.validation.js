@@ -61,7 +61,7 @@ exports.validateEditPost = joi_1.default.object({
         newGameName: joi_1.default.string().required(),
         newTitle: joi_1.default.string().required(),
         newContent: joi_1.default.string().required(),
-        newMedia: joi_1.default.string().required(),
+        newMedia: joi_1.default.string().optional(),
         publisherId: joi_1.default.string().required()
     }),
     file: joi_1.default.object({

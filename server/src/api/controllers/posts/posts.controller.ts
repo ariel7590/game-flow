@@ -1,5 +1,5 @@
 import { RequestHandler, Response } from "express";
-import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
+import { uploadToCloudinary } from "../../services/cloudinary.service";
 import {
 	getAllPosts,
 	createNewPost,
@@ -30,7 +30,7 @@ export const httpGetPaginatedPosts: RequestHandler = async (req, res) => {
 	}
 	const totalNumOfPosts = await countNumberOfPosts();
 	const totalNumOfPages = totalNumOfPosts ? Math.ceil(totalNumOfPosts / 10) : 1;
-	return res.status(200).json({posts, pages: totalNumOfPages});
+	return res.status(200).json({ posts, pages: totalNumOfPages });
 };
 
 export const httpGetPostById: RequestHandler = async (req, res) => {
@@ -52,21 +52,16 @@ export const httpCreateNewPost: RequestHandler = async (req, res) => {
 			error: "Missing required post!",
 		});
 	}
-	const publisherId=+post.publisherId;
-	let uploadResult: UploadApiResponse | null = null;
-	let uploadSecureUrl = "";
+	const publisherId = +post.publisherId;
+	let uploadSecureUrl: string | undefined;
 	if (req.file) {
-		uploadResult = await cloudinary.uploader.upload(req.file.path,{
-			folder: "game-flow"
-		});
-		console.log("File uploaded to Cloudinary:", uploadResult);
-		uploadSecureUrl=uploadResult.secure_url;
+		uploadSecureUrl = await uploadToCloudinary(req.file.path);
 	}
-	const mediaUrls:string[]=[];
-	if (uploadResult){
-		mediaUrls.push(uploadSecureUrl);
-	}
-	const postId = await createNewPost({...post, publisherId, media: mediaUrls});
+	const mediaUrls: string[] = [];
+	typeof uploadSecureUrl !== "undefined"
+		? mediaUrls.push(uploadSecureUrl)
+		: null;
+	const postId = await createNewPost({ ...post, publisherId, media: mediaUrls });
 	return res.status(201).json({
 		postId,
 		publisher: post.publisher,
@@ -105,27 +100,25 @@ export const httpEditPost = async (
 	req: AuthenticatedRequest,
 	res: Response
 ) => {
-	try{
+	try {
 		const post = req.body as IPostForEditing;
 		const userId = req.userId as number;
 		const { postId, newGameName, newTitle, newContent, publisherId, newMedia } = post;
-		const publisherIdNum=+publisherId;
+		const publisherIdNum = +publisherId;
 		if (publisherIdNum !== userId) {
 			return res.status(401).json({
 				error: "You are unathorized to edit this post!",
 			});
 		}
-		let mediaUrls:string[]=[];
+		let mediaUrls: string[] = [];
 		if (req.file) {
-			const uploadResult = await cloudinary.uploader.upload(req.file.path,{
-				folder: "game-flow"
-			});
-			console.log("File uploaded to Cloudinary:", uploadResult);
-			const uploadSecureUrl=uploadResult.secure_url;
-			mediaUrls.push(uploadSecureUrl);
+			const uploadSecureUrl = await uploadToCloudinary(req.file.path);
+			typeof uploadSecureUrl !== "undefined"
+				? mediaUrls.push(uploadSecureUrl)
+				: null;
 		}
-		if(mediaUrls.length===0 && newMedia?.trim() !== ""){
-			mediaUrls=JSON.parse(newMedia);
+		if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
+			mediaUrls = JSON.parse(newMedia);
 		}
 		const editedPost = await editPost(postId, newGameName, newTitle, newContent, mediaUrls);
 		if (!editedPost) {
@@ -135,7 +128,7 @@ export const httpEditPost = async (
 		}
 		return res.status(200).json(editedPost);
 	}
-	catch(error){
+	catch (error) {
 		console.log(error)
 		return res.status(500).json({
 			error
