@@ -3,65 +3,53 @@ import { generateRandomStringId } from "../../utils/random-string";
 import { IPost, IReceivedPostContent } from "../../types/posts.types";
 
 async function savePost(post: IPost) {
-	try {
-		await postsDB.findOneAndUpdate(
-			{
-				postId: post.postId,
-			},
-			post,
-			{ upsert: true }
-		);
-	} catch (err) {
-		console.error(err);
-	}
+	await postsDB.findOneAndUpdate(
+		{
+			postId: post.postId,
+		},
+		post,
+		{ upsert: true }
+	);
+
 }
 
 export async function isPostExists(postId: string) {
-	try {
-		return await postsDB.findOne(
-			{
-				postId,
-			},
-			{
-				_id: 0,
-				__v: 0,
-				deleted: 0,
-			}
-		);
-	} catch (err) {
-		console.error(err);
-	}
+	return await postsDB.findOne(
+		{
+			postId,
+		},
+		{
+			_id: 0,
+			__v: 0,
+			deleted: 0,
+		}
+	);
+
 }
 export async function getAllPosts() { //for testing only, I can remove it later
-	try {
-		return await postsDB.find(
-			{
-				deleted: false,
-			},
-			{ _id: 0, __v: 0, deleted: 0 }
-		);
-	} catch (err) {
-		console.error(err);
-	}
+	return await postsDB.find(
+		{
+			deleted: false,
+		},
+		{ _id: 0, __v: 0, deleted: 0 }
+	);
+
 }
 
 export async function getPaginatedPosts(paginatedData: {
 	skip: number;
 	perPage: number;
 }) {
-	try {
-		return await postsDB
-			.find(
-				{
-					deleted: false,
-				},
-				{ _id: 0, __v: 0, deleted: 0 }
-			)
-			.skip(paginatedData.skip)
-			.limit(paginatedData.perPage);
-	} catch (err) {
-		console.error(err);
-	}
+	return await postsDB
+		.find(
+			{
+				deleted: false,
+			},
+			{ _id: 0, __v: 0, deleted: 0 }
+		)
+		.skip(paginatedData.skip)
+		.limit(paginatedData.perPage);
+
 }
 
 export async function createNewPost(post: IReceivedPostContent) {
@@ -78,51 +66,43 @@ export async function editPost(
 	newContent: string,
 	newMedia: string[],
 ) {
-	try {
-		const edited = await postsDB.updateOne(
-			{
-				postId,
-				deleted: false,
-			},
-			{
-				gameName: newGameName,
-				title: newTitle,
-				body: newContent,
-				media: newMedia,
-			}
-		);
-		if (edited.acknowledged && edited.matchedCount > 0) {
-			return await isPostExists(postId);
-		} else {
-			return null;
+
+	const edited = await postsDB.updateOne(
+		{
+			postId,
+			deleted: false,
+		},
+		{
+			gameName: newGameName,
+			title: newTitle,
+			body: newContent,
+			media: newMedia,
 		}
-	} catch (err) {
-		console.error(err);
+	);
+	if (edited.acknowledged && edited.matchedCount > 0) {
+		return await isPostExists(postId);
+	} else {
+		return null;
 	}
+
 }
 
 export async function deletePost(postId: string) {
-	try {
-		const deleted = await postsDB.updateOne(
-			{
-				postId: postId,
-			},
-			{
-				deleted: true,
-			}
-		);
-		return deleted.acknowledged && deleted.modifiedCount === 1;
-	} catch (err) {
-		console.error(err);
-	}
+	const deleted = await postsDB.updateOne(
+		{
+			postId: postId,
+		},
+		{
+			deleted: true,
+		}
+	);
+	return deleted.acknowledged && deleted.modifiedCount === 1;
+
 }
 
 export async function countNumberOfPosts() {
-	try {
-		return await postsDB.countDocuments({
-			deleted: false,
-		});
-	} catch (err) {
-		console.error(err);
-	}
+	return await postsDB.countDocuments({
+		deleted: false,
+	});
+
 }

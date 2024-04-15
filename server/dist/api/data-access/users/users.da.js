@@ -11,53 +11,28 @@ async function getLatestUserId() {
     return latestUser.userId;
 }
 async function isUserExists(userName) {
-    try {
-        return await users_model_1.userModel.findOne({
-            userName
-        }, { _id: 0, __v: 0, salt: 0 });
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return await users_model_1.userModel.findOne({
+        userName
+    }, { _id: 0, __v: 0, salt: 0 });
 }
 exports.isUserExists = isUserExists;
 async function findUserByEmail(userEmail) {
-    try {
-        return await users_model_1.userModel.findOne({
-            email: userEmail,
-        }, { _id: 0, __v: 0 });
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return await users_model_1.userModel.findOne({
+        email: userEmail,
+    }, { _id: 0, __v: 0 });
 }
 exports.findUserByEmail = findUserByEmail;
 async function saveAccount(user) {
-    try {
-        await users_model_1.userModel.findOneAndUpdate({
-            userId: user.userId,
-        }, user, { upsert: true });
-    }
-    catch (err) {
-        console.error(err);
-    }
+    await users_model_1.userModel.findOneAndUpdate({
+        userId: user.userId,
+    }, user, { upsert: true });
 }
 async function getAllUsers() {
-    try {
-        return await users_model_1.userModel.find({}, { _id: 0, __v: 0, password: 0, salt: 0, active: 0 });
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return await users_model_1.userModel.find({}, { _id: 0, __v: 0, password: 0, salt: 0, active: 0 });
 }
 exports.getAllUsers = getAllUsers;
 async function getUserById(userId) {
-    try {
-        return await users_model_1.userModel.findOne({ userId: userId }, { _id: 0, __v: 0, password: 0, salt: 0, active: 0 });
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return await users_model_1.userModel.findOne({ userId: userId }, { _id: 0, __v: 0, password: 0, salt: 0, active: 0 });
 }
 exports.getUserById = getUserById;
 async function createNewUser(user) {

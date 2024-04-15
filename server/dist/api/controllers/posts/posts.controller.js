@@ -11,78 +11,110 @@ const httpGetAllPosts = async (req, res) => {
 };
 exports.httpGetAllPosts = httpGetAllPosts;
 const httpGetPaginatedPosts = async (req, res) => {
-    const page = req.query.page;
-    const paginationData = (0, pagination_1.paginate)(+page);
-    const posts = await (0, posts_da_1.getPaginatedPosts)(paginationData);
-    if (!posts) {
-        return res.status(404).json({
-            error: "Posts were not found!",
+    try {
+        const page = req.query.page;
+        const paginationData = (0, pagination_1.paginate)(+page);
+        const posts = await (0, posts_da_1.getPaginatedPosts)(paginationData);
+        if (!posts) {
+            return res.status(404).json({
+                error: "Posts were not found!",
+            });
+        }
+        const totalNumOfPosts = await (0, posts_da_1.countNumberOfPosts)();
+        const totalNumOfPages = totalNumOfPosts ? Math.ceil(totalNumOfPosts / 10) : 1;
+        return res.status(200).json({ posts, pages: totalNumOfPages });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            error
         });
     }
-    const totalNumOfPosts = await (0, posts_da_1.countNumberOfPosts)();
-    const totalNumOfPages = totalNumOfPosts ? Math.ceil(totalNumOfPosts / 10) : 1;
-    return res.status(200).json({ posts, pages: totalNumOfPages });
 };
 exports.httpGetPaginatedPosts = httpGetPaginatedPosts;
 const httpGetPostById = async (req, res) => {
-    const postId = req.params.postId;
-    const post = await (0, posts_da_1.isPostExists)(postId);
-    if (post) {
-        return res.status(200).json(post);
+    try {
+        const postId = req.params.postId;
+        const post = await (0, posts_da_1.isPostExists)(postId);
+        if (post) {
+            return res.status(200).json(post);
+        }
+        else {
+            return res.status(404).json({
+                error: "Post not found!",
+            });
+        }
     }
-    else {
-        return res.status(404).json({
-            error: "Post not found!",
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            error
         });
     }
 };
 exports.httpGetPostById = httpGetPostById;
 const httpCreateNewPost = async (req, res) => {
-    const post = req.body;
-    if (!post) {
-        return res.status(400).json({
-            error: "Missing required post!",
+    try {
+        const post = req.body;
+        if (!post) {
+            return res.status(400).json({
+                error: "Missing required post!",
+            });
+        }
+        const publisherId = +post.publisherId;
+        let uploadSecureUrl;
+        if (req.file) {
+            uploadSecureUrl = await (0, cloudinary_service_1.uploadToCloudinary)(req.file.path);
+        }
+        const mediaUrls = [];
+        typeof uploadSecureUrl !== "undefined"
+            ? mediaUrls.push(uploadSecureUrl)
+            : null;
+        const postId = await (0, posts_da_1.createNewPost)({ ...post, publisherId, media: mediaUrls });
+        return res.status(201).json({
+            postId,
+            publisher: post.publisher,
+            publisherId: publisherId,
+            gameName: post.gameName,
+            title: post.title,
+            body: post.body,
+            media: mediaUrls,
         });
     }
-    const publisherId = +post.publisherId;
-    let uploadSecureUrl;
-    if (req.file) {
-        uploadSecureUrl = await (0, cloudinary_service_1.uploadToCloudinary)(req.file.path);
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
     }
-    const mediaUrls = [];
-    typeof uploadSecureUrl !== "undefined"
-        ? mediaUrls.push(uploadSecureUrl)
-        : null;
-    const postId = await (0, posts_da_1.createNewPost)({ ...post, publisherId, media: mediaUrls });
-    return res.status(201).json({
-        postId,
-        publisher: post.publisher,
-        publisherId: publisherId,
-        gameName: post.gameName,
-        title: post.title,
-        body: post.body,
-        media: mediaUrls,
-    });
 };
 exports.httpCreateNewPost = httpCreateNewPost;
 const httpDeletePost = async (req, res) => {
-    const postId = req.params.postId;
-    const userId = req.userId;
-    const isExists = await (0, posts_da_1.isPostExists)(postId);
-    if (isExists) {
-        if (isExists.publisherId !== userId) {
-            return res.status(401).json({
-                error: "You are unathorized to delete this post!",
+    try {
+        const postId = req.params.postId;
+        const userId = req.userId;
+        const isExists = await (0, posts_da_1.isPostExists)(postId);
+        if (isExists) {
+            if (isExists.publisherId !== userId) {
+                return res.status(401).json({
+                    error: "You are unathorized to delete this post!",
+                });
+            }
+            await (0, posts_da_1.deletePost)(postId);
+            return res.status(200).json({
+                ok: `Post with ID ${postId} has been deleted!`,
             });
         }
-        await (0, posts_da_1.deletePost)(postId);
-        return res.status(200).json({
-            ok: `Post with ID ${postId} has been deleted!`,
+        return res.status(404).json({
+            error: "Post is not found!",
         });
     }
-    return res.status(404).json({
-        error: "Post is not found!",
-    });
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
 };
 exports.httpDeletePost = httpDeletePost;
 const httpEditPost = async (req, res) => {

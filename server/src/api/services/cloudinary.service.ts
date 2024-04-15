@@ -11,7 +11,7 @@ export const uploadToCloudinary = async (path: string) => {
         const uploadSecureUrl = uploadResult.secure_url;
         return uploadSecureUrl;
     } catch (error) {
-        console.error("Upload has failed", error);
+        throw new Error("Upload has failed: " + error)
     }
 
 }

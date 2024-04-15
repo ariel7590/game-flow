@@ -4,53 +4,33 @@ exports.countNumberOfPosts = exports.deletePost = exports.editPost = exports.cre
 const posts_model_1 = require("../../models/posts/posts.model");
 const random_string_1 = require("../../utils/random-string");
 async function savePost(post) {
-    try {
-        await posts_model_1.postModel.findOneAndUpdate({
-            postId: post.postId,
-        }, post, { upsert: true });
-    }
-    catch (err) {
-        console.error(err);
-    }
+    await posts_model_1.postModel.findOneAndUpdate({
+        postId: post.postId,
+    }, post, { upsert: true });
 }
 async function isPostExists(postId) {
-    try {
-        return await posts_model_1.postModel.findOne({
-            postId,
-        }, {
-            _id: 0,
-            __v: 0,
-            deleted: 0,
-        });
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return await posts_model_1.postModel.findOne({
+        postId,
+    }, {
+        _id: 0,
+        __v: 0,
+        deleted: 0,
+    });
 }
 exports.isPostExists = isPostExists;
 async function getAllPosts() {
-    try {
-        return await posts_model_1.postModel.find({
-            deleted: false,
-        }, { _id: 0, __v: 0, deleted: 0 });
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return await posts_model_1.postModel.find({
+        deleted: false,
+    }, { _id: 0, __v: 0, deleted: 0 });
 }
 exports.getAllPosts = getAllPosts;
 async function getPaginatedPosts(paginatedData) {
-    try {
-        return await posts_model_1.postModel
-            .find({
-            deleted: false,
-        }, { _id: 0, __v: 0, deleted: 0 })
-            .skip(paginatedData.skip)
-            .limit(paginatedData.perPage);
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return await posts_model_1.postModel
+        .find({
+        deleted: false,
+    }, { _id: 0, __v: 0, deleted: 0 })
+        .skip(paginatedData.skip)
+        .limit(paginatedData.perPage);
 }
 exports.getPaginatedPosts = getPaginatedPosts;
 async function createNewPost(post) {
@@ -61,50 +41,35 @@ async function createNewPost(post) {
 }
 exports.createNewPost = createNewPost;
 async function editPost(postId, newGameName, newTitle, newContent, newMedia) {
-    try {
-        const edited = await posts_model_1.postModel.updateOne({
-            postId,
-            deleted: false,
-        }, {
-            gameName: newGameName,
-            title: newTitle,
-            body: newContent,
-            media: newMedia,
-        });
-        if (edited.acknowledged && edited.matchedCount > 0) {
-            return await isPostExists(postId);
-        }
-        else {
-            return null;
-        }
+    const edited = await posts_model_1.postModel.updateOne({
+        postId,
+        deleted: false,
+    }, {
+        gameName: newGameName,
+        title: newTitle,
+        body: newContent,
+        media: newMedia,
+    });
+    if (edited.acknowledged && edited.matchedCount > 0) {
+        return await isPostExists(postId);
     }
-    catch (err) {
-        console.error(err);
+    else {
+        return null;
     }
 }
 exports.editPost = editPost;
 async function deletePost(postId) {
-    try {
-        const deleted = await posts_model_1.postModel.updateOne({
-            postId: postId,
-        }, {
-            deleted: true,
-        });
-        return deleted.acknowledged && deleted.modifiedCount === 1;
-    }
-    catch (err) {
-        console.error(err);
-    }
+    const deleted = await posts_model_1.postModel.updateOne({
+        postId: postId,
+    }, {
+        deleted: true,
+    });
+    return deleted.acknowledged && deleted.modifiedCount === 1;
 }
 exports.deletePost = deletePost;
 async function countNumberOfPosts() {
-    try {
-        return await posts_model_1.postModel.countDocuments({
-            deleted: false,
-        });
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return await posts_model_1.postModel.countDocuments({
+        deleted: false,
+    });
 }
 exports.countNumberOfPosts = countNumberOfPosts;
