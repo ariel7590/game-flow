@@ -9,4 +9,5 @@ module.exports = {
     JWTSecret: process.env.JWT_SECRET_KEY,
     cloudinaryAPI: process.env.CLOUDINARY_API_KEY,
     cloudinarySecret: process.env.CLOUDINARY_SECRET_KEY,
+    youtubeAPI: process.env.YOUTUBE_API_KEY
 };

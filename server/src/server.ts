@@ -2,7 +2,7 @@ import http from 'http'
 import config from 'config';
 import app from './app'
 import { mongoConnect } from './api/utils/mongo-connect';
-import { cloudinaryConfig } from './config/cloudinary';
+import { cloudinaryConfig } from './config/cloudinary.config';
 
 
 const PORT = config.get('port');
