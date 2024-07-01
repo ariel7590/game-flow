@@ -1,4 +1,3 @@
-import { google } from 'googleapis';
 import { youtube } from '../../config/youtube-search.config';
 
 export default async function searchOnYoutube(query: string){

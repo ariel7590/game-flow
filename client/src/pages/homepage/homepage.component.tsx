@@ -22,9 +22,10 @@ const Homepage = () => {
 
 	const handleSubmit = async () => {
 		const answer= await dispatch(getGeneratedAnswer(prompt));
-		(answer.payload as Array<IAnswer>).map(line=>{
-			console.log(line.text);
-		})
+		console.log(answer.payload);
+		// (answer.payload as Array<IAnswer>).map(line=>{
+		// 	console.log(line.text);
+		// })
 	};
 
 	return (
