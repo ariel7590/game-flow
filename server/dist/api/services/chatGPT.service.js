@@ -2,11 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.chatGPTRewrite = void 0;
 const chatGPT_config_1 = require("../../config/chatGPT.config");
-async function chatGPTRewrite() {
+async function chatGPTRewrite(prompt) {
     try {
         return await chatGPT_config_1.openai.chat.completions.create({
-            messages: [{ role: "user", content: "Say this is a test" }],
-            model: "gpt-3.5-turbo",
+            messages: [
+                {
+                    role: "user",
+                    content: prompt,
+                },
+            ],
+            model: "gpt-4o",
         });
     }
     catch (error) {

@@ -6,7 +6,8 @@ async function transcriptYoutubeVideo(videoLink) {
         return await youtube_transcript_1.YoutubeTranscript.fetchTranscript(videoLink);
     }
     catch (error) {
-        throw new Error("Transcript has failed: " + error);
+        // throw new Error("Transcript has failed: " + error);
+        console.log("Transcript has failed: " + error);
     }
 }
 exports.default = transcriptYoutubeVideo;
