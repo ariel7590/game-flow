@@ -1,11 +1,12 @@
 import React, { ChangeEvent, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import * as homepageStyle from "./homepage.tailwind";
-import { Link } from "react-router-dom";
 import AiGuide from "../../components/ai-guide/ai-guide.component";
+import logo from "../../assets/logo-color.svg";
+import { Link } from "react-router-dom";
 
 const Homepage = () => {
-	const [prompt, setPrompt]=useState('');
+	const [prompt, setPrompt] = useState("");
 	const [isPromptReady, setIsPromptReady] = useState(false);
 
 	const handlePrompt = (event: ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +19,7 @@ const Homepage = () => {
 
 	const idleHomepage = (
 		<div className={homepageStyle.homepageContainer}>
-			<h1>Game Flow</h1>
+			<img src={logo} alt='GameFlow' width='350' height='350' />
 			<br />
 			<div className='flex items-center rounded-[8px] px-2 bg-white'>
 				<input
@@ -43,17 +44,7 @@ const Homepage = () => {
 		</div>
 	);
 
-	return(
-		<>
-		{
-			!isPromptReady
-			?
-			idleHomepage
-			:
-			<AiGuide prompt={prompt} />
-		}
-		</>
-	)
+	return <>{!isPromptReady ? idleHomepage : <AiGuide prompt={prompt} />}</>;
 };
 
 export default Homepage;

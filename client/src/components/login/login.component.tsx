@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { GoogleLoginButton } from "react-social-login-buttons";
 import { Button, Input } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { ICredentials } from "./login.types";
@@ -58,8 +59,12 @@ const Login = () => {
 				<h2>Sign In</h2>
 			</div>
 			<div className='flex flex-col h-[100%]'>
-				<Button className='bg-white'>Sign in with Google</Button>
-				<span className='self-center my-3'>Or</span>
+				<GoogleLoginButton style={{ padding: "10px", borderRadius: "7px"}} />
+				<div className="flex items-center">
+					<div className="w-[50%] h-0 border-solid border-y-[1px]"/>
+					<span className='m-3'>Or</span>
+					<div className="w-[50%] h-0 border-solid border-y-[1px]"/>
+				</div>
 				<form className='flex flex-col h-[100%] justify-between'>
 					<Input
 						type='text'
