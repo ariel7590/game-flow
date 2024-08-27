@@ -51,20 +51,14 @@ const Login = () => {
 	};
 
 	const loginInput =
-		"text-[black] bg-[#e8f0fe] rounded-[7px] h-[35px] px-[5px]";
+		"text-[black] bg-[#e8f0fe] rounded-[7px] h-[35px] px-[5px] mb-[5px]";
 
 	return (
-		<div className='flex flex-col justify-between border border-solid border-[white] min-w-6/12 w-[25rem] rounded-[7px] px-[7px] py-[20px] h-[20rem]'>
+		<div className='flex flex-col justify-between border border-solid border-[white] min-w-6/12 w-[25rem] rounded-[7px] px-[7px] py-[20px] min-h-[20rem]'>
 			<div className='mb-[15px]'>
-				<h2>Sign In</h2>
+				<div className='font-bold text-center text-2xl'>Sign in</div>
 			</div>
 			<div className='flex flex-col h-[100%]'>
-				<GoogleLoginButton style={{ padding: "10px", borderRadius: "7px"}} />
-				<div className="flex items-center">
-					<div className="w-[50%] h-0 border-solid border-y-[1px]"/>
-					<span className='m-3'>Or</span>
-					<div className="w-[50%] h-0 border-solid border-y-[1px]"/>
-				</div>
 				<form className='flex flex-col h-[100%] justify-between'>
 					<Input
 						type='text'
@@ -78,23 +72,38 @@ const Login = () => {
 						}
 						required
 					/>
-					<input
+					<Input
 						type='password'
 						name='password'
+						color='primary'
+						disableUnderline
 						className={loginInput}
 						placeholder='Password'
-						onChange={(e) => handleInputs(e)}
+						onChange={(e) =>
+							handleInputs(e as React.ChangeEvent<HTMLInputElement>)
+						}
 						required
 					/>
+					<div className='self-center text-sm mb-[5px]'>Forgot Password?</div>
 					<Button
 						type='submit'
 						variant='contained'
-						className='bg-[#5c5c65]'
+						className='bg-[#5c5c65] mb-[5px]'
 						onClick={handleSubmit}
 					>
 						Login
 					</Button>
 				</form>
+				<div className='self-center'>
+					Don't have an account? click{" "}
+					<span className="cursor-pointer underline" onClick={() => navigate("/signup")}>here</span> to sign up
+				</div>
+				<div className='flex items-center'>
+					<div className='w-[50%] h-0 border-solid border-y-[1px]' />
+					<span className='m-3'>Or</span>
+					<div className='w-[50%] h-0 border-solid border-y-[1px]' />
+				</div>
+				<GoogleLoginButton style={{ padding: "10px", borderRadius: "7px" }} />
 			</div>
 		</div>
 	);

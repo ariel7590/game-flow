@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { ICurrentUser } from "../../redux/users/users.types";
 import { Button } from "@mui/material";
 import SignOut from "../sign-out/sign-out.component";
-import logo from "../../assets/logo-white.svg"
+
 
 const NavBar = () => {
 	const user = useSelector((state: RootState) => state.users.currentUser);
@@ -14,7 +14,8 @@ const NavBar = () => {
 	return (
 		<div className={navbarStyle.navbarContainer}>
 			<Link to='/' className={navbarStyle.logo}>
-				<h2>Game Flow</h2>
+				{/* <h2>Game Flow</h2> */}
+				<img src="https://res.cloudinary.com/dwobsryyr/image/upload/v1724764496/game-flow/ga516kcamthrtemuzneo.jpg" width="200" height="200" alt="GameFlow" />
 			</Link>
 			{user.auth ? (
 				<div className={navbarStyle.welcomeUser}>

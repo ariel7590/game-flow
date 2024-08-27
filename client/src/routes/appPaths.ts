@@ -1,6 +1,7 @@
 export const appPath={
     homePage: '/',
     login: '/login',
+    signup: '/signup',
     forum: '/forum',
     postPage: '/forum/post/:id',
     editcomment: '/forum/post/:postId/edit-comment/:commentId',
