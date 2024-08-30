@@ -1,7 +1,7 @@
 import React from "react";
 import { useRoutes } from "react-router-dom";
 import Layout from "../components/layout/layout.component";
-import LoginSignupPage from "../pages/login-signup-page/login-signup-page.component";
+import LoginPage from "../pages/login-page/login-page";
 import Homepage from "../pages/homepage/homepage.component";
 import Forum from "../components/forum/forum.component";
 import PostPage from "../pages/post-page/post-page.component";
@@ -24,7 +24,7 @@ export default function Router() {
                 },
                 {
                     path: appPath.login,
-                    element: <LoginSignupPage />
+                    element: <LoginPage />
                 },
                 {
                     path: appPath.signup,

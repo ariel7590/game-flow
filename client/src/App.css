@@ -2,12 +2,15 @@ body{
   background-color: #343541;
  color:white;
 }
-/* #root {
-  max-width: 1280px;
-  margin: 0 auto;
+
+#root {
+  max-width: 1600px;
+  width: 95%;
+  /* margin: 0 auto;
   padding: 2rem;
-  text-align: center;
+  text-align: center; */
 }
+/* 
 
 .logo {
   height: 6em;
