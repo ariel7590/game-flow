@@ -1,6 +1,7 @@
 body{
   background-color: #343541;
  color:white;
+ width: 100vw;
 }
 
 #root {

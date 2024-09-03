@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
-import * as homepageStyle from "./homepage.tailwind";
 import AiGuide from "../../components/ai-guide/ai-guide.component";
 import logo from "../../assets/logo-color.svg";
 import { Link } from "react-router-dom";
@@ -18,7 +17,7 @@ const Homepage = () => {
 	};
 
 	const idleHomepage = (
-		<div className={homepageStyle.homepageContainer}>
+		<div className="min-h-[50vh] flex flex-col justify-center items-center w-[100vw]">
 			<img src={logo} alt='GameFlow' width='350' height='350' />
 			<br />
 			<div className='flex items-center rounded-[8px] px-2 bg-white'>
@@ -37,7 +36,7 @@ const Homepage = () => {
 			<br />
 			<p>
 				Go to the{" "}
-				<Link to='/forum' className={homepageStyle.forum}>
+				<Link to='/forum' className="text-white">
 					forum
 				</Link>
 			</p>
