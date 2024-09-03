@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import * as signUpStyles from "./sign-up.tailwind";
+import { Button, Input } from "@mui/material";
 import { ISignUpData } from "./sign-up.types";
 import { signUpThunk } from "../../redux/users/users.thunks";
 import { AppDispatch } from "../../redux/store";
+import CustomUserSigningContainer from "../custom-user-signing-container/custom-user-signing-container";
 
 const SignUp = () => {
 	const [data, setData] = useState<ISignUpData>({
@@ -46,51 +47,61 @@ const SignUp = () => {
 			password: data.password,
 		};
 		const response = await dispatch(signUpThunk(user));
-		response.payload
-			? navigate("/")
-			: null;
+		response.payload ? navigate("/") : null;
 	};
+
+	const signUpInput =
+		"text-[black] bg-[#e8f0fe] rounded-[7px] h-[35px] px-[5px] mb-[8px]";
+
 	return (
-		<div className={signUpStyles.signUpContainer}>
-			<h2>Sign Up</h2>
-			<form className={signUpStyles.signUpForm}>
-				<input
+		<CustomUserSigningContainer title='Sign Up'>
+			<form className='flex flex-col'>
+				<Input
 					type='text'
 					name='userName'
-					className={signUpStyles.signUpInput}
+					className={signUpInput}
+					disableUnderline
 					placeholder='Username'
-					onChange={(e) => handleData(e)}
+					onChange={(e) => handleData(e as React.ChangeEvent<HTMLInputElement>)}
 					required
 				/>
-				<input
+				<Input
 					type='email'
 					name='email'
-					className={signUpStyles.signUpInput}
+					className={signUpInput}
+					disableUnderline
 					placeholder='Email'
-					onChange={(e) => handleData(e)}
+					onChange={(e) => handleData(e as React.ChangeEvent<HTMLInputElement>)}
 					required
 				/>
-				<input
+				<Input
 					type='password'
 					name='password'
-					className={signUpStyles.signUpInput}
+					className={signUpInput}
+					disableUnderline
 					placeholder='Password'
-					onChange={(e) => handleData(e)}
+					onChange={(e) => handleData(e as React.ChangeEvent<HTMLInputElement>)}
 					required
 				/>
-				<input
+				<Input
 					type='password'
 					name='confirmPassword'
-					className={signUpStyles.signUpInput}
+					className={signUpInput}
+					disableUnderline
 					placeholder='Confirm Password'
-					onChange={(e) => handleData(e)}
+					onChange={(e) => handleData(e as React.ChangeEvent<HTMLInputElement>)}
 					required
 				/>
-				<button type='submit' onClick={handleSubmit}>
-					Sign In
-				</button>
+				<Button
+					type='submit'
+					variant='contained'
+					className='bg-[#5c5c65] mb-[8px]'
+					onClick={handleSubmit}
+				>
+					Sign Up
+				</Button>
 			</form>
-		</div>
+		</CustomUserSigningContainer>
 	);
 };
 

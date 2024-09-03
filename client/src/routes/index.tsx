@@ -10,7 +10,7 @@ import EditPost from "../pages/edit-post/edit-post.component";
 import NewComment from "../pages/new-comment/new-comment.component";
 import EditComment from "../pages/edit-comment/edit-comment.component";
 import { appPath } from "./appPaths";
-import SignUp from "../components/sign-up/sign-up.component";
+import SignUpPage from "../pages/sign-up-page/sign-up-page";
 
 export default function Router() {
     const routes = [
@@ -28,7 +28,7 @@ export default function Router() {
                 },
                 {
                     path: appPath.signup,
-                    element: <SignUp />
+                    element: <SignUpPage />
                 },
                 {
                     path: appPath.forum,
