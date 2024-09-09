@@ -101,6 +101,16 @@ const SignUp = () => {
 					Sign Up
 				</Button>
 			</form>
+			<div className='self-center mb-[5px]'>
+				Already have an account? click{" "}
+				<span
+					className='cursor-pointer underline'
+					onClick={() => navigate("/login")}
+				>
+					here
+				</span>{" "}
+				to login
+			</div>
 		</CustomUserSigningContainer>
 	);
 };

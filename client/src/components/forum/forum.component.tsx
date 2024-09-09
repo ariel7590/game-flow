@@ -9,8 +9,12 @@ import {
 } from "react-router-dom";
 import { getPeginatedPostsThunk } from "../../redux/posts/posts.thunks";
 import { enterPost } from "../../redux/posts/posts.slice";
-import * as forumStyle from "./forum.tailwind";
 import { ICurrentPost } from "../../redux/posts/posts.types";
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import CommentIcon from "@mui/icons-material/Comment";
+import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
+import Pagination from '@mui/material/Pagination';
 
 const Forum = () => {
 	const [params] = useSearchParams();
@@ -28,9 +32,7 @@ const Forum = () => {
 	useEffect(() => {
 		async function initPostsState() {
 			await dispatch(getPeginatedPostsThunk(page));
-			currentPost
-				? dispatch(exitPost())
-				: null;
+			currentPost ? dispatch(exitPost()) : null;
 		}
 
 		initPostsState();
@@ -42,25 +44,23 @@ const Forum = () => {
 	};
 
 	const handleNewPost = () => {
-		isUserAuth
-			? navigate("/forum/new-post")
-			: navigate("/login");
+		isUserAuth ? navigate("/forum/new-post") : navigate("/login");
 	};
 
 	const handleNewPage = (event: MouseEvent<HTMLDivElement>) => {
 		event.currentTarget.id === "prev" && page > 1
 			? setPage((prevPage) => {
-				const newPage = --prevPage;
-				navigateToPage("/forum", newPage);
-				return newPage;
-			})
+					const newPage = --prevPage;
+					navigateToPage("/forum", newPage);
+					return newPage;
+			  })
 			: null;
-			event.currentTarget.id === "next" && page < totalNumOfPages
+		event.currentTarget.id === "next" && page < totalNumOfPages
 			? setPage((prevPage) => {
-				const newPage = ++prevPage;
-				navigateToPage("/forum", newPage);
-				return newPage;
-			})
+					const newPage = ++prevPage;
+					navigateToPage("/forum", newPage);
+					return newPage;
+			  })
 			: null;
 	};
 
@@ -72,16 +72,47 @@ const Forum = () => {
 	};
 
 	return (
-		<div className={forumStyle.pageContainer}>
-			<div className={forumStyle.tableContainer}>
-				<button className={forumStyle.newPostButton} onClick={handleNewPost}>
+		<div
+			id='page-container'
+			className='flex justify-center pt-[25px] w-[100vw]'
+		>
+			<Stack spacing={2} className='w-[40%]'>
+				{currentPostList?.map((post) => {
+					return (
+						<div key={post.postId}>
+							<Paper
+								className='cursor-pointer p-2'
+								onClick={() => handlePostNavigation(post)}
+							>
+								<div>
+									<span className='font-bold'>{post.gameName}</span> | &nbsp;
+									{post.title}
+								</div>
+								<br />
+								<div className="flex justify-between">
+									<div>
+										<CommentIcon className="mr-1" />
+										<span className="mr-5">0 answers</span>
+										<ThumbsUpDownIcon className="mr-2" />
+										<span>0 answers</span>
+									</div>
+									<div>{post.publisher}</div>
+								</div>
+							</Paper>
+						</div>
+					);
+				})}
+			</Stack>
+			<Pagination count={10} />
+			{/* <div id="table-container" className="flex justify-center items-center flex-col w-[40%]">
+				<button className="bg-[#3d403e] border-white self-end mb-2 hover:bg-[#939995]" onClick={handleNewPost}>
 					New Post
 				</button>
-				<table className={forumStyle.tableStyle}>
+				<table className="w-[100%]">
 					<thead>
 						<tr>
-							<th className={forumStyle.thStyle}>Title</th>
-							<th className={forumStyle.thStyle}>By</th>
+							<th className={thStyle}>Title</th>
+							<th className={thStyle}>By</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -89,13 +120,13 @@ const Forum = () => {
 							return (
 								<tr key={post.postId}>
 									<td
-										className={forumStyle.titleTdStyle}
+										className="border border-solid border-[white] cursor-pointer"
 										onClick={() => handlePostNavigation(post)}
 									>
 										{post.gameName} | &nbsp;
 										{post.title}
 									</td>
-									<td className={forumStyle.byTdStyle}>{post.publisher}</td>
+									<td className="border border-solid border-[white] cursor-pointer text-center">{post.publisher}</td>
 								</tr>
 							);
 						})}
@@ -126,7 +157,7 @@ const Forum = () => {
 						{">"}
 					</div>
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 };
