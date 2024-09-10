@@ -13,8 +13,9 @@ import { ICurrentPost } from "../../redux/posts/posts.types";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import CommentIcon from "@mui/icons-material/Comment";
-import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
-import Pagination from '@mui/material/Pagination';
+import ThumbsUpDownIcon from "@mui/icons-material/ThumbsUpDown";
+import Pagination from "@mui/material/Pagination";
+import { styled } from "@mui/material";
 
 const Forum = () => {
 	const [params] = useSearchParams();
@@ -74,7 +75,7 @@ const Forum = () => {
 	return (
 		<div
 			id='page-container'
-			className='flex justify-center pt-[25px] w-[100vw]'
+			className='flex flex-col items-center pt-[25px] w-[100%]'
 		>
 			<Stack spacing={2} className='w-[40%]'>
 				{currentPostList?.map((post) => {
@@ -89,11 +90,11 @@ const Forum = () => {
 									{post.title}
 								</div>
 								<br />
-								<div className="flex justify-between">
+								<div className='flex justify-between'>
 									<div>
-										<CommentIcon className="mr-1" />
-										<span className="mr-5">0 answers</span>
-										<ThumbsUpDownIcon className="mr-2" />
+										<CommentIcon className='mr-1' />
+										<span className='mr-5'>0 answers</span>
+										<ThumbsUpDownIcon className='mr-2' />
 										<span>0 answers</span>
 									</div>
 									<div>{post.publisher}</div>
@@ -103,7 +104,7 @@ const Forum = () => {
 					);
 				})}
 			</Stack>
-			<Pagination count={10} />
+			<Pagination count={totalNumOfPages} color='primary' />
 			{/* <div id="table-container" className="flex justify-center items-center flex-col w-[40%]">
 				<button className="bg-[#3d403e] border-white self-end mb-2 hover:bg-[#939995]" onClick={handleNewPost}>
 					New Post

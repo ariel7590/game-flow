@@ -1,12 +1,12 @@
 body{
   background-color: #343541;
  color:white;
- width: 100vw;
+ /* width: 100vw; */
 }
 
 #root {
-  max-width: 1600px;
-  width: 95%;
+  /* max-width: 1600px; */
+  /* width: 95%; */
   /* margin: 0 auto;
   padding: 2rem;
   text-align: center; */

@@ -17,7 +17,7 @@ const Homepage = () => {
 	};
 
 	const idleHomepage = (
-		<div className="min-h-[50vh] flex flex-col justify-center items-center w-[100vw]">
+		<div className="min-h-[50vh] flex flex-col justify-center items-center w-[100%]">
 			<img src={logo} alt='GameFlow' width='350' height='350' />
 			<br />
 			<div className='flex items-center rounded-[8px] px-2 bg-white'>

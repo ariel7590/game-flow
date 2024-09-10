@@ -6,23 +6,23 @@ import { BrowserRouter } from "react-router-dom";
 import { authenticationThunk } from "./redux/users/users.thunks";
 import Router from "./routes";
 
+
 function App() {
+	const dispatch = useDispatch<AppDispatch>();
 
-	const dispatch=useDispatch<AppDispatch>();
-
-	useEffect(()=>{
-		async function authentication(){
+	useEffect(() => {
+		async function authentication() {
 			await dispatch(authenticationThunk({}));
 		}
-		
+
 		authentication();
-	},[])
-	
+	}, []);
+
 	return (
 		<>
-		<BrowserRouter>
-			<Router />
-		</BrowserRouter>
+			<BrowserRouter>
+				<Router />
+			</BrowserRouter>
 		</>
 	);
 }
