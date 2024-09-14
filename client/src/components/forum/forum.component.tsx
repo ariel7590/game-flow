@@ -1,4 +1,4 @@
-import React, { useEffect, useState, MouseEvent } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { exitPost } from "../../redux/posts/posts.slice";
@@ -15,7 +15,8 @@ import Paper from "@mui/material/Paper";
 import CommentIcon from "@mui/icons-material/Comment";
 import ThumbsUpDownIcon from "@mui/icons-material/ThumbsUpDown";
 import Pagination from "@mui/material/Pagination";
-import { styled } from "@mui/material";
+import { Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 const Forum = () => {
 	const [params] = useSearchParams();
@@ -48,27 +49,18 @@ const Forum = () => {
 		isUserAuth ? navigate("/forum/new-post") : navigate("/login");
 	};
 
-	const handleNewPage = (event: MouseEvent<HTMLDivElement>) => {
-		event.currentTarget.id === "prev" && page > 1
-			? setPage((prevPage) => {
-					const newPage = --prevPage;
-					navigateToPage("/forum", newPage);
-					return newPage;
-			  })
-			: null;
-		event.currentTarget.id === "next" && page < totalNumOfPages
-			? setPage((prevPage) => {
-					const newPage = ++prevPage;
-					navigateToPage("/forum", newPage);
-					return newPage;
-			  })
-			: null;
-	};
-
 	const navigateToPage = (path: string, newPage: number) => {
 		navigate({
 			pathname: path,
 			search: `?${createSearchParams({ page: newPage.toString() })}`,
+		});
+	};
+
+	const handlePagination = (e: ChangeEvent, page: number) => {
+		setPage(() => {
+			const newPage = page;
+			navigateToPage("/forum", newPage);
+			return newPage;
 		});
 	};
 
@@ -77,6 +69,21 @@ const Forum = () => {
 			id='page-container'
 			className='flex flex-col items-center pt-[25px] w-[100%]'
 		>
+			<div className='flex justify-between items-center w-[40%]'>
+				<Pagination
+					count={totalNumOfPages}
+					color='primary'
+					onChange={(e, page) => handlePagination(e as ChangeEvent, page)}
+				/>
+				<Button
+					variant='contained'
+					className='bg-[#f09b1c] hover:bg-[#fcba2b] min-w-[115px] px-2'
+					onClick={handleNewPost}
+				>
+					<AddIcon />
+					<span className='pt-0.5 pl-0.5'>New Post</span>
+				</Button>
+			</div>
 			<Stack spacing={2} className='w-[40%]'>
 				{currentPostList?.map((post) => {
 					return (
@@ -104,61 +111,21 @@ const Forum = () => {
 					);
 				})}
 			</Stack>
-			<Pagination count={totalNumOfPages} color='primary' />
-			{/* <div id="table-container" className="flex justify-center items-center flex-col w-[40%]">
-				<button className="bg-[#3d403e] border-white self-end mb-2 hover:bg-[#939995]" onClick={handleNewPost}>
-					New Post
-				</button>
-				<table className="w-[100%]">
-					<thead>
-						<tr>
-							<th className={thStyle}>Title</th>
-							<th className={thStyle}>By</th>
-						</tr>
-					</thead>
-					<tbody>
-						{currentPostList?.map((post) => {
-							return (
-								<tr key={post.postId}>
-									<td
-										className="border border-solid border-[white] cursor-pointer"
-										onClick={() => handlePostNavigation(post)}
-									>
-										{post.gameName} | &nbsp;
-										{post.title}
-									</td>
-									<td className="border border-solid border-[white] cursor-pointer text-center">{post.publisher}</td>
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
-				<div className='flex justify-between w-24'>
-					<div
-						id='prev'
-						className={
-							page !== 1
-								? "cursor-pointer text-white"
-								: "pointer-default text-gray-500"
-						}
-						onClick={(e) => handleNewPage(e)}
-					>
-						{"<"}
-					</div>
-					<div>{page}</div>
-					<div
-						id='next'
-						className={
-							page < totalNumOfPages
-								? "cursor-pointer text-white"
-								: "pointer-default text-gray-500"
-						}
-						onClick={(e) => handleNewPage(e)}
-					>
-						{">"}
-					</div>
-				</div>
-			</div> */}
+			<div className='flex justify-between items-center w-[40%]'>
+				<Button
+					variant='contained'
+					className='bg-[#f09b1c] hover:bg-[#fcba2b] min-w-[115px] px-2'
+					onClick={handleNewPost}
+				>
+					<AddIcon />
+					<span className='pt-0.5 pl-0.5'>New Post</span>
+				</Button>
+				<Pagination
+					count={totalNumOfPages}
+					color='primary'
+					onChange={(e, page) => handlePagination(e as ChangeEvent, page)}
+				/>
+			</div>
 		</div>
 	);
 };
