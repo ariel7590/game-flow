@@ -6,7 +6,6 @@ import {
 	useSearchParams,
 	createSearchParams,
 } from "react-router-dom";
-import * as commentsStyle from "./comments.tailwind";
 import {
 	getRelevantCommentsThunk,
 	rankCommentThunk,
@@ -18,6 +17,11 @@ import { Button } from "@mui/material";
 import AlertDialog from "../mui/alert-dialog.component";
 import { IComment } from "../../redux/comments/comments.types";
 import { ICurrentUser } from "../../redux/users/users.types";
+import Paper from "@mui/material/Paper";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 const Comments = () => {
 	const [params] = useSearchParams();
@@ -30,8 +34,8 @@ const Comments = () => {
 	const comments = useSelector(
 		(state: RootState) => state.comments.currentCommentsList
 	);
-	const userId = useSelector(
-		(state: RootState) => (state.users.currentUser as ICurrentUser).userId
+	const { userId, auth } = useSelector(
+		(state: RootState) => state.users.currentUser as ICurrentUser
 	);
 	const totalPages = useSelector((state: RootState) => state.comments.pages);
 
@@ -83,7 +87,7 @@ const Comments = () => {
 	};
 
 	const handleRank = (event: MouseEvent<HTMLDivElement>, comment: IComment) => {
-		event.currentTarget.id === "voteUp"
+		event.currentTarget.id === "voteUp" && comment.publisherId !== userId
 			? dispatch(
 				rankCommentThunk({
 					commentId: comment.commentId,
@@ -92,7 +96,7 @@ const Comments = () => {
 				})
 			)
 			: null;
-		event.currentTarget.id === "voteDown"
+		event.currentTarget.id === "voteDown" && comment.publisherId !== userId
 			? dispatch(
 				rankCommentThunk({
 					commentId: comment.commentId,
@@ -106,56 +110,71 @@ const Comments = () => {
 	return (
 		<div className='w-[50%] flex flex-col items-center'>
 			{comments?.map((comment) => (
-				<div key={comment?.commentId} className={commentsStyle.container}>
+				<Paper key={comment?.commentId} className="w-[100%] flex p-2 mb-3">
 					<div className='flex flex-col justify-center'>
 						<div
 							id='voteUp'
-							className={`${commentsStyle.voteUp} ${comment?.whoRanked?.includes(userId)
-								? commentsStyle.votedUp
-								: null
-								}`}
 							onClick={(e) => handleRank(e, comment)}
-						/>
-						<div className={commentsStyle.rank}>{comment.rank}</div>
+						>
+							<ThumbUpIcon
+								className={
+									comment?.whoRanked?.includes(userId)
+										|| comment.publisherId === userId
+										|| !auth
+										?
+										"text-[#696b6a] cursor default"
+										:
+										"text-black cursor-pointer"
+								} />
+						</div>
+						<div className="text-[36px] ml-[7px]">{comment.rank}</div>
 						<div
 							id='voteDown'
-							className={`${commentsStyle.votedown} ${comment?.whoRanked?.includes(userId)
-								? commentsStyle.votedDown
-								: null
-								}`}
 							onClick={(e) => handleRank(e, comment)}
-						/>
+						>
+							<ThumbDownIcon
+								className={
+									comment?.whoRanked?.includes(userId)
+										|| comment.publisherId === userId
+										|| !auth
+										?
+										"text-[#696b6a] cursor default"
+										:
+										"text-black cursor-pointer"
+								}
+							/>
+						</div>
 					</div>
-					<div className={commentsStyle.content}>
-						<div className={commentsStyle.body}>{comment.body}</div>
+					<div className="w-[100%] flex flex-col justify-between">
+						<div className="text-center">{comment.body}</div>
 						<img className="p-5" src={comment.media[0]} alt={comment.media[0]} />
 						<div className='flex justify-between pl-[10px]'>
 							{comment.publisherId === userId ? (
 								<div>
 									<AlertDialog
-										btnClassName={commentsStyle.commentDeleteEdit}
+										btnClassName='cursor-pointer font-normal font-[400] focus:outline-none normal-case p-0 min-w-[40px]'
 										title='Delete a comment'
 										content='Are you sure you want to delete this comment?'
 										onAgree={() => handleDelete(comment.commentId)}
 									>
-										Delete
+										<DeleteIcon className="text-black" />
 									</AlertDialog>
 									&nbsp;
 									<Button
 										variant='text'
-										className={commentsStyle.commentDeleteEdit}
+										className='cursor-pointer font-normal font-[400] focus:outline-none normal-case p-0 min-w-[40px]'
 										onClick={() => handleEdit(comment)}
 									>
-										Edit
+										<EditNoteIcon className="text-black" />
 									</Button>
 								</div>
 							) : null}
-							<div className={commentsStyle.publisher}>
+							<div className="text-end">
 								by: {comment.publisher}
 							</div>
 						</div>
 					</div>
-				</div>
+				</Paper>
 			))}
 			<div className='flex justify-between w-24'>
 				<div

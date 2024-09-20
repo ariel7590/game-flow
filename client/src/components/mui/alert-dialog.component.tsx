@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 interface alertProps{
   btnClassName: string;
-  children: string;
+  children: React.ReactNode;
   title: string;
   content: string;
   onAgree: (_:unknown)=>void;
