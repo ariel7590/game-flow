@@ -5,7 +5,6 @@ import {
 	deletePostThunk,
 	getCurrentPost,
 } from "../../redux/posts/posts.thunks";
-import * as postStyle from "./post.tailwind";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ICurrentUser } from "../../redux/users/users.types";
@@ -42,7 +41,7 @@ const Post = () => {
 	};
 
 	return (
-		<div className={postStyle.postContainer}>
+		<div className="border-[1px] border-white w-[50%] p-2 mb-10">
 			<h2>
 				{post?.gameName}| {post?.title}
 			</h2>
@@ -69,11 +68,11 @@ const Post = () => {
 					null
 			}
 			<br />
-			<div className={postStyle.optionsAndDetailes}>
+			<div className="flex justify-between">
 				{post?.publisherId === userId ? (
-					<div className={postStyle.options}>
+					<div className="w-[100%]">
 						<AlertDialog
-							btnClassName={postStyle.deleteEdit}
+							btnClassName='cursor-pointer text-white font-normal font-[400] focus:outline-none normal-case p-0 min-w-[40px]'
 							title='Delete a post'
 							content='Are you sure you want to delete your post?'
 							onAgree={handleDelete}
@@ -83,14 +82,14 @@ const Post = () => {
 						&nbsp;
 						<Button
 							variant='text'
-							className={postStyle.deleteEdit}
+							className='cursor-pointer text-white font-normal font-[400] focus:outline-none normal-case p-0 min-w-[40px]'
 							onClick={handleEdit}
 						>
 							Edit
 						</Button>
 					</div>
 				) : null}
-				<span className={postStyle.publisher}>by: {post?.publisher}</span>
+				<span className="text-end w-[100%]">by: {post?.publisher}</span>
 			</div>
 		</div>
 	);

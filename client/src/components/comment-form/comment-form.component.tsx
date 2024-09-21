@@ -1,9 +1,10 @@
 import React, { ChangeEvent, FormEvent } from "react";
-import * as commentFormStyle from './comment-form.tailwind';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface ICommentFormProps {
     handleSubmit: (event: FormEvent) => void;
-    handleChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+    handleChange: (event: string) => void;
     handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
     isEdit: boolean;
     text?: string;
@@ -12,20 +13,45 @@ interface ICommentFormProps {
 
 const CommentForm = ({ handleSubmit, handleChange, handleFileChange, isEdit, text, fileName }: ICommentFormProps) => {
     return (
-        <div className={commentFormStyle.formContainer}>
-            <form className={commentFormStyle.form} onSubmit={(event) => handleSubmit(event)}>
+        <div className="w-[100%] flex justify-center items-center m-[50px]">
+            <form className="flex flex-col w-[50%]" onSubmit={(event) => handleSubmit(event)}>
                 {
                     isEdit
                         ?
-                        <h1 className={commentFormStyle.header}>Edit Comment</h1>
+                        <h1 className="text-center">Edit Comment</h1>
                         :
-                        <h1 className={commentFormStyle.header}>New Comment</h1>
+                        <h1 className="text-center">New Comment</h1>
                 }
                 <br />
-                <textarea className={commentFormStyle.content} value={text} onChange={(event) => handleChange(event)} />
+                {/* <textarea 
+                className="h-[300px] rounded-md resize-none text-black" 
+                value={text} 
+                onChange={(event) => handleChange(event)} 
+                /> */}
+                <ReactQuill
+                value={text}
+                onChange={(event) => handleChange(event)}
+                theme="snow"
+                className="bg-white h-[200px] overflow-y-clip rounded-md text-black border-none"
+                modules={{
+                    toolbar: [
+                        [{'header': [1,2,3,false]}],
+                        ['bold','italic','underline'],
+                        [{'list': 'ordered'}, {'list': 'bullet'}],
+                        ['link'],
+                    ]
+                }}
+                formats={[
+                    'header',
+                    'bold','italic', 'underline',
+                    'list', 'bullet',
+                    'link'
+                ]}
+                />
+
                 <br />
                 <div className='flex justify-between w-[90%]'>
-                    <label htmlFor='browse' className={commentFormStyle.browse}>
+                    <label htmlFor='browse' className="bg-blue-700 hover:bg-blue-600 px-5 py-[5px] cursor-pointer rounded-[5px]">
                         +Upload Image
                     </label>
                     <label>{fileName}</label>
@@ -36,7 +62,7 @@ const CommentForm = ({ handleSubmit, handleChange, handleFileChange, isEdit, tex
                         onChange={(e) => handleFileChange(e)}
                     />
                 </div>
-                <button className={commentFormStyle.submitBtn}>Send</button>
+                <button className="bg-green-700 self-center w-[8vw] min-w-[80px] hover:bg-green-600">Send</button>
             </form>
         </div>
     )
