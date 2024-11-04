@@ -8,11 +8,15 @@
     "tsc-server": "npm run tsc-watch --prefix server",
     "server-watch": "npm run watch --prefix server",
     "client-watch": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server-watch\" \"npm run client-watch\"",
     "install-client": "npm install --prefix client",
     "install-server": "npm install --prefix server",
     "install-all": "npm run install-client && npm run install-server"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.1.0"
+  }
 }
