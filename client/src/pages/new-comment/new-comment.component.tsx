@@ -25,8 +25,8 @@ const NewComment = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 
-	const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-		setFormData({ ...formData, body: event.target.value });
+	const handleChange = (event: string) => {
+		setFormData({ ...formData, body: event });
 	};
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,9 +35,9 @@ const NewComment = () => {
 			: null;
 	};
 
-	const handleSubmit = (event: FormEvent) => {
+	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault();
-		dispatch(
+		await dispatch(
 			createNewCommentThunk({
 				postId,
 				body: formData.body,
@@ -46,6 +46,7 @@ const NewComment = () => {
 				publisherId: user.userId,
 			})
 		);
+		await setFormData({...formData, body: ""});
 		navigate({
 			pathname: `/forum/post/${postId}`,
 			search: `?${createSearchParams({ page: totalPages.toString() })}`,
@@ -57,8 +58,9 @@ const NewComment = () => {
 		<CommentForm
 			isEdit={false}
 			handleSubmit={(e) => handleSubmit(e)}
-			handleChange={(e) => handleChange(e)}
+			handleChange={(e) => handleChange(e as string)}
 			handleFileChange={(e) => handleFileChange(e)}
+			text={formData.body}
 			fileName={formData.media?.name}
 		/>
 	);

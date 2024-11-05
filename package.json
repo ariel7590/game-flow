@@ -11,7 +11,7 @@
     "dev": "concurrently \"npm run server-watch\" \"npm run client-watch\"",
     "install-client": "npm install --prefix client",
     "install-server": "npm install --prefix server",
-    "install-all": "npm run install-client && npm run install-server"
+    "install-all": "npm install && npm run install-client && npm run install-server"
   },
   "keywords": [],
   "author": "",

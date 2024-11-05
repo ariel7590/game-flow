@@ -1,10 +1,11 @@
 import React, { ChangeEvent, FormEvent } from "react";
 import ReactQuill from 'react-quill';
+import ReplyIcon from '@mui/icons-material/Reply';
 import 'react-quill/dist/quill.snow.css';
 
 interface ICommentFormProps {
     handleSubmit: (event: FormEvent) => void;
-    handleChange: (event: string) => void;
+    handleChange: (event: ChangeEvent<HTMLTextAreaElement> | string) => void;
     handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
     isEdit: boolean;
     text?: string;
@@ -20,7 +21,7 @@ const CommentForm = ({ handleSubmit, handleChange, handleFileChange, isEdit, tex
                         ?
                         <h1 className="text-center">Edit Comment</h1>
                         :
-                        <h1 className="text-center">New Comment</h1>
+                        <div className="flex items-center"><ReplyIcon /><h4 className="pt-1">New Comment</h4></div>
                 }
                 <br />
                 {/* <textarea 
@@ -29,7 +30,7 @@ const CommentForm = ({ handleSubmit, handleChange, handleFileChange, isEdit, tex
                 onChange={(event) => handleChange(event)} 
                 /> */}
                 <ReactQuill
-                value={text}
+                value={text || ""}
                 onChange={(event) => handleChange(event)}
                 theme="snow"
                 className="bg-white h-[200px] overflow-y-clip rounded-md text-black border-none"

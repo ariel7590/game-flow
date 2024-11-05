@@ -128,7 +128,8 @@ const Comments = () => {
 						</div>
 					</div>
 					<div className='w-[100%] flex flex-col justify-between'>
-						<div className='pl-[22px] pr-[10px]'>{comment.body}</div>
+						{/* I senitized the HTML in the server to prevent XSS attacks */}
+						<div className='pl-[22px] pr-[10px]' dangerouslySetInnerHTML={{ __html: comment.body }} />
 						<img
 							className='p-5'
 							src={comment.media[0]}

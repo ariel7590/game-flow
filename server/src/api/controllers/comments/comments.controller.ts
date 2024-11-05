@@ -19,6 +19,7 @@ import { isPostExists } from "../../data-access/posts/posts.da";
 import { AuthenticatedRequest } from "../../types/jwt.types";
 import { paginate } from "../../utils/pagination";
 import { uploadToCloudinary } from "../../services/cloudinary.service";
+import DOMPurify from "dompurify";
 
 export const httpCreateNewComment: RequestHandler = async (req, res) => {
 	try {
@@ -29,8 +30,9 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 				error: "Post not found!",
 			});
 		}
+		const cleanComment = DOMPurify.sanitize(commentInput.body);
 		const publisherId = +commentInput.publisherId;
-		let uploadSecureUrl:string|undefined;
+		let uploadSecureUrl: string | undefined;
 		if (req.file) {
 			uploadSecureUrl = await uploadToCloudinary(req.file.path);
 		}
@@ -38,24 +40,32 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 		typeof uploadSecureUrl !== "undefined"
 			? mediaUrls.push(uploadSecureUrl)
 			: null;
-		const newComment = await createNewComment({ ...commentInput, publisherId, media: mediaUrls });
+		const newComment = await createNewComment({
+			...commentInput,
+			publisherId,
+			body: cleanComment,
+			media: mediaUrls,
+		});
 		return res.status(201).json({
 			commetId: newComment.commentId,
 			publisher: newComment.publisher,
 			publisherId: newComment.publisherId,
 			body: newComment.body,
 			rank: newComment.rank,
-			media: mediaUrls
+			media: mediaUrls,
 		});
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
 };
 
-export const httpFindCommentWithCommentId: RequestHandler = async (req, res) => {
+export const httpFindCommentWithCommentId: RequestHandler = async (
+	req,
+	res
+) => {
 	try {
 		const commentId = req.params.commentId as string;
 		const comment = await findCommentWithCommentId(commentId);
@@ -66,12 +76,12 @@ export const httpFindCommentWithCommentId: RequestHandler = async (req, res) => 
 		}
 		return res.status(200).json(comment);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
-}
+};
 
 export const httpFindCommentsWithPostId: RequestHandler = async (req, res) => {
 	try {
@@ -89,10 +99,10 @@ export const httpFindCommentsWithPostId: RequestHandler = async (req, res) => {
 		}
 		return res.status(200).json(comments);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
 };
 
@@ -109,13 +119,15 @@ export const httpGetPaginatedComments: RequestHandler = async (req, res) => {
 			});
 		}
 		const totalNumOfComments = await countNumberOfComments(postId);
-		const totalNumOfPages = totalNumOfComments ? Math.ceil(totalNumOfComments / perPage) : 1;
+		const totalNumOfPages = totalNumOfComments
+			? Math.ceil(totalNumOfComments / perPage)
+			: 1;
 		return res.status(200).json({ comments, pages: totalNumOfPages });
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
 };
 
@@ -145,14 +157,14 @@ export const httpDeleteComment = async (
 			error: "Comment with this ID is not found!",
 		});
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
 };
 
-export const httpEditComment: RequestHandler = async (req,res) => {
+export const httpEditComment: RequestHandler = async (req, res) => {
 	try {
 		const comment = req.body as ICommentForEditing;
 		const { commentId, newContent, publisherId, editorId, newMedia } = comment;
@@ -167,8 +179,8 @@ export const httpEditComment: RequestHandler = async (req,res) => {
 		if (req.file) {
 			const uploadSecureUrl = await uploadToCloudinary(req.file.path);
 			typeof uploadSecureUrl !== "undefined"
-			? mediaUrls.push(uploadSecureUrl)
-			: null;
+				? mediaUrls.push(uploadSecureUrl)
+				: null;
 		}
 		if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
 			mediaUrls = JSON.parse(newMedia);
@@ -182,17 +194,17 @@ export const httpEditComment: RequestHandler = async (req,res) => {
 		return res.status(200).json({
 			commentId,
 			newContent,
-			newMedia: mediaUrls
+			newMedia: mediaUrls,
 		});
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
 };
 
-export const httpRankComment: RequestHandler = async (req,res) => {
+export const httpRankComment: RequestHandler = async (req, res) => {
 	try {
 		const rankData = req.body as IRankComment;
 		const { commentId, newRank, rankerId } = rankData;
@@ -211,9 +223,9 @@ export const httpRankComment: RequestHandler = async (req,res) => {
 		}
 		return res.status(200).json(rankedComment);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
 };
