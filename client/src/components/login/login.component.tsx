@@ -85,7 +85,7 @@ const Login = () => {
 					<Button
 						type='submit'
 						variant='contained'
-						className='bg-[#5c5c65] mb-[8px]'
+						className='bg-[#f09b1c] hover:bg-[#fcba2b] mb-[8px]'
 						onClick={handleSubmit}
 					>
 						Login

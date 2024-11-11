@@ -101,7 +101,7 @@ const Comments = () => {
 	return (
 		<div className='w-[50%] flex flex-col items-center'>
 			{comments?.map((comment) => (
-				<Paper key={comment?.commentId} className='w-[100%] flex p-2 mb-3'>
+				<Paper key={comments.indexOf(comment)} className='w-[100%] flex p-2 mb-3'>
 					<div className='flex flex-col justify-center'>
 						<div id='voteUp' onClick={(e) => handleRank(e, comment)}>
 							<ThumbUpIcon
@@ -161,7 +161,7 @@ const Comments = () => {
 					</div>
 				</Paper>
 			))}
-			<Pagination className="mb-2" color='primary' count={totalPages} onChange={(e, page)=>handlePagination(e as ChangeEvent<Element>, page)} />
+			<Pagination className="mb-2" color='primary' page={+(location.search.split('=').reverse()[0])} count={totalPages} onChange={(e, page)=>handlePagination(e as ChangeEvent<Element>, page)} />
 		</div>
 	);
 };

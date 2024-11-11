@@ -1,5 +1,5 @@
 export const container = "flex flex-col items-center mt-20";
-export const pageTitle = "mb-3";
+export const pageTitle = "mb-3 self-center";
 export const form =
 	"flex flex-col justify-between border-[2px] p-3 w-[40%] h-[50vh]";
 export const titleContainer = "flex justify-between";

@@ -3,27 +3,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useNavigate, createSearchParams } from "react-router-dom";
 import CommentForm from "../../components/comment-form/comment-form.component";
-import { createNewCommentThunk } from "../../redux/comments/comments.thunks";
+import { createNewCommentThunk, getRelevantCommentsThunk } from "../../redux/comments/comments.thunks";
 import { ICurrentUser } from "../../redux/users/users.types";
 
-
 const NewComment = () => {
-	const [formData, setFormData] = useState<{ body: string; media: File | null }>({
+	const [formData, setFormData] = useState<{
+		body: string;
+		media: File | null;
+	}>({
 		body: "",
-		media: null
+		media: null,
 	});
 
 	const user = useSelector(
 		(state: RootState) => state.users.currentUser as ICurrentUser
 	);
-	const postId = useSelector(
-		(state: RootState) => state.posts.currentPost!.postId
-	);
-	const totalPages = useSelector(
-		(state: RootState) => state.comments.pages
-	);
+	const postId = location.pathname.split("/").reverse()[0];
+	const totalPages = useSelector((state: RootState) => state.comments.pages);
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
+
 
 	const handleChange = (event: string) => {
 		setFormData({ ...formData, body: event });
@@ -46,12 +45,12 @@ const NewComment = () => {
 				publisherId: user.userId,
 			})
 		);
-		await setFormData({...formData, body: ""});
+		await setFormData({ ...formData, body: "" });
+		await dispatch(getRelevantCommentsThunk({ postId, page: totalPages }));
 		navigate({
 			pathname: `/forum/post/${postId}`,
 			search: `?${createSearchParams({ page: totalPages.toString() })}`,
-		}
-		);
+		});
 	};
 
 	return (

@@ -24,11 +24,6 @@ const CommentForm = ({ handleSubmit, handleChange, handleFileChange, isEdit, tex
                         <div className="flex items-center"><ReplyIcon /><h4 className="pt-1">New Comment</h4></div>
                 }
                 <br />
-                {/* <textarea 
-                className="h-[300px] rounded-md resize-none text-black" 
-                value={text} 
-                onChange={(event) => handleChange(event)} 
-                /> */}
                 <ReactQuill
                 value={text || ""}
                 onChange={(event) => handleChange(event)}
