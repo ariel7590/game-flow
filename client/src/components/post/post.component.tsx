@@ -46,7 +46,8 @@ const Post = () => {
 				{post?.gameName}| {post?.title}
 			</h2>
 			<br />
-			<p>{post?.body}</p>
+			{/* Sanitaized the body in th server */}
+			<p dangerouslySetInnerHTML={{ __html: post?.body as string }} />
 			{
 				post?.media && Array.isArray(post.media) && typeof (post.media[0]) === 'string'
 					?
