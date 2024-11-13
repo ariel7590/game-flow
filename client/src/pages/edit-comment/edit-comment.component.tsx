@@ -45,8 +45,15 @@ const EditComment = () => {
 		}
 	}, [comment, userId]);
 
-	const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-		setFormData({ ...formData, body: event.target.value });
+	const handleChange = (
+		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string
+	) => {
+		if (typeof event === "string") {
+			setFormData({ ...formData, body: event });
+		} else {
+			const { name, value } = event.target;
+			setFormData({ ...formData, [name]: value });
+		}
 	};
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {

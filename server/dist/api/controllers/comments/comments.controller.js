@@ -157,7 +157,7 @@ const httpEditComment = async (req, res) => {
                 ? mediaUrls.push(uploadSecureUrl)
                 : null;
         }
-        if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
+        if (!req.file && newMedia && newMedia.trim() !== "") {
             mediaUrls = JSON.parse(newMedia);
         }
         const editedComment = await (0, comments_da_1.editComment)(commentId, newContent, mediaUrls);

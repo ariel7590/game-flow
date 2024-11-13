@@ -17,7 +17,7 @@ const EditPost = () => {
 		gameName: "",
 		title: "",
 		body: "",
-		media: []
+		media: [],
 	});
 	const post = useSelector((state: RootState) => state.posts.currentPost);
 	const userId = useSelector(
@@ -32,10 +32,10 @@ const EditPost = () => {
 				gameName: post.gameName,
 				title: post.title,
 				body: post.body,
-				media: post.media as string[]
+				media: post.media as string[],
 			});
 		} else {
-			if (userId && !(isNaN(userId))) {
+			if (userId && !isNaN(userId)) {
 				const postId = location.pathname.split("/").reverse()[0];
 				dispatch(getCurrentPost(postId));
 			}
@@ -45,26 +45,30 @@ const EditPost = () => {
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault();
 
-		post ? (
-			await dispatch(
-				editPostThunk({
-					postId: post.postId,
-					newGameName: formData.gameName,
-					newTitle: formData.title,
-					newContent: formData.body,
-					publisherId: post.publisherId,
-					newMedia: formData.media
-				})
+		post
+			? (await dispatch(
+					editPostThunk({
+						postId: post.postId,
+						newGameName: formData.gameName,
+						newTitle: formData.title,
+						newContent: formData.body,
+						publisherId: post.publisherId,
+						newMedia: formData.media,
+					})
 			),
-			navigate(`/forum/post/${post.postId}`)
-		) : console.log("Something went wrong with the editing!");
+			navigate(`/forum/post/${post.postId}`))
+			: console.log("Something went wrong with the editing!");
 	};
 
 	const handleChange = (
-		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string
 	) => {
-		const { name, value } = event.target;
-		setFormData({ ...formData, [name]: value });
+		if (typeof event === "string") {
+			setFormData({ ...formData, body: event });
+		} else {
+			const { name, value } = event.target;
+			setFormData({ ...formData, [name]: value });
+		}
 	};
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,12 +81,14 @@ const EditPost = () => {
 		<PostForm
 			handleSubmit={handleSubmit}
 			handleChange={handleChange}
-			handleFileChange={e => handleFileChange(e)}
+			handleFileChange={(e) => handleFileChange(e)}
 			editPost={true}
 			gameName={formData.gameName}
 			titleValue={formData.title}
 			bodyValue={formData.body}
-			fileName={(formData.media as string[])[0] || (formData.media as File).name}
+			fileName={
+				(formData.media as string[])[0] || (formData.media as File).name
+			}
 		/>
 	);
 };

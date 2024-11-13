@@ -9,6 +9,9 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ICurrentUser } from "../../redux/users/users.types";
 import AlertDialog from "../mui/alert-dialog.component";
+import Paper from "@mui/material/Paper";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 
 const Post = () => {
 	const post = useSelector((state: RootState) => state.posts.currentPost);
@@ -41,10 +44,10 @@ const Post = () => {
 	};
 
 	return (
-		<div className="border-[1px] border-white w-[50%] p-2 mb-10">
-			<h2>
+		<Paper className="border-[1px] border-white w-[50%] p-2 mb-10 rounded-none">
+			<h3 className="font-bold">
 				{post?.gameName}| {post?.title}
-			</h2>
+			</h3>
 			<br />
 			{/* Sanitaized the body in th server */}
 			<p dangerouslySetInnerHTML={{ __html: post?.body as string }} />
@@ -73,26 +76,26 @@ const Post = () => {
 				{post?.publisherId === userId ? (
 					<div className="w-[100%]">
 						<AlertDialog
-							btnClassName='cursor-pointer text-white font-normal font-[400] focus:outline-none normal-case p-0 min-w-[40px]'
+							btnClassName='cursor-pointer font-normal font-[400] focus:outline-none normal-case p-0 min-w-[40px]'
 							title='Delete a post'
 							content='Are you sure you want to delete your post?'
 							onAgree={handleDelete}
 						>
-							Delete
+							<DeleteIcon className="text-black" />
 						</AlertDialog>
 						&nbsp;
 						<Button
 							variant='text'
-							className='cursor-pointer text-white font-normal font-[400] focus:outline-none normal-case p-0 min-w-[40px]'
+							className='cursor-pointer font-normal font-[400] focus:outline-none normal-case p-0 min-w-[40px]'
 							onClick={handleEdit}
 						>
-							Edit
+							<EditNoteIcon className="text-black" />
 						</Button>
 					</div>
 				) : null}
 				<span className="text-end w-[100%]">by: {post?.publisher}</span>
 			</div>
-		</div>
+		</Paper>
 	);
 };
 

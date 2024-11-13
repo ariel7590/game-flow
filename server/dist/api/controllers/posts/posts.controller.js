@@ -135,7 +135,7 @@ const httpEditPost = async (req, res) => {
                 ? mediaUrls.push(uploadSecureUrl)
                 : null;
         }
-        if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
+        if (!req.file && newMedia && newMedia.trim() !== "") {
             mediaUrls = JSON.parse(newMedia);
         }
         const editedPost = await (0, posts_da_1.editPost)(postId, newGameName, newTitle, newContent, mediaUrls);

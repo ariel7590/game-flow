@@ -24,6 +24,11 @@ export default function AlertDialog({btnClassName, children, title, content, onA
     setOpen(false);
   };
 
+  const handleAgree = async ()=>{
+    await onAgree(null);
+    handleClose();
+  }
+
   return (
     <React.Fragment>
       <Button variant="text" className={btnClassName} onClick={handleClickOpen}>
@@ -45,7 +50,7 @@ export default function AlertDialog({btnClassName, children, title, content, onA
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={onAgree} autoFocus>
+          <Button onClick={handleAgree} autoFocus>
             Agree
           </Button>
         </DialogActions>
