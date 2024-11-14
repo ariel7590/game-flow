@@ -19,7 +19,7 @@ const CommentForm = ({ handleSubmit, handleChange, handleFileChange, isEdit, tex
                 {
                     isEdit
                         ?
-                        <h1 className="text-center">Edit Comment</h1>
+                        <h3 className="text-center">Edit Comment</h3>
                         :
                         <div className="flex items-center"><ReplyIcon /><h4 className="pt-1">New Comment</h4></div>
                 }

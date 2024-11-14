@@ -73,6 +73,7 @@ const Forum = () => {
 				<Pagination
 					count={totalNumOfPages}
 					color='primary'
+					page={+location.search[location.search.length-1] || 1}
 					onChange={(e, page) => handlePagination(e as ChangeEvent, page)}
 				/>
 				<Button
@@ -123,6 +124,7 @@ const Forum = () => {
 				<Pagination
 					count={totalNumOfPages}
 					color='primary'
+					page={+location.search[location.search.length-1] || 1}
 					onChange={(e, page) => handlePagination(e as ChangeEvent, page)}
 				/>
 			</div>
