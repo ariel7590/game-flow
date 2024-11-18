@@ -19,10 +19,13 @@
 		"@types/cors": "^2.8.16",
 		"@types/dompurify": "^3.0.5",
 		"@types/express": "^4.17.21",
+		"@types/express-session": "^1.18.0",
 		"@types/jsonwebtoken": "^9.0.5",
 		"@types/morgan": "^1.9.9",
 		"@types/multer": "^1.4.11",
 		"@types/node": "^20.9.0",
+		"@types/passport": "^1.0.17",
+		"@types/passport-google-oauth20": "^2.0.16",
 		"nodemon": "^2.0.22"
 	},
 	"dependencies": {
@@ -35,6 +38,7 @@
 		"dompurify": "^3.1.7",
 		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
+		"express-session": "^1.18.1",
 		"game-flow": "file:..",
 		"googleapis": "^140.0.1",
 		"joi": "^17.12.2",
@@ -43,6 +47,8 @@
 		"morgan": "^1.10.0",
 		"multer": "^1.4.5-lts.1",
 		"openai": "^4.0.0",
+		"passport": "^0.7.0",
+		"passport-google-oauth20": "^2.0.0",
 		"youtube-transcript": "^1.2.1"
 	}
 }

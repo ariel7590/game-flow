@@ -19,4 +19,11 @@ export interface ICredentials {
 	userId: number;
 }
 
+export interface OAuthUser {
+    id: string;
+    displayName: string;
+    email: string;
+    profilePhotoUrl: string;
+}
+
 export type SignInCredentials = (Pick<ICredentials, "userName"> & { email?: never } | Pick<ICredentials, "email"> & { userName?: never }) & Pick<ICredentials, "password">
