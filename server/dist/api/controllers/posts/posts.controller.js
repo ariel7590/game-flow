@@ -1,9 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpEditPost = exports.httpDeletePost = exports.httpCreateNewPost = exports.httpGetPostById = exports.httpGetPaginatedPosts = exports.httpGetAllPosts = void 0;
 const cloudinary_service_1 = require("../../services/cloudinary.service");
 const posts_da_1 = require("../../data-access/posts/posts.da");
 const pagination_1 = require("../../utils/pagination");
+const dompurify_1 = __importDefault(require("dompurify"));
 const httpGetAllPosts = async (req, res) => {
     //for testing only, I can remove it later
     const posts = await (0, posts_da_1.getAllPosts)();
@@ -21,13 +25,15 @@ const httpGetPaginatedPosts = async (req, res) => {
             });
         }
         const totalNumOfPosts = await (0, posts_da_1.countNumberOfPosts)();
-        const totalNumOfPages = totalNumOfPosts ? Math.ceil(totalNumOfPosts / 10) : 1;
+        const totalNumOfPages = totalNumOfPosts
+            ? Math.ceil(totalNumOfPosts / 10)
+            : 1;
         return res.status(200).json({ posts, pages: totalNumOfPages });
     }
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -48,7 +54,7 @@ const httpGetPostById = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -62,6 +68,7 @@ const httpCreateNewPost = async (req, res) => {
             });
         }
         const publisherId = +post.publisherId;
+        const cleanPostBody = dompurify_1.default.sanitize(post.body);
         let uploadSecureUrl;
         if (req.file) {
             uploadSecureUrl = await (0, cloudinary_service_1.uploadToCloudinary)(req.file.path);
@@ -70,21 +77,26 @@ const httpCreateNewPost = async (req, res) => {
         typeof uploadSecureUrl !== "undefined"
             ? mediaUrls.push(uploadSecureUrl)
             : null;
-        const postId = await (0, posts_da_1.createNewPost)({ ...post, publisherId, media: mediaUrls });
+        const postId = await (0, posts_da_1.createNewPost)({
+            ...post,
+            publisherId,
+            body: cleanPostBody,
+            media: mediaUrls,
+        });
         return res.status(201).json({
             postId,
             publisher: post.publisher,
             publisherId: publisherId,
             gameName: post.gameName,
             title: post.title,
-            body: post.body,
+            body: cleanPostBody,
             media: mediaUrls,
         });
     }
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -112,7 +124,7 @@ const httpDeletePost = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -135,7 +147,7 @@ const httpEditPost = async (req, res) => {
                 ? mediaUrls.push(uploadSecureUrl)
                 : null;
         }
-        if (!req.file && newMedia && newMedia.trim() !== "") {
+        if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
             mediaUrls = JSON.parse(newMedia);
         }
         const editedPost = await (0, posts_da_1.editPost)(postId, newGameName, newTitle, newContent, mediaUrls);
@@ -149,7 +161,7 @@ const httpEditPost = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };

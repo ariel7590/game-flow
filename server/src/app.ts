@@ -7,7 +7,6 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import session from 'express-session';
 import passport from 'passport';
-import './passport-setup';
 import routers from "./api/routes";
 
 const app = express();

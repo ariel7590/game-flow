@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signUpThunk, loginThunk, authenticationThunk, signoutThunk } from "./users.thunks";
+import {
+	signUpThunk,
+	loginThunk,
+	authenticationThunk,
+	googleLoginThunk,
+	signoutThunk,
+} from "./users.thunks";
 import { IAuthFailed, ICurrentUser, IUserState } from "./users.types";
 
 const initialState = {
@@ -73,7 +79,7 @@ const userSlice = createSlice({
 				error: action.payload as IAuthFailed,
 				currentUser: {
 					auth: false,
-					message: action.payload
+					message: action.payload,
 				} as IAuthFailed,
 			}))
 			.addCase(signoutThunk.pending, (state) => ({
@@ -93,6 +99,25 @@ const userSlice = createSlice({
 				...state,
 				loading: false,
 				error: action.payload as string,
+			}))
+			.addCase(googleLoginThunk.pending, (state) => ({
+				...state,
+				loading: true,
+			}))
+			.addCase(googleLoginThunk.fulfilled, (state, action) => ({
+				...state,
+				loading: false,
+				error: null,
+				currentUser: action.payload as ICurrentUser,
+			}))
+			.addCase(googleLoginThunk.rejected, (state, action) => ({
+				...state,
+				loading: false,
+				error: action.payload as IAuthFailed,
+				currentUser: {
+					auth: false,
+					message: action.payload,
+				} as IAuthFailed,
 			}));
 	},
 });

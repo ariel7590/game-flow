@@ -71,6 +71,27 @@ export const authenticationThunk = createAsyncThunk<
 	}
 });
 
+export const googleLoginThunk = createAsyncThunk<
+	unknown,
+	unknown,
+	{ rejectValue: SerializedError }
+>("users/googleLogin", async (_, thunkAPI) => {
+	try {
+		const response = await axiosInstance({
+			method: "get",
+			url: usersRoute + "auth/google/",
+		});
+
+		return thunkAPI.fulfillWithValue(response.data);
+	} catch (err) {
+		if (err instanceof AxiosError && err.response !== undefined) {
+			return thunkAPI.rejectWithValue(err.response.data.message);
+		} else {
+			throw err;
+		}
+	}
+});
+
 export const signoutThunk = createAsyncThunk<
 	unknown,
 	unknown,

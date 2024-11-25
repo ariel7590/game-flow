@@ -1,10 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpRankComment = exports.httpEditComment = exports.httpDeleteComment = exports.httpGetPaginatedComments = exports.httpFindCommentsWithPostId = exports.httpFindCommentWithCommentId = exports.httpCreateNewComment = void 0;
 const comments_da_1 = require("../../data-access/comments/comments.da");
 const posts_da_1 = require("../../data-access/posts/posts.da");
 const pagination_1 = require("../../utils/pagination");
 const cloudinary_service_1 = require("../../services/cloudinary.service");
+const dompurify_1 = __importDefault(require("dompurify"));
 const httpCreateNewComment = async (req, res) => {
     try {
         const commentInput = req.body;
@@ -14,6 +18,7 @@ const httpCreateNewComment = async (req, res) => {
                 error: "Post not found!",
             });
         }
+        const cleanComment = dompurify_1.default.sanitize(commentInput.body);
         const publisherId = +commentInput.publisherId;
         let uploadSecureUrl;
         if (req.file) {
@@ -23,20 +28,25 @@ const httpCreateNewComment = async (req, res) => {
         typeof uploadSecureUrl !== "undefined"
             ? mediaUrls.push(uploadSecureUrl)
             : null;
-        const newComment = await (0, comments_da_1.createNewComment)({ ...commentInput, publisherId, media: mediaUrls });
+        const newComment = await (0, comments_da_1.createNewComment)({
+            ...commentInput,
+            publisherId,
+            body: cleanComment,
+            media: mediaUrls,
+        });
         return res.status(201).json({
             commetId: newComment.commentId,
             publisher: newComment.publisher,
             publisherId: newComment.publisherId,
             body: newComment.body,
             rank: newComment.rank,
-            media: mediaUrls
+            media: mediaUrls,
         });
     }
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -55,7 +65,7 @@ const httpFindCommentWithCommentId = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -79,7 +89,7 @@ const httpFindCommentsWithPostId = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -97,13 +107,15 @@ const httpGetPaginatedComments = async (req, res) => {
             });
         }
         const totalNumOfComments = await (0, comments_da_1.countNumberOfComments)(postId);
-        const totalNumOfPages = totalNumOfComments ? Math.ceil(totalNumOfComments / perPage) : 1;
+        const totalNumOfPages = totalNumOfComments
+            ? Math.ceil(totalNumOfComments / perPage)
+            : 1;
         return res.status(200).json({ comments, pages: totalNumOfPages });
     }
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -134,7 +146,7 @@ const httpDeleteComment = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -157,7 +169,7 @@ const httpEditComment = async (req, res) => {
                 ? mediaUrls.push(uploadSecureUrl)
                 : null;
         }
-        if (!req.file && newMedia && newMedia.trim() !== "") {
+        if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
             mediaUrls = JSON.parse(newMedia);
         }
         const editedComment = await (0, comments_da_1.editComment)(commentId, newContent, mediaUrls);
@@ -169,13 +181,13 @@ const httpEditComment = async (req, res) => {
         return res.status(200).json({
             commentId,
             newContent,
-            newMedia: mediaUrls
+            newMedia: mediaUrls,
         });
     }
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -201,7 +213,7 @@ const httpRankComment = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };

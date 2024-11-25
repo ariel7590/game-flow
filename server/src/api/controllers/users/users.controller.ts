@@ -15,7 +15,7 @@ import {
 	ICredentials,
 } from "../../types/users.types";
 import { AuthenticatedRequest } from "../../types/jwt.types";
-
+import passport from "passport";
 
 export const httpGetAllUsers: RequestHandler = async (req, res) => {
 	// this function is for testing only, I can delete it later
@@ -41,7 +41,7 @@ export const httpGetUserById: RequestHandler = async (req, res) => {
 };
 
 export const httpCreateNewUser: RequestHandler = async (req, res) => {
-	try{
+	try {
 		const user = req.body as INewUserInput;
 		const userWithEmail = await findUserByEmail(user.email);
 		if (userWithEmail) {
@@ -64,26 +64,24 @@ export const httpCreateNewUser: RequestHandler = async (req, res) => {
 			userId: userId,
 			userName: user.userName,
 		});
-	}catch(error){
-		console.log(error)
+	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
 };
 
 export const httpLogin: RequestHandler = async (req, res) => {
-	try{
+	try {
 		const credentials = req.body as SignInCredentials;
 		let user: null | ICredentials;
-		if(credentials.userName){
-			 user = await isUserExists(credentials.userName) as ICredentials;
-		}
-		else if(credentials.email){
-			user=await findUserByEmail(credentials.email) as ICredentials;
-		}
-		else{
-			user=null;
+		if (credentials.userName) {
+			user = (await isUserExists(credentials.userName)) as ICredentials;
+		} else if (credentials.email) {
+			user = (await findUserByEmail(credentials.email)) as ICredentials;
+		} else {
+			user = null;
 		}
 		if (!user) {
 			return res.status(404).json({
@@ -103,16 +101,19 @@ export const httpLogin: RequestHandler = async (req, res) => {
 			userId: user.userId,
 			userName: user.userName,
 		});
-	}catch(error){
-		console.log(error)
+	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
 };
 
-export const httpAuthenticate = async (req: AuthenticatedRequest, res: Response) => {
-	try{
+export const httpAuthenticate = async (
+	req: AuthenticatedRequest,
+	res: Response
+) => {
+	try {
 		const userId = req.userId as number;
 		if (!userId) {
 			return res.status(400).json({
@@ -123,7 +124,7 @@ export const httpAuthenticate = async (req: AuthenticatedRequest, res: Response)
 		const user = await getUserById(userId);
 		if (!user) {
 			return res.status(404).json({
-				auth:false,
+				auth: false,
 				message: "user not found",
 			});
 		}
@@ -132,24 +133,35 @@ export const httpAuthenticate = async (req: AuthenticatedRequest, res: Response)
 			auth: true,
 			userName: user.userName,
 		});
-	}catch(error){
-		console.log(error)
+	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
 };
 
-export const httpSignOut:RequestHandler=(req,res)=>{
-	try{
-		res.cookie('jwt', '', { expires: new Date(0), httpOnly: true });
+export const httpGoogleAuthenticate: RequestHandler = (req, res) => {
+	passport.authenticate("google", { scope: ["profile", "email"] });
+};
+
+export const httpGoogleAuthenticateCallback: RequestHandler = (req, res) => {
+	passport.authenticate("google", { failureRedirect: "/" }),
+		(req: Request, res: Response) => {
+			res.redirect("/profile");
+		};
+};
+
+export const httpSignOut: RequestHandler = (req, res) => {
+	try {
+		res.cookie("jwt", "", { expires: new Date(0), httpOnly: true });
 		return res.status(200).json({
-			auth: false
-		})
-	}catch(error){
-		console.log(error)
+			auth: false,
+		});
+	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
-			error
-		})
+			error,
+		});
 	}
-}
+};

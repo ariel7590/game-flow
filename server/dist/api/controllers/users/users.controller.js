@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpSignOut = exports.httpAuthenticate = exports.httpLogin = exports.httpCreateNewUser = exports.httpGetUserById = exports.httpGetAllUsers = void 0;
+exports.httpSignOut = exports.httpGoogleAuthenticateCallback = exports.httpGoogleAuthenticate = exports.httpAuthenticate = exports.httpLogin = exports.httpCreateNewUser = exports.httpGetUserById = exports.httpGetAllUsers = void 0;
 const jwt_config_1 = require("../../../config/jwt.config");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const users_da_1 = require("../../data-access/users/users.da");
+const passport_1 = __importDefault(require("passport"));
 const httpGetAllUsers = async (req, res) => {
     // this function is for testing only, I can delete it later
     const users = await (0, users_da_1.getAllUsers)();
@@ -58,7 +59,7 @@ const httpCreateNewUser = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -68,10 +69,10 @@ const httpLogin = async (req, res) => {
         const credentials = req.body;
         let user;
         if (credentials.userName) {
-            user = await (0, users_da_1.isUserExists)(credentials.userName);
+            user = (await (0, users_da_1.isUserExists)(credentials.userName));
         }
         else if (credentials.email) {
-            user = await (0, users_da_1.findUserByEmail)(credentials.email);
+            user = (await (0, users_da_1.findUserByEmail)(credentials.email));
         }
         else {
             user = null;
@@ -98,7 +99,7 @@ const httpLogin = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
@@ -128,22 +129,33 @@ const httpAuthenticate = async (req, res) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
 exports.httpAuthenticate = httpAuthenticate;
+const httpGoogleAuthenticate = (req, res) => {
+    passport_1.default.authenticate("google", { scope: ["profile", "email"] });
+};
+exports.httpGoogleAuthenticate = httpGoogleAuthenticate;
+const httpGoogleAuthenticateCallback = (req, res) => {
+    passport_1.default.authenticate("google", { failureRedirect: "/" }),
+        (req, res) => {
+            res.redirect("/profile");
+        };
+};
+exports.httpGoogleAuthenticateCallback = httpGoogleAuthenticateCallback;
 const httpSignOut = (req, res) => {
     try {
-        res.cookie('jwt', '', { expires: new Date(0), httpOnly: true });
+        res.cookie("jwt", "", { expires: new Date(0), httpOnly: true });
         return res.status(200).json({
-            auth: false
+            auth: false,
         });
     }
     catch (error) {
         console.log(error);
         return res.status(500).json({
-            error
+            error,
         });
     }
 };
