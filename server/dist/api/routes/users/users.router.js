@@ -8,11 +8,14 @@ const jwt_config_1 = require("../../../config/jwt.config");
 const users_controller_1 = require("../../controllers/users/users.controller");
 const validate_resourse_middleware_1 = require("../../middlewares/validate-resourse.middleware");
 const users_validations_1 = require("../../validations/users/users.validations");
+const passport_1 = __importDefault(require("passport"));
 const usersRouter = express_1.default.Router();
 usersRouter.get("/", users_controller_1.httpGetAllUsers);
 usersRouter.get("/auth", jwt_config_1.verifyJWT, (0, validate_resourse_middleware_1.validate)(users_validations_1.validateAuthenticate), users_controller_1.httpAuthenticate);
 usersRouter.get("/auth/google", users_controller_1.httpGoogleAuthenticate);
-usersRouter.get('/auth/google/callback', users_controller_1.httpGoogleAuthenticateCallback);
+usersRouter.get('/auth/google/callback', passport_1.default.authenticate('google', {
+    failureRedirect: '/error'
+}), users_controller_1.httpGoogleAuthenticateCallback);
 usersRouter.get("/signout", jwt_config_1.verifyJWT, (0, validate_resourse_middleware_1.validate)(users_validations_1.validateSignOut), users_controller_1.httpSignOut);
 usersRouter.get("/:userId", users_controller_1.httpGetUserById);
 usersRouter.post("/signup", (0, validate_resourse_middleware_1.validate)(users_validations_1.validateCreateNewUser), users_controller_1.httpCreateNewUser);

@@ -53,6 +53,10 @@ export default function Router() {
                 {
                     path: appPath.newPost,
                     element: <NewPost />
+                },
+                {
+                    path: appPath.error,
+                    element: <h1>Error 404: Page not found!</h1>
                 }
                 
 

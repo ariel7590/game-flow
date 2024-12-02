@@ -134,15 +134,20 @@ const httpAuthenticate = async (req, res) => {
     }
 };
 exports.httpAuthenticate = httpAuthenticate;
-const httpGoogleAuthenticate = (req, res) => {
-    passport_1.default.authenticate("google", { scope: ["profile", "email"] });
-};
-exports.httpGoogleAuthenticate = httpGoogleAuthenticate;
-const httpGoogleAuthenticateCallback = (req, res) => {
-    passport_1.default.authenticate("google", { failureRedirect: "/" }),
-        (req, res) => {
-            res.redirect("/profile");
-        };
+// Controller to handle Google OAuth login
+exports.httpGoogleAuthenticate = passport_1.default.authenticate('google', { scope: ['profile', 'email'] });
+// Controller to handle Google OAuth callback
+const httpGoogleAuthenticateCallback = (req, res, next) => {
+    // Render a page in the pop-up to send the user data back to the opener (original window)
+    res.send(`
+	<script>
+		// Send user data to the opener (original window)
+		window.opener.postMessage({ user: ${JSON.stringify(req.user)} }, 'http://localhost:5173/');
+		
+		// Close the pop-up window
+		window.close();
+	</script>
+`);
 };
 exports.httpGoogleAuthenticateCallback = httpGoogleAuthenticateCallback;
 const httpSignOut = (req, res) => {

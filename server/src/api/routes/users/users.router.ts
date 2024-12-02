@@ -16,13 +16,15 @@ import { validateCreateNewUser,
 	 validateSignOut,  
 	 validateLogin,
 	} from "../../validations/users/users.validations";
-
+import passport from "passport";
 const usersRouter = express.Router();
 
 usersRouter.get("/", httpGetAllUsers);
 usersRouter.get("/auth", verifyJWT, validate(validateAuthenticate), httpAuthenticate);
 usersRouter.get("/auth/google", httpGoogleAuthenticate);
-usersRouter.get('/auth/google/callback', httpGoogleAuthenticateCallback);
+usersRouter.get('/auth/google/callback', passport.authenticate('google', {
+    failureRedirect: '/error'
+}), httpGoogleAuthenticateCallback);
 usersRouter.get("/signout", verifyJWT, validate(validateSignOut), httpSignOut);
 usersRouter.get("/:userId", httpGetUserById);
 usersRouter.post("/signup", validate(validateCreateNewUser), httpCreateNewUser);

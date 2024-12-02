@@ -141,15 +141,21 @@ export const httpAuthenticate = async (
 	}
 };
 
-export const httpGoogleAuthenticate: RequestHandler = (req, res) => {
-	passport.authenticate("google", { scope: ["profile", "email"] });
-};
+// Controller to handle Google OAuth login
+export const httpGoogleAuthenticate = passport.authenticate('google', { scope: ['profile', 'email'] });
 
-export const httpGoogleAuthenticateCallback: RequestHandler = (req, res) => {
-	passport.authenticate("google", { failureRedirect: "/" }),
-		(req: Request, res: Response) => {
-			res.redirect("/profile");
-		};
+// Controller to handle Google OAuth callback
+export const httpGoogleAuthenticateCallback: RequestHandler = (req, res, next) => {
+   // Render a page in the pop-up to send the user data back to the opener (original window)
+   res.send(`
+	<script>
+		// Send user data to the opener (original window)
+		window.opener.postMessage({ user: ${JSON.stringify(req.user)} }, 'http://localhost:5173/');
+		
+		// Close the pop-up window
+		window.close();
+	</script>
+`);
 };
 
 export const httpSignOut: RequestHandler = (req, res) => {

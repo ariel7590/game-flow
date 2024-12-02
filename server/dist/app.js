@@ -23,7 +23,7 @@ app.use(express_1.default.json());
 app.use((0, express_session_1.default)({
     secret: config_1.default.get('sessionSecret'),
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
