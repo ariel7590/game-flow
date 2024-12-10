@@ -8,7 +8,7 @@ dotenv.config();
 
 export const jwtExp = 30 * 24 * 60 * 60;
 
-export function createJWT(payload: { email: string; id: number }) {
+export function createJWT(payload: { email: string; id: number | string }) {
 	return jwt.sign(payload, config.get("JWTSecret")!, {
 		expiresIn: jwtExp,
 	});
@@ -34,7 +34,7 @@ export function verifyJWT(
 				message: "Not authorized!",
 			});
 		}
-		req.userId = (decoded as { id: number }).id;
+		req.userId = (decoded as { id: number | string }).id;
 		next();
 	});
 }

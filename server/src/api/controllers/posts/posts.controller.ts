@@ -13,6 +13,10 @@ import { IPostForEditing, IReceivedPostContent } from "../../types/posts.types";
 import { AuthenticatedRequest } from "../../types/jwt.types";
 import { paginate } from "../../utils/pagination";
 import DOMPurify from "dompurify";
+import { JSDOM } from 'jsdom';
+
+const window = new JSDOM('').window;
+const domPurify = DOMPurify(window);
 
 export const httpGetAllPosts: RequestHandler = async (req, res) => {
   //for testing only, I can remove it later
@@ -71,7 +75,7 @@ export const httpCreateNewPost: RequestHandler = async (req, res) => {
       });
     }
     const publisherId = +post.publisherId;
-    const cleanPostBody = DOMPurify.sanitize(post.body);
+    const cleanPostBody = domPurify.sanitize(post.body);
     let uploadSecureUrl: string | undefined;
     if (req.file) {
       uploadSecureUrl = await uploadToCloudinary(req.file.path);
@@ -148,6 +152,7 @@ export const httpEditPost = async (
         error: "You are unathorized to edit this post!",
       });
     }
+    const cleanNewContent = domPurify.sanitize(newContent);
     let mediaUrls: string[] = [];
     if (req.file) {
       const uploadSecureUrl = await uploadToCloudinary(req.file.path);
@@ -162,7 +167,7 @@ export const httpEditPost = async (
       postId,
       newGameName,
       newTitle,
-      newContent,
+      cleanNewContent,
       mediaUrls
     );
     if (!editedPost) {

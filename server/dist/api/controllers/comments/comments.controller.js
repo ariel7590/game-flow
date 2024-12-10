@@ -9,6 +9,9 @@ const posts_da_1 = require("../../data-access/posts/posts.da");
 const pagination_1 = require("../../utils/pagination");
 const cloudinary_service_1 = require("../../services/cloudinary.service");
 const dompurify_1 = __importDefault(require("dompurify"));
+const jsdom_1 = require("jsdom");
+const window = new jsdom_1.JSDOM('').window;
+const domPurify = (0, dompurify_1.default)(window);
 const httpCreateNewComment = async (req, res) => {
     try {
         const commentInput = req.body;
@@ -18,7 +21,7 @@ const httpCreateNewComment = async (req, res) => {
                 error: "Post not found!",
             });
         }
-        const cleanComment = dompurify_1.default.sanitize(commentInput.body);
+        const cleanComment = domPurify.sanitize(commentInput.body);
         const publisherId = +commentInput.publisherId;
         let uploadSecureUrl;
         if (req.file) {
@@ -127,6 +130,8 @@ const httpDeleteComment = async (req, res) => {
         const comment = await (0, comments_da_1.findCommentWithCommentId)(commentId);
         if (comment) {
             if (comment.publisherId !== userId) {
+                console.log("publisher id: ", comment.publisherId);
+                console.log("user id: ", userId);
                 return res.status(401).json({
                     error: "You are unathorized to delete this comment!",
                 });

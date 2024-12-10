@@ -135,14 +135,38 @@ const httpAuthenticate = async (req, res) => {
 };
 exports.httpAuthenticate = httpAuthenticate;
 // Controller to handle Google OAuth login
-exports.httpGoogleAuthenticate = passport_1.default.authenticate('google', { scope: ['profile', 'email'] });
+exports.httpGoogleAuthenticate = passport_1.default.authenticate("google", {
+    scope: ["profile", "email"],
+});
 // Controller to handle Google OAuth callback
-const httpGoogleAuthenticateCallback = (req, res, next) => {
+const httpGoogleAuthenticateCallback = async (req, res, next) => {
+    const googleUser = req.user;
+    if (!googleUser) {
+        return res.status(400).send("User not found");
+    }
+    let id;
+    let token;
+    const { emails, displayName } = googleUser;
+    const email = emails[0].value;
+    const userFromDB = await (0, users_da_1.findUserByEmail)(email);
+    if (userFromDB) {
+        id = userFromDB.userId;
+    }
+    else {
+        id = googleUser.id;
+        await (0, users_da_1.saveGoogleAccount)({ googleId: id, userName: displayName, email });
+    }
+    token = (0, jwt_config_1.createJWT)({ email, id });
+    res.cookie("jwt", token, { httpOnly: true, maxAge: jwt_config_1.jwtExp * 1000 });
     // Render a page in the pop-up to send the user data back to the opener (original window)
     res.send(`
 	<script>
 		// Send user data to the opener (original window)
-		window.opener.postMessage({ user: ${JSON.stringify(req.user)} }, 'http://localhost:5173/');
+		window.opener.postMessage({ user: ${JSON.stringify({
+        auth: true,
+        userId: id,
+        userName: displayName
+    })} }, 'http://localhost:5173/');
 		
 		// Close the pop-up window
 		window.close();

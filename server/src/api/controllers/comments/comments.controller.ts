@@ -20,6 +20,10 @@ import { AuthenticatedRequest } from "../../types/jwt.types";
 import { paginate } from "../../utils/pagination";
 import { uploadToCloudinary } from "../../services/cloudinary.service";
 import DOMPurify from "dompurify";
+import { JSDOM } from 'jsdom';
+
+const window = new JSDOM('').window;
+const domPurify = DOMPurify(window);
 
 export const httpCreateNewComment: RequestHandler = async (req, res) => {
 	try {
@@ -30,7 +34,7 @@ export const httpCreateNewComment: RequestHandler = async (req, res) => {
 				error: "Post not found!",
 			});
 		}
-		const cleanComment = DOMPurify.sanitize(commentInput.body);
+		const cleanComment = domPurify.sanitize(commentInput.body);
 		const publisherId = +commentInput.publisherId;
 		let uploadSecureUrl: string | undefined;
 		if (req.file) {
@@ -141,6 +145,8 @@ export const httpDeleteComment = async (
 		const comment = await findCommentWithCommentId(commentId);
 		if (comment) {
 			if (comment.publisherId !== userId) {
+				console.log("publisher id: ",comment.publisherId);
+				console.log("user id: ", userId);
 				return res.status(401).json({
 					error: "You are unathorized to delete this comment!",
 				});

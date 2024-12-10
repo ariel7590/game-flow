@@ -7,12 +7,14 @@ import {
 	createNewUser,
 	getUserById,
 	isUserExists,
+	saveGoogleAccount,
 } from "../../data-access/users/users.da";
 import {
 	INewUserInput,
 	IHashedPassUser,
 	SignInCredentials,
 	ICredentials,
+	IGoogleUser,
 } from "../../types/users.types";
 import { AuthenticatedRequest } from "../../types/jwt.types";
 import passport from "passport";
@@ -114,7 +116,7 @@ export const httpAuthenticate = async (
 	res: Response
 ) => {
 	try {
-		const userId = req.userId as number;
+		const userId = req.userId;
 		if (!userId) {
 			return res.status(400).json({
 				auth: false,
@@ -142,15 +144,50 @@ export const httpAuthenticate = async (
 };
 
 // Controller to handle Google OAuth login
-export const httpGoogleAuthenticate = passport.authenticate('google', { scope: ['profile', 'email'] });
+export const httpGoogleAuthenticate = passport.authenticate("google", {
+	scope: ["profile", "email"],
+});
 
 // Controller to handle Google OAuth callback
-export const httpGoogleAuthenticateCallback: RequestHandler = (req, res, next) => {
-   // Render a page in the pop-up to send the user data back to the opener (original window)
-   res.send(`
+export const httpGoogleAuthenticateCallback: RequestHandler = async (
+	req,
+	res,
+	next
+) => {
+	const googleUser = req.user as IGoogleUser;
+
+	if (!googleUser) {
+		return res.status(400).send("User not found");
+	  }
+
+	let id: number | string;
+	let token: string;
+	const {emails,displayName}=googleUser;
+	const email=emails[0].value;
+	const userFromDB=await findUserByEmail(email);
+	
+	if(userFromDB){
+		id=userFromDB.userId as number;
+	}
+	else{
+		id=googleUser.id;
+		await saveGoogleAccount({googleId: id, userName: displayName, email});
+	}
+
+	token = createJWT({ email, id});
+	res.cookie("jwt", token, { httpOnly: true, maxAge: jwtExp * 1000 });
+
+	// Render a page in the pop-up to send the user data back to the opener (original window)
+	res.send(`
 	<script>
 		// Send user data to the opener (original window)
-		window.opener.postMessage({ user: ${JSON.stringify(req.user)} }, 'http://localhost:5173/');
+		window.opener.postMessage({ user: ${JSON.stringify(
+			{
+				auth: true,
+				userId: id,
+				userName: displayName
+			}
+		)} }, 'http://localhost:5173/');
 		
 		// Close the pop-up window
 		window.close();

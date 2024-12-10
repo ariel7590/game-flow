@@ -6,9 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const usersSchema = new mongoose_1.default.Schema({
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true,
+    },
     userId: {
         type: Number,
-        required: true,
+        required: function () {
+            return !this.googleId;
+        }
     },
     userName: {
         type: String,
@@ -16,14 +23,19 @@ const usersSchema = new mongoose_1.default.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function () {
+            return !this.googleId;
+        }
     },
     salt: {
         type: String,
-        required: true,
+        required: function () {
+            return !this.googleId;
+        }
     },
     email: {
         type: String,
+        unique: true,
         required: true,
     },
 });

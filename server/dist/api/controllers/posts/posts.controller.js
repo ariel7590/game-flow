@@ -8,6 +8,9 @@ const cloudinary_service_1 = require("../../services/cloudinary.service");
 const posts_da_1 = require("../../data-access/posts/posts.da");
 const pagination_1 = require("../../utils/pagination");
 const dompurify_1 = __importDefault(require("dompurify"));
+const jsdom_1 = require("jsdom");
+const window = new jsdom_1.JSDOM('').window;
+const domPurify = (0, dompurify_1.default)(window);
 const httpGetAllPosts = async (req, res) => {
     //for testing only, I can remove it later
     const posts = await (0, posts_da_1.getAllPosts)();
@@ -68,7 +71,7 @@ const httpCreateNewPost = async (req, res) => {
             });
         }
         const publisherId = +post.publisherId;
-        const cleanPostBody = dompurify_1.default.sanitize(post.body);
+        const cleanPostBody = domPurify.sanitize(post.body);
         let uploadSecureUrl;
         if (req.file) {
             uploadSecureUrl = await (0, cloudinary_service_1.uploadToCloudinary)(req.file.path);
@@ -140,6 +143,7 @@ const httpEditPost = async (req, res) => {
                 error: "You are unathorized to edit this post!",
             });
         }
+        const cleanNewContent = domPurify.sanitize(newContent);
         let mediaUrls = [];
         if (req.file) {
             const uploadSecureUrl = await (0, cloudinary_service_1.uploadToCloudinary)(req.file.path);
@@ -150,7 +154,7 @@ const httpEditPost = async (req, res) => {
         if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
             mediaUrls = JSON.parse(newMedia);
         }
-        const editedPost = await (0, posts_da_1.editPost)(postId, newGameName, newTitle, newContent, mediaUrls);
+        const editedPost = await (0, posts_da_1.editPost)(postId, newGameName, newTitle, cleanNewContent, mediaUrls);
         if (!editedPost) {
             return res.status(500).json({
                 error: "Couldn't edit post",

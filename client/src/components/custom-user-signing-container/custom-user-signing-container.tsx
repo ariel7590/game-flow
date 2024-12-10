@@ -18,7 +18,7 @@ const CustomUserSigningContainer = ({ title, children }: ContainerProps) => {
 		const left = (window.innerWidth - width) / 2;
 		const top = (window.innerHeight - height) / 2;
 
-		const loginWindow = window.open(
+		window.open(
 			"http://localhost:8000/users/auth/google", // The route to start Google login
 			"GoogleLogin",
 			`width=${width},height=${height},top=${top},left=${left}` // Pop-up window specs
@@ -33,7 +33,7 @@ const CustomUserSigningContainer = ({ title, children }: ContainerProps) => {
 			console.log("User authenticated:", event.data);
 
 			// Optionally: you can reload the page or update your application state here
-			// window.location.reload();
+			window.location.reload();
 
 			if (event.data.user) {
 				// Redirect the main window to a different page (e.g., profile page)

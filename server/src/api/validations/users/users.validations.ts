@@ -30,7 +30,7 @@ export const validateLogin = joi.object({
 });
 
 export const validateAuthenticate = joi.object({
-	userId: joi.number().required(),
+	userId: joi.alternatives().try(joi.number(), joi.string()).required(),
 	body: joi.object(),
 	params: joi.object(),
 	query: joi.object(),

@@ -2,9 +2,16 @@ import mongoose from "mongoose";
 import { IUserSchema } from "../../types/schemas.types";
 
 const usersSchema = new mongoose.Schema<IUserSchema>({
+	googleId: {
+		type: String,
+		unique: true,
+		sparse: true,
+	},
 	userId: {
 		type: Number,
-		required: true,
+		required: function (this: IUserSchema) {
+			return !this.googleId;
+		  }
 	},
 	userName: {
 		type: String,
@@ -12,14 +19,19 @@ const usersSchema = new mongoose.Schema<IUserSchema>({
 	},
 	password: {
 		type: String,
-		required: true,
+		required: function (this: IUserSchema) {
+			return !this.googleId;
+		  }
 	},
 	salt: {
 		type: String,
-		required: true,
+		required: function (this: IUserSchema) {
+			return !this.googleId;
+		  }
 	},
 	email: {
 		type: String,
+		unique: true,
 		required: true,
 	},
 });

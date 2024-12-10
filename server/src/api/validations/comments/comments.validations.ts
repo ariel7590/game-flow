@@ -49,7 +49,7 @@ export const validateDeleteComment = joi.object({
     params: joi.object({
         commentId: joi.string().required()
     }),
-    userId: joi.number().required(),
+    userId: joi.alternatives().try(joi.number(), joi.string()).required(),
     query: joi.object(),
     body: joi.object(),
     file: joi.object(),

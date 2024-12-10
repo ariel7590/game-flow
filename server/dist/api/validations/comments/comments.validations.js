@@ -51,7 +51,7 @@ exports.validateDeleteComment = joi_1.default.object({
     params: joi_1.default.object({
         commentId: joi_1.default.string().required()
     }),
-    userId: joi_1.default.number().required(),
+    userId: joi_1.default.alternatives().try(joi_1.default.number(), joi_1.default.string()).required(),
     query: joi_1.default.object(),
     body: joi_1.default.object(),
     file: joi_1.default.object(),

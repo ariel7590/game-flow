@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createNewUser = exports.getUserById = exports.getAllUsers = exports.findUserByEmail = exports.isUserExists = void 0;
+exports.createNewUser = exports.getUserById = exports.getAllUsers = exports.saveGoogleAccount = exports.findUserByEmail = exports.isUserExists = void 0;
 const users_model_1 = require("../../models/users/users.model");
 const DEFAULT_USER_ID = 0;
 async function getLatestUserId() {
@@ -12,7 +12,7 @@ async function getLatestUserId() {
 }
 async function isUserExists(userName) {
     return await users_model_1.userModel.findOne({
-        userName
+        userName,
     }, { _id: 0, __v: 0, salt: 0 });
 }
 exports.isUserExists = isUserExists;
@@ -27,12 +27,23 @@ async function saveAccount(user) {
         userId: user.userId,
     }, user, { upsert: true });
 }
+async function saveGoogleAccount(user) {
+    await users_model_1.userModel.findOneAndUpdate({
+        email: user.email,
+    }, user, { upsert: true });
+}
+exports.saveGoogleAccount = saveGoogleAccount;
 async function getAllUsers() {
     return await users_model_1.userModel.find({}, { _id: 0, __v: 0, password: 0, salt: 0, active: 0 });
 }
 exports.getAllUsers = getAllUsers;
-async function getUserById(userId) {
-    return await users_model_1.userModel.findOne({ userId: userId }, { _id: 0, __v: 0, password: 0, salt: 0, active: 0 });
+async function getUserById(id) {
+    if (typeof id === "number") {
+        return await users_model_1.userModel.findOne({ userId: id }, { _id: 0, __v: 0, password: 0, salt: 0, active: 0 });
+    }
+    else {
+        return await users_model_1.userModel.findOne({ googleId: id }, { _id: 0, __v: 0, password: 0, salt: 0, active: 0 });
+    }
 }
 exports.getUserById = getUserById;
 async function createNewUser(user) {
