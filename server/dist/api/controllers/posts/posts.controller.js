@@ -136,7 +136,7 @@ const httpEditPost = async (req, res) => {
     try {
         const post = req.body;
         const userId = req.userId;
-        const { postId, newGameName, newTitle, newContent, publisherId, newMedia } = post;
+        const { postId, newGameName, newTitle, newContent, publisherId } = post;
         const publisherIdNum = +publisherId;
         if (publisherIdNum !== userId) {
             return res.status(401).json({
@@ -150,9 +150,6 @@ const httpEditPost = async (req, res) => {
             typeof uploadSecureUrl !== "undefined"
                 ? mediaUrls.push(uploadSecureUrl)
                 : null;
-        }
-        if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
-            mediaUrls = JSON.parse(newMedia);
         }
         const editedPost = await (0, posts_da_1.editPost)(postId, newGameName, newTitle, cleanNewContent, mediaUrls);
         if (!editedPost) {

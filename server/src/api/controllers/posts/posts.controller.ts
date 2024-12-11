@@ -144,7 +144,7 @@ export const httpEditPost = async (
   try {
     const post = req.body as IPostForEditing;
     const userId = req.userId as number;
-    const { postId, newGameName, newTitle, newContent, publisherId, newMedia } =
+    const { postId, newGameName, newTitle, newContent, publisherId } =
       post;
     const publisherIdNum = +publisherId;
     if (publisherIdNum !== userId) {
@@ -159,9 +159,6 @@ export const httpEditPost = async (
       typeof uploadSecureUrl !== "undefined"
         ? mediaUrls.push(uploadSecureUrl)
         : null;
-    }
-    if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
-      mediaUrls = JSON.parse(newMedia);
     }
     const editedPost = await editPost(
       postId,

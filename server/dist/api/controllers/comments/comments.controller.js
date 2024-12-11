@@ -159,7 +159,7 @@ exports.httpDeleteComment = httpDeleteComment;
 const httpEditComment = async (req, res) => {
     try {
         const comment = req.body;
-        const { commentId, newContent, publisherId, editorId, newMedia } = comment;
+        const { commentId, newContent, publisherId, editorId } = comment;
         const publisherIdNum = +publisherId;
         const editorIdNum = +editorId;
         if (editorIdNum !== publisherIdNum) {
@@ -173,9 +173,6 @@ const httpEditComment = async (req, res) => {
             typeof uploadSecureUrl !== "undefined"
                 ? mediaUrls.push(uploadSecureUrl)
                 : null;
-        }
-        if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
-            mediaUrls = JSON.parse(newMedia);
         }
         const editedComment = await (0, comments_da_1.editComment)(commentId, newContent, mediaUrls);
         if (!editedComment) {

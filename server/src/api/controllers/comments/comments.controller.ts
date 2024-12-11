@@ -173,7 +173,7 @@ export const httpDeleteComment = async (
 export const httpEditComment: RequestHandler = async (req, res) => {
 	try {
 		const comment = req.body as ICommentForEditing;
-		const { commentId, newContent, publisherId, editorId, newMedia } = comment;
+		const { commentId, newContent, publisherId, editorId } = comment;
 		const publisherIdNum = +publisherId;
 		const editorIdNum = +editorId;
 		if (editorIdNum !== publisherIdNum) {
@@ -187,9 +187,6 @@ export const httpEditComment: RequestHandler = async (req, res) => {
 			typeof uploadSecureUrl !== "undefined"
 				? mediaUrls.push(uploadSecureUrl)
 				: null;
-		}
-		if (mediaUrls.length === 0 && newMedia?.trim() !== "") {
-			mediaUrls = JSON.parse(newMedia);
 		}
 		const editedComment = await editComment(commentId, newContent, mediaUrls);
 		if (!editedComment) {
