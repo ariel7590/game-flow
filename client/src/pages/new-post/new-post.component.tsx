@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState, useEffect } from "react";
+import { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { createPostThunk } from "../../redux/posts/posts.thunks";

@@ -1,4 +1,4 @@
-import React, { FormEvent, ChangeEvent } from "react";
+import { FormEvent, ChangeEvent } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 

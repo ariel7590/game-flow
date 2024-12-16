@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch } from "react-redux";
 import { signoutThunk } from "../../redux/users/users.thunks";
 import { AppDispatch } from "../../redux/store";

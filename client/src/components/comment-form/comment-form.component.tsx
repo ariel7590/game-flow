@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent } from "react";
+import { ChangeEvent, FormEvent } from "react";
 import ReactQuill from 'react-quill';
 import ReplyIcon from '@mui/icons-material/Reply';
 import 'react-quill/dist/quill.snow.css';

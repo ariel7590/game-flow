@@ -1,4 +1,4 @@
-import React, { KeyboardEvent } from "react";
+import { KeyboardEvent } from "react";
 import { PromptInputProps } from "./prompt-input.types";
 import SendIcon from "@mui/icons-material/Send";
 

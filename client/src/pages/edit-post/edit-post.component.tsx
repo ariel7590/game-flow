@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editPostThunk, getCurrentPost } from "../../redux/posts/posts.thunks";
 import { useNavigate } from "react-router-dom";

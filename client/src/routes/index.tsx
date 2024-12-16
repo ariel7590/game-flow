@@ -1,4 +1,3 @@
-import React from "react";
 import { useRoutes } from "react-router-dom";
 import Layout from "../components/layout/layout.component";
 import LoginPage from "../pages/login-page/login-page";

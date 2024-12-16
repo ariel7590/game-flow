@@ -1,4 +1,4 @@
-import React, { useEffect, useState, MouseEvent, ChangeEvent } from "react";
+import { useEffect, useState, MouseEvent, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	useNavigate,
@@ -63,7 +63,7 @@ const Comments = () => {
 		navigate(`${location.pathname}/edit-comment/${comment.commentId}`);
 	};
 
-	const handlePagination = (event: ChangeEvent, newPage: number) => {
+	const handlePagination = (_event: ChangeEvent, newPage: number) => {
 		setPage(() => {
 			navigateToPage(newPage);
 			return newPage;

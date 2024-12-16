@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Input } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { ICredentials } from "./login.types";

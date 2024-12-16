@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import AiGuide from "../../components/ai-guide/ai-guide.component";
 import logo from "../../assets/logo-color.svg";
 import { Link } from "react-router-dom";

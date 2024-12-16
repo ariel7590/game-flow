@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { exitPost } from "../../redux/posts/posts.slice";
@@ -56,7 +56,7 @@ const Forum = () => {
 		});
 	};
 
-	const handlePagination = (e: ChangeEvent, page: number) => {
+	const handlePagination = (_e: ChangeEvent, page: number) => {
 		setPage(() => {
 			const newPage = page;
 			navigateToPage("/forum", newPage);

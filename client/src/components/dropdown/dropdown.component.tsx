@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@mui/material";
 import { IDropdownProps } from "./dropdown.types";
 import * as dropdownStyle from "./dropdown.tailwind";

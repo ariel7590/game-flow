@@ -12,6 +12,7 @@
 
 # production
 /build
+/server/public
 
 # misc
 /server/.env

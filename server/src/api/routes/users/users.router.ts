@@ -32,14 +32,6 @@ usersRouter.post("/login", validate(validateLogin), httpLogin);
 
 // Routes for OAuth
 
-// Logout route
-// app.get('/logout', (req: Request, res: Response) => {
-//     req.logout((err) => {
-//         if (err) { return next(err); }
-//         res.redirect('/');
-//     });
-// });
-
 // Profile route
 // app.get('/profile', (req: Request, res: Response) => {
 //     if (req.user) {

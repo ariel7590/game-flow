@@ -1,7 +1,4 @@
-import React, { ReactNode } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
-import { googleLoginThunk } from "../../redux/users/users.thunks";
+import { ReactNode } from "react";
 import { GoogleLoginButton } from "react-social-login-buttons";
 
 interface ContainerProps {
