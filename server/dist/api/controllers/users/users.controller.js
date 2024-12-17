@@ -166,7 +166,7 @@ const httpGoogleAuthenticateCallback = async (req, res, next) => {
         auth: true,
         userId: id,
         userName: displayName
-    })} }, 'http://localhost:5173/');
+    })} }, window.opener.location.origin);
 		
 		// Close the pop-up window
 		window.close();

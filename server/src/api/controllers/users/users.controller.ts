@@ -187,7 +187,7 @@ export const httpGoogleAuthenticateCallback: RequestHandler = async (
 				userId: id,
 				userName: displayName
 			}
-		)} }, 'http://localhost:5173/');
+		)} }, window.opener.location.origin);
 		
 		// Close the pop-up window
 		window.close();
