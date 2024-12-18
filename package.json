@@ -8,6 +8,7 @@
     "tsc-server": "npm run tsc-watch --prefix server",
     "server-watch": "npm run watch --prefix server",
     "client-watch": "npm run dev --prefix client",
+    "client-build": "npm run build --prefix client",
     "dev": "concurrently \"npm run server-watch\" \"npm run client-watch\"",
     "install-client": "npm install --prefix client",
     "install-server": "npm install --prefix server",

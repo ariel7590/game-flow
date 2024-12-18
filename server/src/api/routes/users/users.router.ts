@@ -30,6 +30,7 @@ usersRouter.get("/:userId", httpGetUserById);
 usersRouter.post("/signup", validate(validateCreateNewUser), httpCreateNewUser);
 usersRouter.post("/login", validate(validateLogin), httpLogin);
 
+
 // Routes for OAuth
 
 // Profile route

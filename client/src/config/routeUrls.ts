@@ -1,4 +1,4 @@
-export const localAPI = "http://localhost:8000/";
+export const localAPI = "/";
 export const usersRoute = "users/";
 export const postsRoute = "posts/";
 export const commentsRoute = "comments/";

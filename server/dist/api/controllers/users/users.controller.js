@@ -160,13 +160,16 @@ const httpGoogleAuthenticateCallback = async (req, res, next) => {
     res.cookie("jwt", token, { httpOnly: true, maxAge: jwt_config_1.jwtExp * 1000 });
     // Render a page in the pop-up to send the user data back to the opener (original window)
     res.send(`
-	<script>
+		<script>
+		// Get the origin of the current environment
+		const origin = window.opener.location.origin;
+
 		// Send user data to the opener (original window)
 		window.opener.postMessage({ user: ${JSON.stringify({
         auth: true,
         userId: id,
-        userName: displayName
-    })} }, window.opener.location.origin);
+        userName: displayName,
+    })} }, origin);
 		
 		// Close the pop-up window
 		window.close();

@@ -16,25 +16,24 @@ const CustomUserSigningContainer = ({ title, children }: ContainerProps) => {
 		const top = (window.innerHeight - height) / 2;
 
 		window.open(
-			"http://localhost:8000/users/auth/google", // The route to start Google login
+			"/users/auth/google", // The route to start Google login
 			"GoogleLogin",
 			`width=${width},height=${height},top=${top},left=${left}` // Pop-up window specs
 		);
 
-		// Listen for message from the pop-up window
 		window.addEventListener("message", (event) => {
-			// Security: ensure message is from the same origin
-			if (event.origin !== "http://localhost:8000") return;
+			const currentOrigin = window.location.origin;
 
-			// Handle the user data from the pop-up (e.g., store user info, update UI)
-			console.log("User authenticated:", event.data);
+			if (event.origin !== currentOrigin) {
+				return; 
+			}
 
-			// Optionally: you can reload the page or update your application state here
-			window.location.reload();
-
+			// Check if user data is present in the message
 			if (event.data.user) {
-				// Redirect the main window to a different page (e.g., profile page)
-				window.location.href = "/"; // Adjust this route as needed
+				// Redirect the main window to a different page (e.g., home page)
+				console.log("Origin: ", event.origin);
+				console.log("User authenticated:", event.data);
+				window.location.href = "/";
 			}
 		});
 	};

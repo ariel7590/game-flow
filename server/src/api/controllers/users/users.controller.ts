@@ -158,36 +158,36 @@ export const httpGoogleAuthenticateCallback: RequestHandler = async (
 
 	if (!googleUser) {
 		return res.status(400).send("User not found");
-	  }
+	}
 
 	let id: number | string;
 	let token: string;
-	const {emails,displayName}=googleUser;
-	const email=emails[0].value;
-	const userFromDB=await findUserByEmail(email);
-	
-	if(userFromDB){
-		id=userFromDB.userId as number;
-	}
-	else{
-		id=googleUser.id;
-		await saveGoogleAccount({googleId: id, userName: displayName, email});
+	const { emails, displayName } = googleUser;
+	const email = emails[0].value;
+	const userFromDB = await findUserByEmail(email);
+
+	if (userFromDB) {
+		id = userFromDB.userId as number;
+	} else {
+		id = googleUser.id;
+		await saveGoogleAccount({ googleId: id, userName: displayName, email });
 	}
 
-	token = createJWT({ email, id});
+	token = createJWT({ email, id });
 	res.cookie("jwt", token, { httpOnly: true, maxAge: jwtExp * 1000 });
 
 	// Render a page in the pop-up to send the user data back to the opener (original window)
 	res.send(`
-	<script>
+		<script>
+		// Get the origin of the current environment
+		const origin = window.opener.location.origin;
+
 		// Send user data to the opener (original window)
-		window.opener.postMessage({ user: ${JSON.stringify(
-			{
-				auth: true,
-				userId: id,
-				userName: displayName
-			}
-		)} }, window.opener.location.origin);
+		window.opener.postMessage({ user: ${JSON.stringify({
+			auth: true,
+			userId: id,
+			userName: displayName,
+		})} }, origin);
 		
 		// Close the pop-up window
 		window.close();
