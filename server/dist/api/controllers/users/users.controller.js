@@ -150,7 +150,7 @@ const httpGoogleAuthenticateCallback = async (req, res, next) => {
     const email = emails[0].value;
     const userFromDB = await (0, users_da_1.findUserByEmail)(email);
     if (userFromDB) {
-        id = userFromDB.userId;
+        id = userFromDB.userId || userFromDB.googleId;
     }
     else {
         id = googleUser.id;

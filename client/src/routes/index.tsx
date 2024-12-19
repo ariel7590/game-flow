@@ -10,6 +10,7 @@ import NewComment from "../pages/new-comment/new-comment.component";
 import EditComment from "../pages/edit-comment/edit-comment.component";
 import { appPath } from "./appPaths";
 import SignUpPage from "../pages/sign-up-page/sign-up-page";
+import ErrorPage from "../pages/error-page/error-page.component";
 
 export default function Router() {
     const routes = [
@@ -55,7 +56,7 @@ export default function Router() {
                 },
                 {
                     path: appPath.error,
-                    element: <h1>Error 404: Page not found!</h1>
+                    element: <ErrorPage />
                 }
                 
 

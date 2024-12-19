@@ -33,14 +33,14 @@ exports.validateLogin = joi_1.default.object({
     userId: joi_1.default.number().optional(),
 });
 exports.validateAuthenticate = joi_1.default.object({
-    userId: joi_1.default.alternatives().try(joi_1.default.number(), joi_1.default.string()).required(),
+    userId: joi_1.default.alternatives().try(joi_1.default.number(), joi_1.default.string()).optional(),
     body: joi_1.default.object(),
     params: joi_1.default.object(),
     query: joi_1.default.object(),
     file: joi_1.default.object(),
 });
 exports.validateSignOut = joi_1.default.object({
-    userId: joi_1.default.number().required(),
+    userId: joi_1.default.alternatives().try(joi_1.default.number(), joi_1.default.string()).required(),
     body: joi_1.default.object(),
     params: joi_1.default.object(),
     query: joi_1.default.object(),

@@ -167,7 +167,7 @@ export const httpGoogleAuthenticateCallback: RequestHandler = async (
 	const userFromDB = await findUserByEmail(email);
 
 	if (userFromDB) {
-		id = userFromDB.userId as number;
+		id = userFromDB.userId as number || userFromDB.googleId as string;
 	} else {
 		id = googleUser.id;
 		await saveGoogleAccount({ googleId: id, userName: displayName, email });

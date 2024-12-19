@@ -30,7 +30,7 @@ export const validateLogin = joi.object({
 });
 
 export const validateAuthenticate = joi.object({
-	userId: joi.alternatives().try(joi.number(), joi.string()).required(),
+	userId: joi.alternatives().try(joi.number(), joi.string()).optional(),
 	body: joi.object(),
 	params: joi.object(),
 	query: joi.object(),
@@ -38,7 +38,7 @@ export const validateAuthenticate = joi.object({
 });
 
 export const validateSignOut = joi.object({
-	userId: joi.number().required(),
+	userId: joi.alternatives().try(joi.number(), joi.string()).required(),
 	body: joi.object(),
 	params: joi.object(),
 	query: joi.object(),
