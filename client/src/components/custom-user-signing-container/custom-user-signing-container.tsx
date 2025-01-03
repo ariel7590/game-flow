@@ -1,5 +1,9 @@
 import { ReactNode } from "react";
 import { GoogleLoginButton } from "react-social-login-buttons";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../redux/store";
+import { updateUser } from "../../redux/users/users.slice";
 
 interface ContainerProps {
 	title: string;
@@ -7,7 +11,8 @@ interface ContainerProps {
 }
 
 const CustomUserSigningContainer = ({ title, children }: ContainerProps) => {
-	// const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useDispatch<AppDispatch>();
+	const navigate=useNavigate();
 
 	const handleGoogleSignIn = () => {
 		const width = 500;
@@ -33,7 +38,9 @@ const CustomUserSigningContainer = ({ title, children }: ContainerProps) => {
 				// Redirect the main window to a different page (e.g., home page)
 				console.log("Origin: ", event.origin);
 				console.log("User authenticated:", event.data);
-				window.location.href = "/";
+				// window.location.href = "/";
+				dispatch(updateUser(event.data.user));
+				navigate('/');
 			}
 		});
 	};
